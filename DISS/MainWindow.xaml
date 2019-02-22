@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:DISS"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:geared="clr-namespace:LiveCharts.Geared;assembly=LiveCharts.Geared"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="MainWindow" 
         MinHeight="450" 
@@ -35,24 +36,35 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Border Padding="45,10,45,10" 
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Border Padding="85,5,85,5" 
                     Background="{StaticResource DefaultWhiteTransparentBrush}" 
                     Margin="5" HorizontalAlignment="Center">
-                <Grid >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
 
-                    <Button PreviewMouseLeftButtonUp="RefreshSimulation_Click" 
+                    <Border.Effect>
+                        <DropShadowEffect Color="#FF110D32" Opacity="1" BlurRadius="10" ShadowDepth="8"/>
+                    </Border.Effect>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button PreviewMouseLeftButtonUp="RefreshSimulation_Click" 
                         BorderThickness="0"
                         Tag="Pause"
                         Margin="15"
                         Style="{StaticResource RefreshButton}"
                         />
 
-                    <Button PreviewMouseLeftButtonUp="StartSimulation_Click"  
+                        <Button PreviewMouseLeftButtonUp="StartSimulation_Click"  
                         BorderThickness="0"
                         Style="{StaticResource PlayButton}"
                         Tag="Pause"
@@ -61,7 +73,7 @@
                         Grid.Column="1"
                         Padding="15"
                          >
-                        <Path Data="m 17.34375,7.78125 0,16.90625 0,16.9375 
+                            <Path Data="m 17.34375,7.78125 0,16.90625 0,16.9375 
                               L 30.875,33.21875 44.53125,24.6875 30.875,16.1875 
                               17.34375,7.78125 z"
                               Fill="AliceBlue"
@@ -70,16 +82,38 @@
                               Stretch="Fill"
                               x:Name="PlayButtonData"
                               />
-                    </Button>
+                        </Button>
 
-                    <Button PreviewMouseLeftButtonUp="StopSimulation_Click"  
+                        <Button PreviewMouseLeftButtonUp="StopSimulation_Click"  
                         BorderThickness="0"
                         Style="{StaticResource StopButton}" 
                         Grid.Column="2"
                         Margin="15"
                         />
-                </Grid>
-            </Border>
+                    </Grid>
+                </Border>
+
+                <Border  Grid.Row="1"
+                         Background="{StaticResource TopWindowsColor}"
+                         Padding="5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Margin="5">
+                            <TextBlock Text="Number of iteration: " FontSize="15"/>
+                        </Grid>
+
+                        <Grid Grid.Column="1" Margin="5,0,0,0">
+                            <TextBox  FontSize="15" KeyUp="TextBox_KeyUp" 
+                                      x:Name="TextBox_NumberOfIteration" 
+                                      Text="100 000"/>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
 
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
@@ -89,15 +123,35 @@
 
                 <Frame x:Name="Frame_Simulation" />
 
-
                 <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Button Content="Reset Chart" x:Name="ResetButt" 
+                             HorizontalAlignment="Left" VerticalAlignment="Top" 
+                             Click="ResetButt_Click"
+                             Margin="5"
+                             Padding="6"
+                             Foreground="{StaticResource DefaultWhiteBrush}">
+                        <Button.Style>
+                            <Style BasedOn="{StaticResource PlayButton}" TargetType="Button">
+                                <Setter Property="Background" Value="#FFCB2249"/>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    
                     <lvc:CartesianChart Hoverable="False" 
                                         DataTooltip="{x:Null}"
                                         DisableAnimations="True"
                                         LegendLocation="Right"
+                                        Zoom="X"
+                                        Pan="X"
+                                       x:Name="Chart"
+                                        Grid.Row="1"
                                         >
                         <lvc:CartesianChart.Series>
-                            <!--Notice we are using GLineSeries, instead of LineSeries-->
                             <geared:GLineSeries Values="{Binding ChartValues}" 
                                                 x:Name="Chart_Line"
                                                 Fill="Transparent"
@@ -106,25 +160,31 @@
                                                 Title="A-F-G-E"
                                                 Stroke="{StaticResource DefaultRedBrush}"
                                                 />
+
                         </lvc:CartesianChart.Series>
+
                         <lvc:CartesianChart.AxisX>
-                            <lvc:Axis Foreground="{StaticResource DefaultWhiteBrush}" 
+                            <lvc:AxesCollection>
+                                <lvc:Axis Foreground="{StaticResource DefaultWhiteBrush}" 
                                       Title="Number of iteration" 
                                       Position="LeftBottom">
-                                <lvc:Axis.Separator>
-                                    <lvc:Separator Style="{StaticResource CleanSeparator}"></lvc:Separator>
-                                </lvc:Axis.Separator>
-                            </lvc:Axis>
+                                    <lvc:Axis.Separator>
+                                        <lvc:Separator Style="{StaticResource CleanSeparator}"></lvc:Separator>
+                                    </lvc:Axis.Separator>
+                                </lvc:Axis>
+                            </lvc:AxesCollection>
                         </lvc:CartesianChart.AxisX>
 
                         <lvc:CartesianChart.AxisY>
-                            <lvc:Axis Foreground="{StaticResource DefaultWhiteBrush}" 
-                                      Title="Time (minutes)" 
-                                      >
-                                <lvc:Axis.Separator>
-                                    <lvc:Separator Style="{StaticResource CleanSeparator}"></lvc:Separator>
-                                </lvc:Axis.Separator>
-                            </lvc:Axis>
+                            <lvc:AxesCollection>
+                                <lvc:Axis Foreground="{StaticResource DefaultWhiteBrush}" 
+                                          Title="Time (minutes)" 
+                                >
+                                    <lvc:Axis.Separator>
+                                        <lvc:Separator Style="{StaticResource CleanSeparator}"></lvc:Separator>
+                                    </lvc:Axis.Separator>
+                                </lvc:Axis>
+                            </lvc:AxesCollection>
                         </lvc:CartesianChart.AxisY>
                     </lvc:CartesianChart>
                 </Grid>

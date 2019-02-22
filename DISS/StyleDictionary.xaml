@@ -9,7 +9,7 @@
     <Color x:Key="BackgroudColor2" R="31" G="28" B="39" A="255"/>
     <Color x:Key="DefaultRedColor" R="254" G="27" B="72" A="255"/>
     <Color x:Key="DefaultRedTransparentColor" R="254" G="27" B="72" A="50"/>
-    <Color x:Key="DefaultWhiteColor" R="199" G="193" B="225" A="255"/>
+    <Color x:Key="DefaultWhiteColor" R="219" G="213" B="245" A="255"/>
     <Color x:Key="DefaultWhiteColorTransparent" R="179" G="173" B="205" A="10"/>
 
     <SolidColorBrush x:Key="TopWindowsColor" Color="{DynamicResource BackgroudColor2}"/>
@@ -22,6 +22,12 @@
         <GradientStop Color="{DynamicResource BackgroudColor}" 
                       Offset="0.23" />
         <GradientStop Color="{DynamicResource BackgroudColor2}" Offset="0.5" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="BackgroudPageBrush" StartPoint="0,0" EndPoint="0,3">
+        <GradientStop Color="{DynamicResource BackgroudColor}" 
+                      Offset="0.23" />
+        <GradientStop Color="{DynamicResource BackgroudColor2}" Offset="0.8" />
     </LinearGradientBrush>
 
     <Style x:Key="PlayButton" TargetType="{x:Type Button}">
@@ -209,6 +215,35 @@
         </Setter>
     </Style>
 
+
+    <Style TargetType="{x:Type TextBox}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
+        <Setter Property="CaretBrush" Value="{DynamicResource DefaultWhiteBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource DefaultWhiteBrush}"/>
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="MinWidth" Value="45"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                    <Grid>
+                        <Border CornerRadius="1" BorderThickness="0,0,0,1.2">
+                            <Border.Background>
+                                <SolidColorBrush Color="Transparent" />
+                            </Border.Background>
+
+                            <Border.BorderBrush>
+                                <SolidColorBrush Color="{DynamicResource DefaultWhiteColor}" />
+                            </Border.BorderBrush>
+
+                            <ScrollViewer Margin="0" x:Name="PART_ContentHost" />
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <Style x:Key="WindowStyle" TargetType="{x:Type Window}">
         <Setter Property="Foreground" Value="GhostWhite"/>

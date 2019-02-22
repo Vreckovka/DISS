@@ -100,6 +100,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="SimulationModels\SimulationModel.cs" />
+    <Compile Include="SimulationModels\SimulationModel_1.cs" />
     <Compile Include="SimulationPages\Page_S1.xaml.cs">
       <DependentUpon>Page_S1.xaml</DependentUpon>
     </Compile>

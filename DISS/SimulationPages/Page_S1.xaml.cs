@@ -17,142 +17,52 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DISS.Annotations;
 using Simulation.Simulations;
+using DISS.SimulationModels;
 
 namespace DISS.SimulationPages
 {
     /// <summary>
     /// Interaction logic for S1.xaml
     /// </summary>
-    public partial class Page_S1 : Page, INotifyPropertyChanged
+    public partial class Page_S1 : Page
     {
-        private Random random = new Random();
-        private S1 simulationS1;
-        public event EventHandler<string[]> SimulationReplicationFinished;
-
-        private string _ABCDE;
-        private string _AFHDE;
-        private string _AFGE;
-
-        public bool Started { get; set; }
-
-        private Thread simulationThread;
-        public string ABCDE
-        {
-            get { return _ABCDE; }
-            set
-            {
-                if (value != _ABCDE)
-                {
-                    OnPropertyChanged(nameof(ABCDE));
-                    _ABCDE = value;
-                }
-
-            }
-        }
-
-        public string AFHDE
-        {
-            get { return _AFHDE; }
-            set
-            {
-                if (value != _AFHDE)
-                {
-                    OnPropertyChanged(nameof(AFHDE));
-                    _AFHDE = value;
-                }
-
-            }
-        }
-
-        public string AFGE
-        {
-            get { return _AFGE; }
-            set
-            {
-                if (value != _AFGE)
-                {
-                    OnPropertyChanged(nameof(AFGE));
-                    _AFGE = value;
-                }
-
-            }
-        }
-
-        public Page_S1()
+        public SimulationModel simulationModel { get; }
+        public bool SimulationRunning { get; private set; }
+        private Thread _simulationThread;
+        public Page_S1(Random random)
         {
             InitializeComponent();
-            DataContext = this;
+            
+            simulationModel = new SimulationModel_1(random);
+            DataContext = simulationModel;
+        }
 
-            simulationS1 = new S1(100000, random);
-            simulationS1.ReplicationFinished += SimulationS1_ReplicationFinished;
-
-            simulationThread = new Thread(() =>
+        public void StartSimulation(Random random, int replicationCount)
+        {
+            _simulationThread = new Thread(() =>
             {
-                simulationS1.Simulate();
+                SimulationRunning = true;
+                simulationModel.StartSimulation(replicationCount);
             });
 
-            simulationThread.IsBackground = true;
-
-        }
-
-        private void SimulationS1_ReplicationFinished(object sender, string[] e)
-        {
-            OnSimulationReplicationFinished(e);
-            ABCDE = e[1];
-            AFHDE = e[2];
-            AFGE = e[3];
-        }
-
-        protected virtual void OnSimulationReplicationFinished(string[] e)
-        {
-            SimulationReplicationFinished?.Invoke(this, e);
-
-        }
-
-        public void StartSimulation()
-        {
-            if (!simulationThread.IsAlive)
-                if (simulationThread.ThreadState == ThreadState.Aborted)
-                {
-                    simulationThread = new Thread(() =>
-                    {
-                        simulationS1.Simulate();
-                    });
-
-                    simulationThread.IsBackground = true;
-                    simulationThread.Start();
-                }
-                else
-                    simulationThread.Start();
-            else
-                simulationThread.Resume();
-        }
-
-        public void PauseSimulation()
-        {
-            simulationThread.Suspend();
+            _simulationThread.Start();
         }
 
         public void StopSimulation()
         {
-            try
-            {
-                if (simulationThread.ThreadState != ThreadState.Suspended &&
-                       simulationThread.ThreadState != ThreadState.AbortRequested)
-                    simulationThread.Abort();
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("AHoj");
-            }
+            _simulationThread.Abort();
+            _simulationThread.Join();
+
+            SimulationRunning = false;
+        }
+        public void PauseSimulation()
+        {
+            simulationModel.PauseSimulation();
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public void ResumeSimulation()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            simulationModel.ResumeSimulation();
         }
     }
 }

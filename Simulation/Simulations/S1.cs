@@ -7,9 +7,8 @@ namespace Simulation.Simulations
     public class S1 : BaseSimulation
     {
         private static Random _random;
-        private int _replicationCount;
 
-        public delegate void ThresholdReachedEventHandler(object sender, double e);
+        private static EventWaitHandle waitHandle = new ManualResetEvent(true);
 
         #region Distributions
 
@@ -29,10 +28,9 @@ namespace Simulation.Simulations
         #endregion
 
 
-        public S1(int replicationCount, Random random) : base(replicationCount, random)
+        public S1(Random random) : base(random)
         {
             _random = random;
-            _replicationCount = replicationCount;
 
             AB = new UniformContinuousDistribution(170, 217, _random);
             BC = new UniformContinuousDistribution(120, 230, _random);
@@ -50,135 +48,101 @@ namespace Simulation.Simulations
 
         /// <summary>
         /// Create simulation, returns string[] where at index:
-        /// 0 - Best route,
-        /// 1 - probability of manage in time
+        /// 0 - A-B-C-D-E,
+        /// 1 - A-F-H-D-E,
+        /// 2 - A-F-G-E
+        /// 3 - Best route,
+        /// 4 - probability of manage in time
         /// </summary>
         /// <returns></returns>
-        public override string[] Simulate()
+        public override string[] Simulate(int replicationCount)
         {
-            int bestRoute = GetBestRoute();
+            int bestRoute = 2;
+
+            double route_ABCDE = 0;
+            double route_AFHDE = 0;
+            double route_AFGE = 0;
 
             TimeSpan timeStart = new TimeSpan(7, 30, 0);
             TimeSpan timeEnd = new TimeSpan(15, 0, 0);
 
             int positive = 0;
 
-            for (int i = 0; i < _replicationCount; i++)
+            for (int i = 0; i < replicationCount; i++)
             {
-                var time = CalculateBestRoute(bestRoute);
+                positive += CalculateOneReplicationOfTime(timeEnd - timeStart);
 
-                if (time <= (timeEnd - timeStart).TotalMinutes)
-                {
-                    positive++;
-                }
-            }
-
-            double p = (double)positive / _replicationCount;
-
-            return new string[]
-            {
-                bestRoute.ToString(),
-                p.ToString()
-            };
-
-        }
-
-        private static double CalculateBestRoute(int bestRoute)
-        {
-            switch (bestRoute)
-            {
-                case 0:
-                    return CalculateRoute_ABCDE();
-                case 1:
-                    return CalculateRoute_AFHDE();
-                case 2:
-                    return CalculateRoute_AFGE();
-                default:
-                    return double.NaN;
-            }
-        }
-
-        private static double CalculateRoute_ABCDE()
-        {
-            return AB.GetNext() + BC.GetNext() + CD.GetNext() + DE.GetNext();
-        }
-
-        private static double CalculateRoute_AFHDE()
-        {
-            double route = 0;
-
-            if (_random.NextDouble() > 0.05)
-                route += AF.GetNext() + FH.GetNext() + HD.GetNext() + DE.GetNext();
-            else
-                route += AF.GetNext() + FH.GetNext() + HC.GetNext() + CD.GetNext() + DE.GetNext();
-
-            return route;
-        }
-
-        private static double CalculateRoute_AFGE()
-        {
-            return AF.GetNext() + FG.GetNext() + GE.GetNext();
-        }
-
-        /// <summary>
-        /// Returns index of the best route:
-        /// 0 - A-B-C-D-E,
-        /// 1 - A-F-H-D-E,
-        /// 2 - A-F-G-E
-        /// </summary>
-        /// <returns></returns>
-        private int GetBestRoute()
-        {
-            double route_ABCDE = 0;
-            double route_AFHDE = 0;
-            double route_AFGE = 0;
-
-            for (int i = 0; i < _replicationCount; i++)
-            {
-
-                var ab = AB.GetNext();
-                var bc = BC.GetNext();
-                var cd = CD.GetNext();
-                var de = DE.GetNext();
-                var af = AF.GetNext();
-                var fh = FH.GetNext();
-                var hd = HD.GetNext();
-                var hc = HC.GetNext();
-                var fg = FG.GetNext();
-                var ge = GE.GetNext();
-
-                route_ABCDE += ab + bc + cd + de;
-
-                if (_random.NextDouble() > 0.05)
-                    route_AFHDE += af + fh + hd + de;
-                else
-                    route_AFHDE += af + fh + hc + cd + de;
-
-                route_AFGE += af + fg + ge;
+                GetBestRouteReplication(ref route_ABCDE, ref route_AFHDE, ref route_AFGE);
 
                 var s = new string[]
                 {
-                    (route_AFGE / (i + 1)).ToString(),
                     (route_ABCDE / (i + 1)).ToString(),
                     (route_AFHDE / (i + 1)).ToString(),
                     (route_AFGE / (i + 1)).ToString(),
+                    (route_AFGE / (i + 1)).ToString(),
+                    ((double)positive / i).ToString()
                 };
 
                 OnReplicationFinished(s);
                 Thread.Sleep(1);
+                waitHandle.WaitOne();
             }
 
+            return new string[]
+            {
+                (route_ABCDE / (replicationCount + 1)).ToString(),
+                (route_AFHDE / (replicationCount + 1)).ToString(),
+                (route_AFGE / (replicationCount + 1)).ToString(),
+                (route_AFGE / (replicationCount + 1)).ToString(),
+                ((double)positive / replicationCount).ToString()
+            };
+        }
 
-            double route_ABCDE_Time = route_ABCDE / _replicationCount;
-            double route_AFHDE_Time = route_AFHDE / _replicationCount;
-            double route_AFGE_Time = route_AFGE / _replicationCount;
+        private int CalculateOneReplicationOfTime(TimeSpan timeSpan)
+        {
+            var time = AF.GetNext() + FG.GetNext() + GE.GetNext();
 
-            if (route_ABCDE_Time < route_AFHDE_Time && route_ABCDE_Time < route_AFGE_Time)
-                return 0;
-            else if (route_AFHDE_Time < route_ABCDE_Time && route_AFHDE_Time < route_AFGE_Time)
+            if (time <= (timeSpan).TotalMinutes)
+            {
                 return 1;
+            }
+
+            return 0;
+        }
+
+        private void GetBestRouteReplication(ref double route_ABCDE,
+            ref double route_AFHDE,ref double route_AFGE)
+        {
+            var ab = AB.GetNext();
+            var bc = BC.GetNext();
+            var cd = CD.GetNext();
+            var de = DE.GetNext();
+            var af = AF.GetNext();
+            var fh = FH.GetNext();
+            var hd = HD.GetNext();
+            var hc = HC.GetNext();
+            var fg = FG.GetNext();
+            var ge = GE.GetNext();
+
+            route_ABCDE += ab + bc + cd + de;
+
+            if (_random.NextDouble() > 0.05)
+                route_AFHDE += af + fh + hd + de;
             else
-                return 2;
+                route_AFHDE += af + fh + hc + cd + de;
+
+            route_AFGE += af + fg + ge;
+           
+        }
+
+        public void OnPauseClick()
+        {
+            waitHandle.Reset();
+        }
+
+        public void OnResumeClick()
+        {
+            waitHandle.Set();
         }
     }
 }
