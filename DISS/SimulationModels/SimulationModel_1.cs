@@ -31,14 +31,12 @@ namespace DISS.SimulationModels
 
         #endregion
 
-        public SimulationModel_1(Random random) : base(random)
+        public SimulationModel_1() : base()
         {
-            simulationS1 = new S1(random);
+            simulationS1 = new S1();
             simulationS1.ReplicationFinished += SimulationS1_ReplicationFinished;
+            Simulation = simulationS1;
         }
-
-      
-        public override event EventHandler<string[]> SimulationReplicationFinished;
 
         public override void ResumeSimulation()
         {
@@ -50,9 +48,9 @@ namespace DISS.SimulationModels
             throw new NotImplementedException();
         }
 
-        public override void StartSimulation(int replicationCount)
+        public override void StartSimulation(Random random,int replicationCount)
         {
-            simulationS1.Simulate(replicationCount);
+            simulationS1.Simulate(random,replicationCount);
         }
 
         public override void PauseSimulation()
@@ -62,13 +60,7 @@ namespace DISS.SimulationModels
 
         public override void SimulationS1_ReplicationFinished(object sender, string[] e)
         {
-            OnSimulationReplicationFinished(e);
             SimulationData = e;
-        }
-
-        protected virtual void OnSimulationReplicationFinished(string[] e)
-        {
-            SimulationReplicationFinished?.Invoke(this, e);
         }
     }
 }

@@ -29,11 +29,11 @@ namespace DISS.SimulationPages
         public SimulationModel simulationModel { get; }
         public bool SimulationRunning { get; private set; }
         private Thread _simulationThread;
-        public Page_S1(Random random)
+        public Page_S1()
         {
             InitializeComponent();
-            
-            simulationModel = new SimulationModel_1(random);
+
+            simulationModel = new SimulationModel_1();
             DataContext = simulationModel;
         }
 
@@ -42,9 +42,10 @@ namespace DISS.SimulationPages
             _simulationThread = new Thread(() =>
             {
                 SimulationRunning = true;
-                simulationModel.StartSimulation(replicationCount);
+                simulationModel.StartSimulation(random,replicationCount);
             });
 
+            _simulationThread.IsBackground = true;
             _simulationThread.Start();
         }
 

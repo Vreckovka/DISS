@@ -6,7 +6,6 @@ namespace Simulation.Simulations
 {
     public class S1 : BaseSimulation
     {
-        private static Random _random;
 
         private static EventWaitHandle waitHandle = new ManualResetEvent(true);
 
@@ -28,22 +27,24 @@ namespace Simulation.Simulations
         #endregion
 
 
-        public S1(Random random) : base(random)
+        public S1() : base()
         {
-            _random = random;
+        }
 
-            AB = new UniformContinuousDistribution(170, 217, _random);
-            BC = new UniformContinuousDistribution(120, 230, _random);
-            CD = new UniformContinuousDistribution(50, 70, _random);
-            DE = new UniformContinuousDistribution(19, 36, _random);
-            AF = new UniformContinuousDistribution(150, 240, _random);
-            FH = new UniformContinuousDistribution(30, 62, _random);
-            HC = new UniformContinuousDistribution(150, 220, _random);
-            HD = new UniformContinuousDistribution(170, 200, _random);
+        private void CreateDistributions(Random random)
+        {
+            AB = new UniformContinuousDistribution(170, 217, random);
+            BC = new UniformContinuousDistribution(120, 230, random);
+            CD = new UniformContinuousDistribution(50, 70, random);
+            DE = new UniformContinuousDistribution(19, 36, random);
+            AF = new UniformContinuousDistribution(150, 240, random);
+            FH = new UniformContinuousDistribution(30, 62, random);
+            HC = new UniformContinuousDistribution(150, 220, random);
+            HD = new UniformContinuousDistribution(170, 200, random);
 
-            FG = new DiscreetEmpiricalDistribution(170, 195, 0.2, 196, 280, 0.8, _random);
+            FG = new DiscreetEmpiricalDistribution(170, 195, 0.2, 196, 280, 0.8, random);
 
-            GE = new UniformDiscreetDistribution(20, 49, _random);
+            GE = new UniformDiscreetDistribution(20, 49, random);
         }
 
         /// <summary>
@@ -55,9 +56,13 @@ namespace Simulation.Simulations
         /// 4 - probability of manage in time
         /// </summary>
         /// <returns></returns>
-        public override string[] Simulate(int replicationCount)
+        public override string[] Simulate(Random random, int replicationCount)
         {
+            CreateDistributions(random);
+
             int bestRoute = 2;
+            SpinWait sw = new SpinWait();
+            sw.SpinOnce();
 
             double route_ABCDE = 0;
             double route_AFHDE = 0;
@@ -72,7 +77,7 @@ namespace Simulation.Simulations
             {
                 positive += CalculateOneReplicationOfTime(timeEnd - timeStart);
 
-                GetBestRouteReplication(ref route_ABCDE, ref route_AFHDE, ref route_AFGE);
+                GetBestRouteReplication(random,ref route_ABCDE, ref route_AFHDE, ref route_AFGE);
 
                 var s = new string[]
                 {
@@ -84,7 +89,12 @@ namespace Simulation.Simulations
                 };
 
                 OnReplicationFinished(s);
-                Thread.Sleep(1);
+                
+                sw.SpinOnce();
+                //sw.SpinOnce();
+                //sw.SpinOnce();
+
+                // Thread.Sleep(1);
                 waitHandle.WaitOne();
             }
 
@@ -110,8 +120,8 @@ namespace Simulation.Simulations
             return 0;
         }
 
-        private void GetBestRouteReplication(ref double route_ABCDE,
-            ref double route_AFHDE,ref double route_AFGE)
+        private void GetBestRouteReplication(Random random,ref double route_ABCDE,
+            ref double route_AFHDE, ref double route_AFGE)
         {
             var ab = AB.GetNext();
             var bc = BC.GetNext();
@@ -126,13 +136,13 @@ namespace Simulation.Simulations
 
             route_ABCDE += ab + bc + cd + de;
 
-            if (_random.NextDouble() > 0.05)
+            if (random.NextDouble() > 0.05)
                 route_AFHDE += af + fh + hd + de;
             else
                 route_AFHDE += af + fh + hc + cd + de;
 
             route_AFGE += af + fg + ge;
-           
+
         }
 
         public void OnPauseClick()

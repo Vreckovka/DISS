@@ -7,11 +7,11 @@ namespace Simulation
 
         public event EventHandler<string[]> ReplicationFinished;
 
-        public BaseSimulation(Random random)
+        public BaseSimulation()
         {
         }
 
-        public abstract string[] Simulate(int replicationCount);
+        public abstract string[] Simulate(Random random,int replicationCount);
 
         protected virtual void OnReplicationFinished(string[] e)
         {

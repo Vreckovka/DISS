@@ -6,7 +6,7 @@
                     x:Class="DISS.StylesDictionary">
 
     <Color x:Key="BackgroudColor" R="21" G="18" B="29" A="255"/>
-    <Color x:Key="BackgroudColor2" R="31" G="28" B="39" A="255"/>
+    <Color x:Key="BackgroudColor2" R="26" G="22" B="34" A="255"/>
     <Color x:Key="DefaultRedColor" R="254" G="27" B="72" A="255"/>
     <Color x:Key="DefaultRedTransparentColor" R="254" G="27" B="72" A="50"/>
     <Color x:Key="DefaultWhiteColor" R="219" G="213" B="245" A="255"/>
@@ -52,7 +52,7 @@
                         <Trigger Property="IsPressed" Value="True">
                             <Setter Property="Background" Value="Transparent" />
                             <Setter TargetName="PathIcon" Property="Fill" Value="{DynamicResource DefaultRedBrush}" />
-                          </Trigger>
+                        </Trigger>
 
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Background" Value="{DynamicResource DefaultRedTransparentBrush}"/>
@@ -72,7 +72,7 @@
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border CornerRadius="4" Background="{TemplateBinding Background}" Padding="7">
                         <Grid Background="Transparent">
-                            
+
                             <Path x:Name="PathIcon"
                             Stretch="Fill"
                             Data="M346.8,61.2C311.1,22.95,260.1,0,204,0C91.8,0,0,91.8,0,204s91.8,204,204,204c94.35,0,173.4-66.3,196.35-153H346.8
@@ -181,12 +181,10 @@
 
 
     <!--Window style    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa              -->
-
-
     <Style x:Key="ButtonStyleWindows" TargetType="{x:Type Button}">
-        <Setter Property="Foreground" Value="{DynamicResource LightGold}" />
-        <Setter Property="Background" Value="#333333"/>
+        <Setter Property="Foreground" Value="{DynamicResource DefaultWhiteBrush}" />
         <Setter Property="FontSize" Value="15" />
+        <Setter Property="Background" Value="Transparent" />
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
@@ -194,19 +192,14 @@
 
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Border  Name="Border" Background="Transparent" Padding="5">
+                    <Border  Name="Border" Background="{TemplateBinding Background}" Padding="5">
                         <ContentPresenter Content="{TemplateBinding Content}" />
                     </Border>
 
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
                             <Setter Property="Cursor" Value="Hand" />
-
-                            <Setter Property="Effect">
-                                <Setter.Value>
-                                    <DropShadowEffect ShadowDepth="0" Color="#FFFFEECA" Opacity="1" BlurRadius="5"/>
-                                </Setter.Value>
-                            </Setter>
+                            <Setter Property="Background" Value="{DynamicResource DefaultRedBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
 
@@ -215,6 +208,52 @@
         </Setter>
     </Style>
 
+    <Style
+       TargetType="{x:Type CheckBox}" >
+        <Setter Property="SnapsToDevicePixels"
+          Value="true" />
+        <Setter Property="OverridesDefaultStyle"
+          Value="true" />
+        <Setter Property="FocusVisualStyle"
+          Value="{DynamicResource CheckBoxFocusVisual}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate   
+                 TargetType="{x:Type CheckBox}">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                        <Grid>
+                            <ContentPresenter 
+                                Content="{TemplateBinding Content}" 
+                                ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                Margin="{TemplateBinding Padding}" 
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            <Border BorderBrush="{DynamicResource DefaultWhiteBrush}" BorderThickness="1">
+                                <Border.Background>
+                                    <VisualBrush Opacity="1">
+                                        <VisualBrush.Visual>
+                                            <Path Name="path" />
+                                        </VisualBrush.Visual>
+                                    </VisualBrush>
+                                </Border.Background>
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="path" Property="Data" Value="M 0 5 L 3 10 10 0" />
+                            <Setter TargetName="path" Property="Stroke" Value="{DynamicResource DefaultWhiteBrush}" />
+                            <Setter TargetName="path" Property="StrokeThickness" Value="2" />
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground"   Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <Style TargetType="{x:Type TextBox}">
         <Setter Property="OverridesDefaultStyle" Value="True" />
@@ -223,19 +262,16 @@
         <Setter Property="Foreground" Value="{DynamicResource DefaultWhiteBrush}"/>
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DefaultWhiteBrush}"/>
         <Setter Property="MinWidth" Value="45"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBoxBase}">
                     <Grid>
-                        <Border CornerRadius="1" BorderThickness="0,0,0,1.2">
+                        <Border CornerRadius="1" BorderThickness="0,0,0,1.2" BorderBrush="{Binding RelativeSource={RelativeSource AncestorType=TextBox},Path=BorderBrush}">
                             <Border.Background>
                                 <SolidColorBrush Color="Transparent" />
                             </Border.Background>
-
-                            <Border.BorderBrush>
-                                <SolidColorBrush Color="{DynamicResource DefaultWhiteColor}" />
-                            </Border.BorderBrush>
 
                             <ScrollViewer Margin="0" x:Name="PART_ContentHost" />
                         </Border>
@@ -250,9 +286,13 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
-                    <Border >
+                    <Border Padding="0,0,10,10" CornerRadius="50">
                         <Grid>
-                            <Border Background="{DynamicResource BackgroudBrush}" />
+                            <Border CornerRadius="10" Background="{DynamicResource BackgroudBrush}">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="Black" ShadowDepth="10" Opacity="0.3" />
+                                </Border.Effect>
+                            </Border>
 
                             <!--The main window content-->
                             <Grid>
@@ -262,11 +302,10 @@
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
 
-                                <Grid Grid.Column="0" Panel.ZIndex="1" Height="45" 
-                                      Background="{StaticResource TopWindowsColor}">
+                                <Grid Panel.ZIndex="1" Background="{DynamicResource TopWindowsColor}" x:Name="WindowsChromeGrid">
                                     <!--Title-->
-                                    <TextBlock Text="{Binding WindowTitle}" 
-                                               Foreground="{DynamicResource LightGold}" 
+                                    <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=Title}" 
+                                               Foreground="{DynamicResource DefaultWhiteBrush}" 
                                                HorizontalAlignment="Center" 
                                                Margin="10"
                                                FontSize="15"/>
@@ -275,19 +314,16 @@
                                                 Orientation="Horizontal" 
                                                 HorizontalAlignment="Right">
                                         <Button x:Name="MinimizeButt"  
-                                                Background="Transparent" 
                                                 Content="_" 
                                                 Style="{DynamicResource ButtonStyleWindows}" 
                                                 Click="MinimizeButt_Click" 
                                                 Tag="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
                                         <Button x:Name="MaximizeButt"
-                                                Background="Transparent" 
-                                                Content="{Binding IsMaxed}" 
+                                                Content="[ ]" 
                                                 Style="{DynamicResource ButtonStyleWindows}" 
                                                 Click="MaximizeButt_Click" 
                                                 Tag="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
                                         <Button x:Name="CloseButt" 
-                                                Background="Transparent" 
                                                 Content="X" 
                                                 Margin="0,0,10,0"
                                                 Style="{DynamicResource ButtonStyleWindows}" 
@@ -295,6 +331,7 @@
                                                 Tag="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
                                     </StackPanel>
                                 </Grid>
+
                                 <Border Grid.Row="2" >
                                     <ContentPresenter Content="{TemplateBinding Content}" />
                                 </Border>
@@ -307,7 +344,7 @@
 
         <Setter Property="WindowChrome.WindowChrome">
             <Setter.Value>
-                <WindowChrome ResizeBorderThickness="5" CaptionHeight="40"/>
+                <WindowChrome ResizeBorderThickness="5" CaptionHeight="35"/>
             </Setter.Value>
         </Setter>
     </Style>

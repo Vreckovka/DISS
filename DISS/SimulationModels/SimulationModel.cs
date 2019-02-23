@@ -7,21 +7,21 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DISS.Annotations;
+using Simulation;
 
 namespace DISS.SimulationModels
 {
     public abstract class SimulationModel : INotifyPropertyChanged
     {
-        public abstract event EventHandler<string[]> SimulationReplicationFinished;
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public SimulationModel(Random random)
+        public BaseSimulation Simulation { get; set; }
+        public SimulationModel()
         {
         }
 
         public abstract void ResumeSimulation();
         public abstract void SimulationFinished();
-        public abstract void StartSimulation(int replicationCount);
+        public abstract void StartSimulation(Random random,int replicationCount);
         public abstract void PauseSimulation();
         public abstract void SimulationS1_ReplicationFinished(object sender, string[] e);
 
