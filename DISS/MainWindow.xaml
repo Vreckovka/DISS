@@ -12,7 +12,7 @@
         MinHeight="450" 
         MinWidth="800"
         Height="700"
-        Width="1000"
+        Width="1200"
         WindowStartupLocation="CenterScreen"
         AllowsTransparency="True" 
         Style="{DynamicResource WindowStyle}" 
@@ -20,247 +20,27 @@
         Loaded="WindowLoaded"
         >
 
+   
+
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <Grid Grid.Row="1" Margin="0 10 0 0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-
-                <Border 
-                    Background="{StaticResource DefaultWhiteTransparentBrush}" 
-                    Margin="250,10" >
-
-                    <Border.Effect>
-                        <DropShadowEffect Color="#FF110D32" Opacity="1" BlurRadius="10" ShadowDepth="8"/>
-                    </Border.Effect>
-
-                    <Grid HorizontalAlignment="Center" >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Button PreviewMouseLeftButtonUp="RefreshSimulation_Click" 
-                        BorderThickness="0"
-                        Tag="Pause"
-                        Margin="15"
-                        Style="{StaticResource RefreshButton}"
-                        />
-
-                        <Button PreviewMouseLeftButtonUp="StartSimulation_Click"  
-                        BorderThickness="0"
-                        Style="{StaticResource PlayButton}"
-                        Tag="Pause"
-                        x:Name="Play_Button"
-                        Margin="7"
-                        Grid.Column="1"
-                        Padding="15"
-                         >
-                            <Path Data="m 17.34375,7.78125 0,16.90625 0,16.9375 
-                              L 30.875,33.21875 44.53125,24.6875 30.875,16.1875 
-                              17.34375,7.78125 z"
-                              Fill="AliceBlue"
-                              Width="20"
-                              Height="20"
-                              Stretch="Fill"
-                              x:Name="PlayButtonData"
-                              />
-                        </Button>
-
-                        <Button PreviewMouseLeftButtonUp="StopSimulation_Click"  
-                        BorderThickness="0"
-                        Style="{StaticResource StopButton}" 
-                        Grid.Column="2"
-                        Margin="15"
-                        />
-                    </Grid>
-                </Border>
-
-                <Border  Grid.Row="1"
-                         Background="{StaticResource TopWindowsColor}"
-                         Padding="5">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Grid Margin="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                            </Grid.RowDefinitions>
-
-                            <TextBlock Text="Number of iteration: " FontSize="15"/>
-                            <TextBlock Grid.Row="1" 
-                                       Text="Actual iteration: " 
-                                       FontSize="15"
-                                       Margin="0,8"/>
-                        </Grid>
-
-                        <Border BorderBrush="{StaticResource DefaultWhiteTransparentBrush}"
-                                BorderThickness="0,0,3,0"
-                                Grid.Column="1">
-                            <Grid Margin="5,0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
-                                </Grid.RowDefinitions>
-                                <TextBox  FontSize="15" KeyUp="TextBox_KeyUp" 
-                                      x:Name="TextBox_NumberOfIteration" 
-                                      Text="1 000 000"/>
-
-                                <TextBlock FontSize="15" 
-                                       Grid.Row="1"
-                                       Margin="0,8"
-                                       TextAlignment="Center"
-                                       x:Name="TextBlock_ActualIteration"
-                                       Text="{Binding ActualIteration, StringFormat={}{0:N0}}"/>
-                            </Grid>
-                        </Border>
-
-                        <Grid Margin="5,0" Grid.Column="2">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                            </Grid.RowDefinitions>
-
-                            <TextBlock Text="Seed: " FontSize="15" Margin="0,8"/>
-                            <TextBlock Grid.Row="1" Text="Random Seed: " FontSize="15"/>
-                        </Grid>
-
-                        <Grid Grid.Column="3" Margin="5,0,0,0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                            </Grid.RowDefinitions>
-                            <TextBox  FontSize="15" Margin="0,8" KeyUp="TextBox_KeyUp" x:Name="TextBox_Seed">
-                                <TextBox.Style>
-                                    <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ElementName=CheckBox_RandomSeed, Path=IsChecked}" Value="True">
-                                                <Setter Property="BorderBrush" Value="{StaticResource DefaultRedTransparentBrush}"/>
-                                                <Setter Property="IsEnabled" Value="False"/>
-                                                <Setter Property="Foreground" Value="{StaticResource DefaultRedTransparentBrush}"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding ElementName=CheckBox_RandomSeed, Path=IsChecked}" Value="False">
-                                                <Setter Property="BorderBrush" Value="{StaticResource DefaultWhiteBrush}"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBox.Style>
-                            </TextBox>
-
-                            <CheckBox Grid.Row="1" 
-                                      HorizontalAlignment="Left" 
-                                      VerticalAlignment="Center" 
-                                      x:Name="CheckBox_RandomSeed"
-                                      Width="15"
-                                      Height="15"
-                                      IsChecked="True"
-                                      >
-                            </CheckBox>
-                        </Grid>
-                    </Grid>
-                </Border>
-            </Grid>
-
-            <Grid Grid.Row="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <Frame x:Name="Frame_Simulation" Margin="0,10"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
 
-                <Grid Grid.Row="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
+        <ListView Background="{DynamicResource BackgroudBrush}" 
+                          BorderThickness="0,0,5,0"
+                          BorderBrush="{DynamicResource DefaultWhiteTransparentBrush}"
+                          FontSize="15" SelectionChanged="ListView_SelectionChanged"
+                            >
 
-                    <Button Content="Reset Chart" x:Name="ResetButt" 
-                             HorizontalAlignment="Left" VerticalAlignment="Top" 
-                             Click="ResetButt_Click"
-                             Margin="5"
-                             Padding="6"
-                             Foreground="{StaticResource DefaultWhiteBrush}">
-                        <Button.Style>
-                            <Style BasedOn="{StaticResource PlayButton}" TargetType="Button">
-                                <Setter Property="Background" Value="#FFCB2249"/>
-                            </Style>
-                        </Button.Style>
-                    </Button>
+            <ListViewItem Content="Live Simulation" 
+                          IsSelected="True" />
+            <ListViewItem Content="Simulation Runs" />
+        </ListView>
 
-                    <lvc:CartesianChart Hoverable="False" 
-                                        DataTooltip="{x:Null}"
-                                        DisableAnimations="True"
-                                        LegendLocation="Right"
-                                        Zoom="X"
-                                        Pan="X"
-                                        x:Name="Chart"
-                                        Grid.Row="1"
-                                        Margin="10"
-                                       >
-
-                        <lvc:CartesianChart.Series>
-                            <geared:GLineSeries   
-                                                x:Name="Chart_Line"
-                                                Fill="Transparent"
-                                                PointGeometry="{x:Null}"
-                                                LineSmoothness="0"
-                                                Title="A-F-G-E"
-                                                Stroke="{StaticResource DefaultRedBrush}"
-                                                >
-                            </geared:GLineSeries>
-
-                        </lvc:CartesianChart.Series>
-
-                        <lvc:CartesianChart.AxisX>
-                            <lvc:AxesCollection>
-                                <lvc:Axis Foreground="{StaticResource DefaultWhiteBrush}" 
-                                      Title="Number of iteration" 
-                                      Position="LeftBottom"
-                                      FontSize="15"
-                                      >
-                                    <lvc:Axis.Separator>
-                                        <lvc:Separator Style="{StaticResource CleanSeparator}"/>
-                                    </lvc:Axis.Separator>
-                                </lvc:Axis>
-                            </lvc:AxesCollection>
-                        </lvc:CartesianChart.AxisX>
-
-                        <lvc:CartesianChart.AxisY>
-                            <lvc:AxesCollection>
-                                <lvc:Axis Foreground="{StaticResource DefaultWhiteBrush}" 
-                                          Title="Time (minutes)" 
-                                          FontSize="15"
-                                            >
-                                    <lvc:Axis.Separator>
-                                        <lvc:Separator Style="{StaticResource CleanSeparator}"></lvc:Separator>
-                                    </lvc:Axis.Separator>
-                                </lvc:Axis>
-                            </lvc:AxesCollection>
-                        </lvc:CartesianChart.AxisY>
-                    </lvc:CartesianChart>
-                </Grid>
-            </Grid>
-        </Grid>
+        <Frame x:Name="Frame_Simulation" Grid.Column="1" NavigationUIVisibility="Hidden"/>
+       
     </Grid>
 </Window>

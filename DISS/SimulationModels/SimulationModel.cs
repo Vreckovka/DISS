@@ -19,6 +19,7 @@ namespace DISS.SimulationModels
         {
         }
 
+        public abstract void SetSimulationSpeed(int speed);
         public abstract void ResumeSimulation();
         public abstract void SimulationFinished();
         public abstract void StartSimulation(Random random,int replicationCount);

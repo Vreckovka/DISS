@@ -25,7 +25,6 @@ namespace DISS.SimulationModels
                     OnPropertyChanged(nameof(SimulationData));
                     _simulationData = value;
                 }
-
             }
         }
 
@@ -36,6 +35,11 @@ namespace DISS.SimulationModels
             simulationS1 = new S1();
             simulationS1.ReplicationFinished += SimulationS1_ReplicationFinished;
             Simulation = simulationS1;
+        }
+
+        public override void SetSimulationSpeed(int speed)
+        {
+            simulationS1.SimulationDelay = speed;
         }
 
         public override void ResumeSimulation()

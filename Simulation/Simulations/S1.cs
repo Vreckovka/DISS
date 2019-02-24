@@ -6,9 +6,6 @@ namespace Simulation.Simulations
 {
     public class S1 : BaseSimulation
     {
-
-        private static EventWaitHandle waitHandle = new ManualResetEvent(true);
-
         #region Distributions
 
         private static UniformContinuousDistribution AB;
@@ -25,7 +22,6 @@ namespace Simulation.Simulations
         private static UniformDiscreetDistribution GE;
 
         #endregion
-
 
         public S1() : base()
         {
@@ -61,9 +57,7 @@ namespace Simulation.Simulations
             CreateDistributions(random);
 
             int bestRoute = 2;
-            SpinWait sw = new SpinWait();
-            sw.SpinOnce();
-
+            
             double route_ABCDE = 0;
             double route_AFHDE = 0;
             double route_AFGE = 0;
@@ -88,13 +82,11 @@ namespace Simulation.Simulations
                     ((double)positive / i).ToString()
                 };
 
-                OnReplicationFinished(s);
-                
-                sw.SpinOnce();
-                //sw.SpinOnce();
-                //sw.SpinOnce();
 
-                // Thread.Sleep(1);
+                OnReplicationFinished(s);
+
+                ManageSimulationSpeed();
+
                 waitHandle.WaitOne();
             }
 
@@ -143,16 +135,6 @@ namespace Simulation.Simulations
 
             route_AFGE += af + fg + ge;
 
-        }
-
-        public void OnPauseClick()
-        {
-            waitHandle.Reset();
-        }
-
-        public void OnResumeClick()
-        {
-            waitHandle.Set();
         }
     }
 }
