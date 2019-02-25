@@ -9,6 +9,144 @@
       Title="SimulationRuns_Page">
 
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Margin="8,5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Number of replications" />
+                <TextBox Grid.Row="1" x:Name="TextBox_NumberOfReplication" KeyUp="TextBox_KeyUp" Text="100 000"/>
+            </Grid>
+
+            <Grid Grid.Column="1" Margin="8,5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Number of runs"/>
+                <TextBox Grid.Row="1" x:Name="TextBox_NumberOfRuns" KeyUp="TextBox_KeyUp" Text="1 000"/>
+
+            </Grid>
+            <Button Content="Start" Grid.Column="2" Margin="8,5" Width="80" Click="Start_Click"/>
+            <Button Content="Stop" Grid.Column="3" Margin="0,5" Width="80" Click="Stop_Click"/>
+        </Grid>
+
+        <DataGrid Grid.Row="1" Margin="2,10" 
+                  Background="Transparent" 
+                  AutoGenerateColumns="False" 
+                  IsReadOnly="True" 
+                  x:Name="DataGrid_SimulationRuns" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Simulation number" Width="*" Binding="{Binding [0]}"/>
+                <DataGridTextColumn Header="Simulation outcome"  Width="*" Binding="{Binding [1]}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border BorderBrush="{StaticResource DefaultWhiteTransparentBrush}" BorderThickness="0,0,3,0">
+                <Grid Margin="0,10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock HorizontalAlignment="Center" FontSize="15" TextAlignment="Center" Margin="5">
+                    <Run Text="Avrage time of routes"/>
+                    </TextBlock>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="A-B-C-D-E: "/>
+                            <TextBlock Grid.Row="1" Text="A-F-H-D-E: "/>
+                            <TextBlock Grid.Row="2" Text="A-F-G-E: "/>
+
+                        </Grid>
+
+                        <Grid Margin="10" Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="{Binding AvrageData[0]}"/>
+                            <TextBlock Grid.Row="1" Text="{Binding AvrageData[1]}"/>
+                            <TextBlock Grid.Row="2" Text="{Binding AvrageData[2]}"/>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Column="1"  Margin="0,10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock HorizontalAlignment="Center" FontSize="15" TextAlignment="Center" Margin="5">
+                <Run Text="Probability of time less then 450 min."/>
+                <LineBreak />
+                <Run Text="by route A-F-G-E"/>
+                </TextBlock>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Margin="10" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Probability: "/>
+                    </Grid>
+
+                    <Grid Margin="10" Grid.Column="1" Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+
+                        <TextBlock Text="{Binding AvrageData[3]}"/>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
     </Grid>
 </Page>

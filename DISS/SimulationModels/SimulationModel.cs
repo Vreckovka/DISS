@@ -23,8 +23,9 @@ namespace DISS.SimulationModels
         public abstract void ResumeSimulation();
         public abstract void SimulationFinished();
         public abstract void StartSimulation(Random random,int replicationCount);
+        public abstract void StartRuns (int runsCount, int replicationCount);
         public abstract void PauseSimulation();
-        public abstract void SimulationS1_ReplicationFinished(object sender, string[] e);
+        public abstract void SimulationS1_ReplicationFinished(object sender, double[] e);
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

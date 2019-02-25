@@ -10,12 +10,12 @@ namespace DISS.SimulationModels
 {
     class SimulationModel_1 : SimulationModel
     { 
-        private string[] _simulationData;
+        private double[] _simulationData;
         private S1 simulationS1;
 
         #region Properties
       
-        public string[] SimulationData
+        public double[] SimulationData
         {
             get { return _simulationData; }
             set
@@ -54,7 +54,12 @@ namespace DISS.SimulationModels
 
         public override void StartSimulation(Random random,int replicationCount)
         {
-            simulationS1.Simulate(random,replicationCount);
+            simulationS1.Simulate(random,replicationCount, true);
+        }
+
+        public override void StartRuns(int runsCount, int replicationCount)
+        {
+            simulationS1.SimulateRuns(runsCount, replicationCount);
         }
 
         public override void PauseSimulation()
@@ -62,7 +67,7 @@ namespace DISS.SimulationModels
             simulationS1.OnPauseClick();
         }
 
-        public override void SimulationS1_ReplicationFinished(object sender, string[] e)
+        public override void SimulationS1_ReplicationFinished(object sender, double[] e)
         {
             SimulationData = e;
         }

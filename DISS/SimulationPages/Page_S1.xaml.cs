@@ -49,6 +49,18 @@ namespace DISS.SimulationPages
             _simulationThread.Start();
         }
 
+        public void StartRuns(int runsCount, int replicationCount)
+        {
+            _simulationThread = new Thread(() =>
+            {
+                SimulationRunning = true;
+                simulationModel.StartRuns(runsCount, replicationCount);
+            });
+
+            _simulationThread.IsBackground = true;
+            _simulationThread.Start();
+        }
+
         public void StopSimulation()
         {
             _simulationThread.Abort();

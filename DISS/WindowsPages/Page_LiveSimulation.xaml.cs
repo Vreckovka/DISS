@@ -89,9 +89,9 @@ namespace DISS.WindowsPages
             }
         }
 
-        private void SimulationModel_SimulationReplicationFinished(object sender, string[] e)
+        private void SimulationModel_SimulationReplicationFinished(object sender, double[] e)
         {
-            ChartValues.Add(new ObservableValue(Convert.ToDouble(e[3].Replace('.', ','))));
+            ChartValues.Add(new ObservableValue(e[3]));
             ActualIteration = ChartValues.Count;
         }
 

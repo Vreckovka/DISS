@@ -75,7 +75,7 @@
     </Style>
 
     <Style x:Key="PlayButton" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
-      <Setter Property="Template">
+        <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border CornerRadius="4" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
@@ -85,7 +85,7 @@
                             <ContentPresenter x:Name="MyContentPresenter" Content="{TemplateBinding Content}" 
                                               HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
                         </Grid>
-                       
+
                     </Border>
 
                     <ControlTemplate.Triggers>
@@ -154,7 +154,7 @@
     </Style>
 
     <Style x:Key="StopButton" TargetType="{x:Type Button}" >
-         <Setter Property="Effect">
+        <Setter Property="Effect">
             <Setter.Value>
                 <DropShadowEffect BlurRadius="5" ShadowDepth="2" Color="Black" Opacity="1"/>
             </Setter.Value>
@@ -668,11 +668,73 @@
                                         <ColorAnimation Storyboard.TargetProperty="Background.Color" To="Transparent" Duration="0:0:0:.2" />
                                     </Storyboard>
                                 </BeginStoryboard>
-                               </Trigger.ExitActions>
+                            </Trigger.ExitActions>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="{x:Type DataGrid}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource DefaultWhiteTransparentBrush}"/>
+        <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource DefaultWhiteTransparentBrush}"/>
+        <Setter Property="GridLinesVisibility" Value="All"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="CanUserResizeRows" Value="False"/>
+        <Setter Property="HeadersVisibility" Value="Column"/>
+
+        <Style.Resources>
+            <Style TargetType="DataGridColumnHeader">
+                <Setter Property="Width" Value="auto"/>
+                <Setter Property="Background" Value="{DynamicResource DefaultWhiteTransparentBrush}"></Setter>
+                <Setter Property="FontFamily" Value="Arial"></Setter>
+                <Setter Property="Foreground" Value="{DynamicResource DefaultWhiteBrush}"></Setter>
+                <Setter Property="FontSize" Value="15"></Setter>
+                <Setter Property="Padding" Value="5"></Setter>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="BorderThickness" Value="1.5,0,2,0"/>
+                <Setter Property="BorderBrush" Value="#05b3adcd"/>
+            </Style>
+
+            <Style TargetType="DataGridCell">
+
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type DataGridCell}">
+                            <Border BorderThickness="1.5,0,1.5,0"  
+                                    BorderBrush="{DynamicResource DefaultWhiteTransparentBrush}">
+                                <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Margin="5"
+                                                  VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+
+                </Setter>
+
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="true">
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <SolidColorBrush Opacity="0.2" Color="Black"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style TargetType="DataGridRow">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0,0,0,3"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource DefaultWhiteTransparentBrush}"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="FontFamily" Value="Arial"/>
+                <Setter Property="Foreground" Value="{DynamicResource DefaultWhiteBrush}"/>
+                <Setter Property="FontSize" Value="15"/>
+            </Style>
+        </Style.Resources>
+    </Style>
+
+
 </ResourceDictionary>

@@ -6,7 +6,9 @@ namespace Simulation
     public abstract class BaseSimulation
     {
         protected static EventWaitHandle waitHandle = new ManualResetEvent(true);
-        public event EventHandler<string[]> ReplicationFinished;
+        public event EventHandler<double[]> ReplicationFinished;
+        public event EventHandler<double[]> RunFinished;
+
         SpinWait sw = new SpinWait();
         public int SimulationDelay { get; set; }
 
@@ -14,7 +16,8 @@ namespace Simulation
         {
         }
 
-        public abstract string[] Simulate(Random random,int replicationCount);
+        public abstract double[] Simulate(Random random,int replicationCount, bool liveSimulation);
+        public abstract double[] SimulateRuns(int numberOfRuns, int numberOfReplication);
 
         protected void ManageSimulationSpeed()
         {
@@ -32,7 +35,7 @@ namespace Simulation
             }
         }
 
-        protected virtual void OnReplicationFinished(string[] e)
+        protected virtual void OnReplicationFinished(double[] e)
         {
             ReplicationFinished?.Invoke(this, e);
         }
@@ -45,6 +48,11 @@ namespace Simulation
         public void OnResumeClick()
         {
             waitHandle.Set();
+        }
+
+        protected virtual void OnRunFinished(double[] e)
+        {
+            RunFinished?.Invoke(this, e);
         }
     }
 }

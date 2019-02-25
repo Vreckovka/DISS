@@ -52,12 +52,12 @@ namespace Simulation.Simulations
         /// 4 - probability of manage in time
         /// </summary>
         /// <returns></returns>
-        public override string[] Simulate(Random random, int replicationCount)
+        public override double[] Simulate(Random random, int replicationCount, bool liveSimulation)
         {
             CreateDistributions(random);
 
             int bestRoute = 2;
-            
+
             double route_ABCDE = 0;
             double route_AFHDE = 0;
             double route_AFGE = 0;
@@ -71,32 +71,80 @@ namespace Simulation.Simulations
             {
                 positive += CalculateOneReplicationOfTime(timeEnd - timeStart);
 
-                GetBestRouteReplication(random,ref route_ABCDE, ref route_AFHDE, ref route_AFGE);
+                GetBestRouteReplication(random, ref route_ABCDE, ref route_AFHDE, ref route_AFGE);
 
-                var s = new string[]
+                var s = new double[]
                 {
-                    (route_ABCDE / (i + 1)).ToString(),
-                    (route_AFHDE / (i + 1)).ToString(),
-                    (route_AFGE / (i + 1)).ToString(),
-                    (route_AFGE / (i + 1)).ToString(),
-                    ((double)positive / i).ToString()
+                    (route_ABCDE / (i + 1)),
+                    (route_AFHDE / (i + 1)),
+                    (route_AFGE / (i + 1)),
+                    (route_AFGE / (i + 1)),
+                    ((double)positive / i)
                 };
 
 
-                OnReplicationFinished(s);
-
-                ManageSimulationSpeed();
-
-                waitHandle.WaitOne();
+                if (liveSimulation)
+                {
+                    ManageSimulationSpeed();
+                    OnReplicationFinished(s);
+                }
             }
 
-            return new string[]
+            return new double[]
             {
-                (route_ABCDE / (replicationCount + 1)).ToString(),
-                (route_AFHDE / (replicationCount + 1)).ToString(),
-                (route_AFGE / (replicationCount + 1)).ToString(),
-                (route_AFGE / (replicationCount + 1)).ToString(),
-                ((double)positive / replicationCount).ToString()
+                (route_ABCDE / (replicationCount)),
+                (route_AFHDE / (replicationCount)),
+                (route_AFGE / (replicationCount)),
+                (route_AFGE / (replicationCount)),
+                ((double)positive / replicationCount)
+            };
+        }
+
+        public override double[] SimulateRuns(int numberOfRuns, int numberOfReplication)
+        {
+            Random random = new Random();
+
+            long TOTAL_route_ABCDE = 0;
+            long TOTAL_route_AFHDE = 0;
+            long TOTAL_route_AFGE = 0;
+            long TOTAL_prop = 0;
+
+            for (int i = 0; i < numberOfRuns; i++)
+            {
+                double route_ABCDE = 0;
+                double route_AFHDE = 0;
+                double route_AFGE = 0;
+                double prop = 0;
+
+
+                var replicationOutput = Simulate(random, numberOfReplication, false);
+                route_ABCDE += Convert.ToDouble(replicationOutput[0]);
+                route_AFHDE += Convert.ToDouble(replicationOutput[1]);
+                route_AFGE += Convert.ToDouble(replicationOutput[2]);
+                prop += Convert.ToDouble(replicationOutput[4]);
+
+
+                TOTAL_route_ABCDE += (long)route_ABCDE;
+                TOTAL_route_AFHDE += (long)route_AFHDE;
+                TOTAL_route_AFGE += (long)route_AFGE;
+                TOTAL_prop += (long)prop;
+
+                OnRunFinished(new double[]
+                {
+                  route_ABCDE,
+                  route_AFHDE,
+                  route_AFGE,
+                  prop
+                });
+
+            }
+
+            return new double[]
+            {
+                (TOTAL_route_ABCDE / (numberOfRuns)),
+                (TOTAL_route_AFHDE / (numberOfRuns)),
+                (TOTAL_route_AFGE / (numberOfRuns)),
+                (TOTAL_prop / (numberOfRuns))
             };
         }
 
@@ -112,7 +160,7 @@ namespace Simulation.Simulations
             return 0;
         }
 
-        private void GetBestRouteReplication(Random random,ref double route_ABCDE,
+        private void GetBestRouteReplication(Random random, ref double route_ABCDE,
             ref double route_AFHDE, ref double route_AFGE)
         {
             var ab = AB.GetNext();
