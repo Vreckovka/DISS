@@ -53,7 +53,7 @@ namespace DISS.SimulationPages
         {
             _simulationThread = new Thread(() =>
             {
-                SimulationRunning = true;
+               SimulationRunning = true;
                 simulationModel.StartRuns(runsCount, replicationCount);
             });
 

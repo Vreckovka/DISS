@@ -137,11 +137,9 @@ namespace DISS.WindowsPages
 
         private void Start_Click(object sender, RoutedEventArgs e)
         {
-
             page_S1.StartRuns(ConvertToInt(TextBox_NumberOfRuns.Text),
                 ConvertToInt(TextBox_NumberOfReplication.Text));
-
-        }
+            }
 
         private void OnTimedEvent(object source, ElapsedEventArgs e)
         {

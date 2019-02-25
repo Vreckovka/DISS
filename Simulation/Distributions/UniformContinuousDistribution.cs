@@ -21,7 +21,8 @@ namespace Simulation.Distributions
 
         public override double GetNext()
         {
-            return _min + (_max - _min) * _random.NextDouble();
+            var random = _random.NextDouble();
+            return _min + (_max - _min) * random;
         }
     }
 }

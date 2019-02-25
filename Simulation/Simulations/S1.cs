@@ -8,18 +8,18 @@ namespace Simulation.Simulations
     {
         #region Distributions
 
-        private static UniformContinuousDistribution AB;
-        private static UniformContinuousDistribution BC;
-        private static UniformContinuousDistribution CD;
-        private static UniformContinuousDistribution DE;
-        private static UniformContinuousDistribution AF;
-        private static UniformContinuousDistribution FH;
-        private static UniformContinuousDistribution HC;
-        private static UniformContinuousDistribution HD;
+        private  UniformContinuousDistribution AB;
+        private  UniformContinuousDistribution BC;
+        private  UniformContinuousDistribution CD;
+        private  UniformContinuousDistribution DE;
+        private  UniformContinuousDistribution AF;
+        private  UniformContinuousDistribution FH;
+        private  UniformContinuousDistribution HC;
+        private  UniformContinuousDistribution HD;
 
-        private static DiscreetEmpiricalDistribution FG;
+        private  DiscreetEmpiricalDistribution FG;
 
-        private static UniformDiscreetDistribution GE;
+        private  UniformDiscreetDistribution GE;
 
         #endregion
 
@@ -81,7 +81,6 @@ namespace Simulation.Simulations
                     (route_AFGE / (i + 1)),
                     ((double)positive / i)
                 };
-
 
                 if (liveSimulation)
                 {

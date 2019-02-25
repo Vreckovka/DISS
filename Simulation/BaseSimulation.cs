@@ -28,7 +28,6 @@ namespace Simulation
                 speed = SimulationDelay * 10;
             }
                
-
             for (int i = 0; i < speed; i++)
             {
                 sw.SpinOnce();
