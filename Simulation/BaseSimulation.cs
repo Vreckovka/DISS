@@ -7,6 +7,7 @@ namespace Simulation
     {
         protected static EventWaitHandle waitHandle = new ManualResetEvent(true);
         public event EventHandler<double[]> ReplicationFinished;
+        public event EventHandler<double[]> SimulationFinished;
         public event EventHandler<double[]> RunFinished;
 
         SpinWait sw = new SpinWait();
@@ -52,6 +53,11 @@ namespace Simulation
         protected virtual void OnRunFinished(double[] e)
         {
             RunFinished?.Invoke(this, e);
+        }
+
+        protected virtual void OnSimulationFinished(double[] e)
+        {
+            SimulationFinished?.Invoke(this, e);
         }
     }
 }

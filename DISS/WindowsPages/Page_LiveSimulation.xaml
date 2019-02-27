@@ -133,7 +133,7 @@
                                 </Grid.RowDefinitions>
                                 <TextBox KeyUp="TextBox_KeyUp" 
                                       x:Name="TextBox_NumberOfIteration" 
-                                      Text="1 000 000"
+                                      Text="50 000"
                                       FontSize="15"
                                       Margin="0,2"
                                       />

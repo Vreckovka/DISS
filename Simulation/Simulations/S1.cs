@@ -8,18 +8,18 @@ namespace Simulation.Simulations
     {
         #region Distributions
 
-        private  UniformContinuousDistribution AB;
-        private  UniformContinuousDistribution BC;
-        private  UniformContinuousDistribution CD;
-        private  UniformContinuousDistribution DE;
-        private  UniformContinuousDistribution AF;
-        private  UniformContinuousDistribution FH;
-        private  UniformContinuousDistribution HC;
-        private  UniformContinuousDistribution HD;
+        private UniformContinuousDistribution AB;
+        private UniformContinuousDistribution BC;
+        private UniformContinuousDistribution CD;
+        private UniformContinuousDistribution DE;
+        private UniformContinuousDistribution AF;
+        private UniformContinuousDistribution FH;
+        private UniformContinuousDistribution HC;
+        private UniformContinuousDistribution HD;
 
-        private  DiscreetEmpiricalDistribution FG;
+        private DiscreetEmpiricalDistribution FG;
 
-        private  UniformDiscreetDistribution GE;
+        private UniformDiscreetDistribution GE;
 
         #endregion
 
@@ -82,14 +82,25 @@ namespace Simulation.Simulations
                     ((double)positive / i)
                 };
 
-                if (liveSimulation)
+                if(liveSimulation)
                 {
                     ManageSimulationSpeed();
                     OnReplicationFinished(s);
+                    waitHandle.WaitOne();
                 }
             }
 
-            return new double[]
+            OnSimulationFinished( new double[]
+            {
+                (route_ABCDE / (replicationCount)),
+                (route_AFHDE / (replicationCount)),
+                (route_AFGE / (replicationCount)),
+                (route_AFGE / (replicationCount)),
+                ((double)positive / replicationCount)
+            });
+
+            return
+                 new double[]
             {
                 (route_ABCDE / (replicationCount)),
                 (route_AFHDE / (replicationCount)),

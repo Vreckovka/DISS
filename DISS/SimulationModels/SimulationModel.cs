@@ -22,7 +22,7 @@ namespace DISS.SimulationModels
         public abstract void SetSimulationSpeed(int speed);
         public abstract void ResumeSimulation();
         public abstract void SimulationFinished();
-        public abstract void StartSimulation(Random random,int replicationCount);
+        public abstract double[] StartSimulation(Random random,int replicationCount);
         public abstract void StartRuns (int runsCount, int replicationCount);
         public abstract void PauseSimulation();
         public abstract void SimulationS1_ReplicationFinished(object sender, double[] e);

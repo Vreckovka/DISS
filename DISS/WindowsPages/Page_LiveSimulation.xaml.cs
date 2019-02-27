@@ -70,7 +70,13 @@ namespace DISS.WindowsPages
 
             Frame_Simulation.Content = page_S1;
             page_S1.simulationModel.Simulation.ReplicationFinished += SimulationModel_SimulationReplicationFinished;
+            page_S1.simulationModel.Simulation.SimulationFinished += Simulation_SimulationFinished;
             Chart_Line.Values = ChartValues;
+        }
+
+        private void Simulation_SimulationFinished(object sender, double[] e)
+        {
+            aTimer.Enabled = false;
         }
 
         int acutalIteration;
@@ -89,10 +95,23 @@ namespace DISS.WindowsPages
             }
         }
 
+        List<ObservableValue> values = new List<ObservableValue>();
+        int speed;
         private void SimulationModel_SimulationReplicationFinished(object sender, double[] e)
         {
-            ChartValues.Add(new ObservableValue(e[3]));
-            ActualIteration = ChartValues.Count;
+            //ChartValues.Add(new ObservableValue(e[3]));
+            if (values.Count >= (int)speed / 2)
+            {
+                values.AsGearedValues();
+                ChartValues.AddRange(values);
+                values.Clear();
+            }
+            else
+            {
+                values.Add(new ObservableValue(e[3]));
+            }
+
+            ActualIteration++;
         }
 
         /// <summary>
@@ -174,8 +193,10 @@ namespace DISS.WindowsPages
                 if (!page_S1.SimulationRunning)
                 {
                     page_S1.ResumeSimulation();
-                    page_S1.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfIteration.Text));
                     aTimer.Enabled = true;
+
+                    page_S1.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfIteration.Text));
+
                 }
                 else
                 {
@@ -207,14 +228,14 @@ namespace DISS.WindowsPages
             }
         }
 
-        private void RefreshSimulation_Click(object sender, MouseButtonEventArgs e)
+        private  void RefreshSimulation_Click(object sender, MouseButtonEventArgs e)
         {
             if (page_S1.SimulationRunning)
             {
                 page_S1.StopSimulation();
                 page_S1.ResumeSimulation();
-                page_S1.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfIteration.Text));
                 aTimer.Enabled = true;
+                 page_S1.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfIteration.Text));
             }
             else
             {
@@ -307,6 +328,7 @@ namespace DISS.WindowsPages
         private void Slider_SimulationSpeed_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             page_S1.simulationModel.SetSimulationSpeed(101 - (int)Slider_SimulationSpeed.Value);
+            speed = (int)Slider_SimulationSpeed.Value;
         }
     }
 }
