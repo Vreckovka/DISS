@@ -43,9 +43,10 @@ namespace DISS.WindowsPages
             "56.571h113.143 c31.256,0,56.572-25.315,56.572-56.571V56.571C678.857,25.344,653.541,0,622.285,0z";
 
 
-        public GearedValues<ObservableValue> ChartValues;
+        public GearedValues<double> ChartValues;
         private Page_S1 page_S1 = new Page_S1();
         System.Timers.Timer aTimer = new System.Timers.Timer();
+        private int _removeNIteration;
 
         TimeSpan _simulationTime;
         public TimeSpan SimulationTime
@@ -57,6 +58,16 @@ namespace DISS.WindowsPages
                 _simulationTime = value;
             }
         }
+
+        public Page_S1 Simulation
+        {
+            get { return page_S1; }
+            set
+            {
+                OnPropertyChanged(nameof(Simulation));
+                page_S1 = value;
+            }
+        }
         public Page_LiveSimulation()
         {
             InitializeComponent();
@@ -65,13 +76,15 @@ namespace DISS.WindowsPages
             aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             aTimer.Interval = 1000;
 
-            ChartValues = new GearedValues<ObservableValue>();
+            ChartValues = new GearedValues<double>();
             ChartValues.WithQuality(Quality.Low);
 
             Frame_Simulation.Content = page_S1;
             page_S1.simulationModel.Simulation.ReplicationFinished += SimulationModel_SimulationReplicationFinished;
             page_S1.simulationModel.Simulation.SimulationFinished += Simulation_SimulationFinished;
             Chart_Line.Values = ChartValues;
+
+            _removeNIteration = ConvertToInt(TextBox_RemoveNIteration.Text);
         }
 
         private void Simulation_SimulationFinished(object sender, double[] e)
@@ -95,22 +108,24 @@ namespace DISS.WindowsPages
             }
         }
 
-        List<ObservableValue> values = new List<ObservableValue>();
-        int speed;
+        List<double> values = new List<double>();
         private void SimulationModel_SimulationReplicationFinished(object sender, double[] e)
         {
-            //ChartValues.Add(new ObservableValue(e[3]));
-            if (values.Count >= (int)speed / 2)
+            //Remove noise
+            if (ActualIteration > _removeNIteration)
             {
-                values.AsGearedValues();
-                ChartValues.AddRange(values);
-                values.Clear();
+                if (values.Count >= 10)
+                {
+                    values.AsGearedValues();
+                    ChartValues.AddRange(values);
+                    values.Clear();
+                }
+                else
+                {
+                    if (ActualIteration % 100 == 0)
+                        values.Add(e[3]);
+                }
             }
-            else
-            {
-                values.Add(new ObservableValue(e[3]));
-            }
-
             ActualIteration++;
         }
 
@@ -228,14 +243,14 @@ namespace DISS.WindowsPages
             }
         }
 
-        private  void RefreshSimulation_Click(object sender, MouseButtonEventArgs e)
+        private void RefreshSimulation_Click(object sender, MouseButtonEventArgs e)
         {
             if (page_S1.SimulationRunning)
             {
                 page_S1.StopSimulation();
                 page_S1.ResumeSimulation();
                 aTimer.Enabled = true;
-                 page_S1.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfIteration.Text));
+                page_S1.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfIteration.Text));
             }
             else
             {
@@ -278,6 +293,8 @@ namespace DISS.WindowsPages
                     ((TextBox)sender).Text = number.ToString("N0");
                     ((TextBox)sender).CaretIndex = ((TextBox)sender).Text.Length;
                 }
+
+                _removeNIteration = ConvertToInt(TextBox_RemoveNIteration.Text);
             }
         }
 
@@ -327,8 +344,7 @@ namespace DISS.WindowsPages
 
         private void Slider_SimulationSpeed_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            page_S1.simulationModel.SetSimulationSpeed(101 - (int)Slider_SimulationSpeed.Value);
-            speed = (int)Slider_SimulationSpeed.Value;
+            page_S1.simulationModel.SetSimulationSpeed(100 - (int)Slider_SimulationSpeed.Value);
         }
     }
 }

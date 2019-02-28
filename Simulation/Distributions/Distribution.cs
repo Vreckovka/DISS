@@ -5,10 +5,8 @@ namespace Simulation.Distributions
     abstract class Distribution
     {
         public abstract double GetNext();
-
-        public Distribution(Random random)
+        public Distribution(int seed)
         {
-            
         }
     }
 }

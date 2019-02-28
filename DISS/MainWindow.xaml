@@ -20,8 +20,6 @@
         Loaded="WindowLoaded"
         >
 
-   
-
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -41,6 +39,6 @@
         </ListView>
 
         <Frame x:Name="Frame_Simulation" Grid.Column="1" NavigationUIVisibility="Hidden"/>
-       
+
     </Grid>
 </Window>

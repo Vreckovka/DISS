@@ -699,7 +699,6 @@
             </Style>
 
             <Style TargetType="DataGridCell">
-
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type DataGridCell}">
@@ -724,6 +723,8 @@
                 </Style.Triggers>
             </Style>
 
+            
+
             <Style TargetType="DataGridRow">
                 <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="BorderThickness" Value="0,0,0,3"/>
@@ -735,6 +736,106 @@
             </Style>
         </Style.Resources>
     </Style>
+
+
+
+    <Style x:Key="ScrollBarLineButton"
+       TargetType="{x:Type RepeatButton}">
+        <Setter Property="SnapsToDevicePixels"
+          Value="True" />
+        <Setter Property="OverridesDefaultStyle"
+          Value="true" />
+        <Setter Property="Focusable"
+          Value="false" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Border x:Name="Border"
+                Margin="1"
+                CornerRadius="2"
+                BorderThickness="1" Background="Transparent">
+                        
+                      <Path x:Name="Arrow"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Data="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" >
+                            <Path.Fill>
+                                <SolidColorBrush Color="{DynamicResource DefaultRedColor}"/>
+                            </Path.Fill>
+                        </Path>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ScrollBarThumb"
+       TargetType="{x:Type Thumb}">
+        <Setter Property="SnapsToDevicePixels"
+          Value="True" />
+        <Setter Property="OverridesDefaultStyle"
+          Value="true" />
+        <Setter Property="IsTabStop"
+          Value="false" />
+        <Setter Property="Focusable"
+          Value="false" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Border CornerRadius="2"
+                Background="{DynamicResource DefaultRedBrush}"
+                BorderBrush="{DynamicResource DefaultRedBrush}"
+                BorderThickness="1" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <ControlTemplate x:Key="VerticalScrollBar"
+                 TargetType="{x:Type ScrollBar}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition MaxHeight="18" />
+                <RowDefinition Height="0.00001*" />
+                <RowDefinition MaxHeight="18" />
+            </Grid.RowDefinitions>
+            <Border Grid.RowSpan="3"
+            CornerRadius="2"
+            Background="Transparent" />
+            <RepeatButton Grid.Row="0"
+                  Style="{StaticResource ScrollBarLineButton}"
+                  Height="18"
+                  Command="ScrollBar.LineUpCommand"
+                  Content="M 0 4 L 8 4 L 4 0 Z" />
+            <Track x:Name="PART_Track" Grid.Row="1" IsDirectionReversed="true">
+                <Track.Thumb>
+                    <Thumb Style="{StaticResource ScrollBarThumb}" Margin="1,0,1,0" />
+                </Track.Thumb>
+            </Track>
+            <RepeatButton Grid.Row="3"
+                  Style="{StaticResource ScrollBarLineButton}"
+                  Height="18"
+                  Command="ScrollBar.LineDownCommand"
+                  Content="M 0 0 L 4 4 L 8 0 Z" />
+        </Grid>
+    </ControlTemplate>
+
+
+    <Style x:Key="{x:Type ScrollBar}"
+       TargetType="{x:Type ScrollBar}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Style.Triggers>
+            <Trigger Property="Orientation" Value="Vertical">
+                <Setter Property="Width" Value="18" />
+                <Setter Property="Height" Value="Auto" />
+                <Setter Property="Template"  Value="{StaticResource VerticalScrollBar}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
 
 
 </ResourceDictionary>

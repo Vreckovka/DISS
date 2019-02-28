@@ -83,7 +83,7 @@ namespace DISS.WindowsPages
                     DataGrid_SimulationRuns.Items.Count.ToString(),
                     "A-B-C-D-E: " + (e[0]) + "\n" +
                     "A-F-H-D-E: " + (e[1]) + "\n" +
-                    "A-F-G-E: " + (e[2]),
+                    "A-F-G-E: " + (e[2])  + "\n" +
                     "Probability: " + (e[3])
 
                 });

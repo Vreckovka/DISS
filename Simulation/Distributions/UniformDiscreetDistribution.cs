@@ -13,14 +13,13 @@ namespace Simulation.Distributions
         private int _min;
         private int _max;
         private Random _random;
-
         #endregion
 
-        public UniformDiscreetDistribution(int min, int max,Random random) : base(random)
+        public UniformDiscreetDistribution(int min, int max,int seed) : base(seed)
         {
+            _random = new Random(seed);
             _min = min;
             _max = max;
-            _random = random;
         }
 
         public override double GetNext()
