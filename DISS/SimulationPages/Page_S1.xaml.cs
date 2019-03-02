@@ -24,58 +24,87 @@ namespace DISS.SimulationPages
     /// <summary>
     /// Interaction logic for S1.xaml
     /// </summary>
-    public partial class Page_S1 : Page
+    public partial class Page_S1 : Page, INotifyPropertyChanged
     {
-        public SimulationModel simulationModel { get; }
-        public bool SimulationRunning { get; private set; }
+        public SimulationModel SimulationModel { get; private set; }
+        private bool _simulationRunning;
+
+        public bool SimulationRunning
+        {
+            get { return _simulationRunning; }
+            private set
+            {
+                _simulationRunning = value;
+                OnPropertyChanged(nameof(SimulationRunning));
+
+            }
+        }
+
         private Thread _simulationThread;
         public Page_S1()
         {
             InitializeComponent();
 
-            simulationModel = new SimulationModel_1();
-            DataContext = simulationModel;
+            SimulationModel = new SimulationModel_1();
+            DataContext = SimulationModel;
         }
 
         public void StartSimulation(Random random, int replicationCount)
         {
+            SimulationRunning = true;
+
             _simulationThread = new Thread(() =>
             {
-                SimulationRunning = true;
-                simulationModel.StartSimulation(random,replicationCount);
-            });
+                SimulationModel.StartSimulation(random, replicationCount);
+            })
+            {
+                IsBackground = true
+            };
 
-            _simulationThread.IsBackground = true;
             _simulationThread.Start();
         }
 
         public void StartRuns(int runsCount, int replicationCount)
         {
+            SimulationRunning = true;
+
             _simulationThread = new Thread(() =>
             {
-               SimulationRunning = true;
-                simulationModel.StartRuns(runsCount, replicationCount);
-            });
+                    SimulationModel.StartRuns(runsCount, replicationCount);
+            })
+            {
+                IsBackground = true
+            };
 
-            _simulationThread.IsBackground = true;
             _simulationThread.Start();
         }
 
         public void StopSimulation()
         {
-            _simulationThread.Abort();
-            _simulationThread.Join();
-
             SimulationRunning = false;
+
+            if (_simulationThread != null)
+            {
+                _simulationThread.Abort();
+                _simulationThread.Join();
+            }
         }
         public void PauseSimulation()
         {
-            simulationModel.PauseSimulation();
+            SimulationModel.PauseSimulation();
         }
 
         public void ResumeSimulation()
         {
-            simulationModel.ResumeSimulation();
+            SimulationModel.ResumeSimulation();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

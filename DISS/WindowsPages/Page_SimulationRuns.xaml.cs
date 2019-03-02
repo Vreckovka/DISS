@@ -27,38 +27,14 @@ namespace DISS.WindowsPages
     public partial class Page_SimulationRuns : Page, INotifyPropertyChanged
     {
         private Page_S1 page_S1 = new Page_S1();
-        System.Timers.Timer aTimer = new System.Timers.Timer();
-        TimeSpan _simulationTime;
-        double[] _runData;
-        double[] _avrageData;
 
-        public TimeSpan SimulationTime
+        public Page_S1 Page_S1
         {
-            get { return _simulationTime; }
+            get { return page_S1; }
             set
             {
-                OnPropertyChanged(nameof(SimulationTime));
-                _simulationTime = value;
-            }
-        }
-
-        public double[] RunData
-        {
-            get { return _runData; }
-            set
-            {
-                OnPropertyChanged(nameof(RunData));
-                _runData = value;
-            }
-        }
-
-        public double[] AvrageData
-        {
-            get { return _avrageData; }
-            set
-            {
-                OnPropertyChanged(nameof(AvrageData));
-                _avrageData = value;
+                OnPropertyChanged(nameof(Page_S1));
+                page_S1 = value;
             }
         }
 
@@ -66,11 +42,9 @@ namespace DISS.WindowsPages
         {
             InitializeComponent();
 
-            DataContext = this;
+            page_S1.SimulationModel.Simulation.RunFinished += Simulation_RunFinished; ;
 
-            aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-            aTimer.Interval = 1000;
-            page_S1.simulationModel.Simulation.RunFinished += Simulation_RunFinished; ;
+            DataContext = page_S1;
 
         }
 
@@ -88,63 +62,22 @@ namespace DISS.WindowsPages
 
                 });
 
-                if (RunData != null)
-                    RunData = new double[]
-                    {
-                    (RunData[0] + e[0]),
-                    (RunData[1] + e[1]),
-                    (RunData[2] + e[2]),
-                    (RunData[3] + e[3])
-                    };
-                else
-                    RunData = new double[]
-                    {
-                       e[0],
-                       e[1],
-                       e[2],
-                       e[3]
-                    };
-
-                if (AvrageData != null)
-                    AvrageData = new double[]
-                    {
-                        (RunData[0] / DataGrid_SimulationRuns.Items.Count),
-                        (RunData[1] / DataGrid_SimulationRuns.Items.Count),
-                        (RunData[2] / DataGrid_SimulationRuns.Items.Count),
-                        (RunData[3] / DataGrid_SimulationRuns.Items.Count)
-                    };
-                else
-                    AvrageData = new double[]
-                    {
-                        RunData[0],
-                        RunData[0],
-                        RunData[0],
-                        RunData[0]
-                    };
-
-
                 if (DataGrid_SimulationRuns.Items.Count > 0)
                 {
                     var border = VisualTreeHelper.GetChild(DataGrid_SimulationRuns, 0) as Decorator;
-                    if (border != null)
-                    {
-                        var scroll = border.Child as ScrollViewer;
-                        if (scroll != null) scroll.ScrollToEnd();
-                    }
+                    var scroll = border?.Child as ScrollViewer;
+                    scroll?.ScrollToEnd();
                 }
             });
         }
 
         private void Start_Click(object sender, RoutedEventArgs e)
         {
-            page_S1.StartRuns(ConvertToInt(TextBox_NumberOfRuns.Text),
-                ConvertToInt(TextBox_NumberOfReplication.Text));
-            }
-
-        private void OnTimedEvent(object source, ElapsedEventArgs e)
-        {
-            SimulationTime = new TimeSpan(SimulationTime.Hours, SimulationTime.Minutes, SimulationTime.Seconds + 1);
+            if (!page_S1.SimulationRunning)
+                page_S1.StartRuns(ConvertToInt(TextBox_NumberOfRuns.Text),
+                    ConvertToInt(TextBox_NumberOfReplication.Text));
         }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -199,10 +132,9 @@ namespace DISS.WindowsPages
 
         private int ValidTextToInt(string text)
         {
-            int number;
             while (true)
             {
-                if (!Int32.TryParse(text, out number))
+                if (!Int32.TryParse(text, out var number))
                 {
                     text = text.Remove(text.Length - 1);
                 }
@@ -213,7 +145,6 @@ namespace DISS.WindowsPages
 
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
-            aTimer.Enabled = false;
             page_S1.StopSimulation();
         }
     }

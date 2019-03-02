@@ -47,7 +47,7 @@ namespace DISS.WindowsPages
         private Page_S1 page_S1 = new Page_S1();
         System.Timers.Timer aTimer = new System.Timers.Timer();
         private int _removeNIteration;
-
+        Func<double, string> _XAxisFormatter;
         TimeSpan _simulationTime;
         public TimeSpan SimulationTime
         {
@@ -56,6 +56,16 @@ namespace DISS.WindowsPages
             {
                 OnPropertyChanged(nameof(SimulationTime));
                 _simulationTime = value;
+            }
+        }
+
+        public Func<double, string> XAxisFormatter
+        {
+            get { return _XAxisFormatter; }
+            set
+            {
+                OnPropertyChanged(nameof(XAxisFormatter));
+                _XAxisFormatter = value;
             }
         }
 
@@ -80,11 +90,12 @@ namespace DISS.WindowsPages
             ChartValues.WithQuality(Quality.Low);
 
             Frame_Simulation.Content = page_S1;
-            page_S1.simulationModel.Simulation.ReplicationFinished += SimulationModel_SimulationReplicationFinished;
-            page_S1.simulationModel.Simulation.SimulationFinished += Simulation_SimulationFinished;
+            page_S1.SimulationModel.Simulation.ReplicationFinished += SimulationModel_SimulationReplicationFinished;
+            page_S1.SimulationModel.Simulation.SimulationFinished += Simulation_SimulationFinished;
             Chart_Line.Values = ChartValues;
 
             _removeNIteration = ConvertToInt(TextBox_RemoveNIteration.Text);
+            XAxisFormatter = XAxisLabelFormatter;
         }
 
         private void Simulation_SimulationFinished(object sender, double[] e)
@@ -109,12 +120,42 @@ namespace DISS.WindowsPages
         }
 
         List<double> values = new List<double>();
+        double oldVal;
+        double deltas;
+        int deltaCount;
+        bool _chartScrolled;
+        private double everyNIteration = 500;
         private void SimulationModel_SimulationReplicationFinished(object sender, double[] e)
         {
+            if (acutalIteration % 100000 == 0 && !_chartScrolled)
+            {
+                if (ActualIteration > _removeNIteration && deltaCount == 0)
+                {
+                    oldVal = e[3];
+                    deltaCount++;
+                }
+                else if(ActualIteration > 0)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        double delta = Math.Abs(oldVal - e[3]) * 0.04;
+
+                        deltas += delta;
+                        var a = (deltas / deltaCount);
+
+                        YAxis.MaxValue = e[3] * (1 + a);
+                        YAxis.MinValue = e[3] * (1 - a);
+
+                        oldVal = e[3];
+                        deltaCount++;
+                    });
+                }
+               
+            }
             //Remove noise
             if (ActualIteration > _removeNIteration)
             {
-                if (values.Count >= 10)
+                if (values.Count >= 50)
                 {
                     values.AsGearedValues();
                     ChartValues.AddRange(values);
@@ -122,10 +163,15 @@ namespace DISS.WindowsPages
                 }
                 else
                 {
-                    if (ActualIteration % 100 == 0)
+                    if (ActualIteration % everyNIteration == 0)
+                    {
                         values.Add(e[3]);
+                        
+                    }
+                        
                 }
             }
+
             ActualIteration++;
         }
 
@@ -135,6 +181,17 @@ namespace DISS.WindowsPages
         public void CreateChart()
         {
             Grid_Chart.Children.Remove(Chart);
+
+            YAxis = new Axis()
+            {
+                Foreground = (Brush) Application.Current.Resources["DefaultWhiteBrush"],
+                Title = "Time (minutes)",
+                FontSize = 15,
+                Separator = new LiveCharts.Wpf.Separator()
+                {
+                    Style = (Style) Application.Current.Resources["CleanSeparator"],
+                }
+            };
 
             Chart = new CartesianChart()
             {
@@ -157,21 +214,13 @@ namespace DISS.WindowsPages
                         Separator = new LiveCharts.Wpf.Separator()
                         {
                            Style = (Style)Application.Current.Resources["CleanSeparator"],
-                        }
+                        },
+                      LabelFormatter = XAxisLabelFormatter
                     }
                 },
                 AxisY = new AxesCollection()
                 {
-                    new Axis()
-                    {
-                        Foreground = (Brush)Application.Current.Resources["DefaultWhiteBrush"],
-                        Title = "Time (minutes)",
-                        FontSize = 15,
-                        Separator = new LiveCharts.Wpf.Separator()
-                        {
-                            Style = (Style)Application.Current.Resources["CleanSeparator"],
-                        }
-                    }
+                   YAxis
                 }
             };
 
@@ -186,13 +235,18 @@ namespace DISS.WindowsPages
                     Fill = Brushes.Transparent,
                     PointGeometry = null,
                     LineSmoothness = 0,
-                    Title = "A-F-G-E",
+                    Title = "A-B-C-D-E",
                 }
             };
 
             Chart.Series = series;
             Grid_Chart.Children.Add(Chart);
 
+        }
+
+        private string XAxisLabelFormatter(double a)
+        {
+            return (a * everyNIteration).ToString("N0");
         }
         private Random GetRandom()
         {
@@ -312,10 +366,9 @@ namespace DISS.WindowsPages
 
         private int ValidTextToInt(string text)
         {
-            int number;
             while (true)
             {
-                if (!Int32.TryParse(text, out number))
+                if (!Int32.TryParse(text, out var number))
                 {
                     text = text.Remove(text.Length - 1);
                 }
@@ -326,12 +379,17 @@ namespace DISS.WindowsPages
 
         private void ResetButt_Click(object sender, RoutedEventArgs e)
         {
+            _chartScrolled = false;
+            ResetChart();
+        }
+
+        private void ResetChart()
+        {
             Chart.AxisX[0].MinValue = double.NaN;
             Chart.AxisX[0].MaxValue = double.NaN;
             Chart.AxisY[0].MinValue = double.NaN;
             Chart.AxisY[0].MaxValue = double.NaN;
         }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -344,7 +402,13 @@ namespace DISS.WindowsPages
 
         private void Slider_SimulationSpeed_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            page_S1.simulationModel.SetSimulationSpeed(100 - (int)Slider_SimulationSpeed.Value);
+            page_S1.SimulationModel.SetSimulationSpeed(100 - (int)Slider_SimulationSpeed.Value);
+        }
+
+        private void Chart_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            _chartScrolled = true;
+            ResetChart();
         }
     }
 }

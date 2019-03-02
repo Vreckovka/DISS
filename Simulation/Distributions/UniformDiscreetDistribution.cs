@@ -10,8 +10,8 @@ namespace Simulation.Distributions
     {
         #region Global variables
 
-        private int _min;
-        private int _max;
+        private readonly int _min;
+        private readonly int _max;
         private Random _random;
         #endregion
 
@@ -24,7 +24,7 @@ namespace Simulation.Distributions
 
         public override double GetNext()
         {
-            return _random.Next(_min, _max);
+            return _random.Next(_min, _max + 1);
         }
     }
 }

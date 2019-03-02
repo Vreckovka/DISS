@@ -21,6 +21,13 @@ namespace Simulation
         {
         }
 
+        #region Abstract methods
+        protected abstract void CreateDistributions(Random random);
+
+        protected abstract double[] DoSimulationReplication();
+
+        #endregion
+
         public double[] Simulate(Random random, int replicationCount, bool liveSimulation)
         {
             int numberOfParameters = -1;
@@ -75,11 +82,7 @@ namespace Simulation
 
             return pom;
         }
-
-        protected abstract void CreateDistributions(Random random);
-
-        protected abstract double[] DoSimulationReplication();
-
+        
         public double[] SimulateRuns(int numberOfRuns, int numberOfReplication)
         {
             Random random = new Random();

@@ -75,7 +75,7 @@
             <TextBlock HorizontalAlignment="Center" FontSize="15" TextAlignment="Center" Margin="5">
                 <Run Text="Probability of time less then 450 min."/>
                 <LineBreak />
-                <Run Text="by route A-F-G-E"/>
+                <Run Text="by route A-B-C-D-E"/>
             </TextBlock>
 
             <Grid Grid.Row="1">

@@ -7,7 +7,7 @@
       xmlns:wpf="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
       xmlns:geared="clr-namespace:LiveCharts.Geared;assembly=LiveCharts.Geared"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="450" d:DesignWidth="1000"
       Title="Page_LiveSimulation"
       >
 
@@ -115,7 +115,7 @@
                                        FontSize="15"
                                        />
                             <TextBlock Grid.Row="1" 
-                                       Text="Actual iteration: " 
+                                       Text="XAxisLabelFormatterctual iteration: " 
                                        FontSize="15"
                                        />
                             <TextBlock Grid.Row="2" 
@@ -221,7 +221,7 @@
                                 Minimum="1"
                                 Maximum="100"
                                 IsSnapToTickEnabled="True"
-                                Value="50"
+                                Value="100"
                                 ValueChanged="Slider_SimulationSpeed_ValueChanged"
                                 Margin="0,2"
                                 />
@@ -237,7 +237,7 @@
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Text="Remove first n iteration" 
+                            <TextBlock Text="Ignore first n iteration" 
                                        HorizontalAlignment="Center" 
 
                             />
@@ -269,7 +269,7 @@
 
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
@@ -304,6 +304,7 @@
                                         x:Name="Chart"
                                         Grid.Row="1"
                                         Margin="10"
+                                        PreviewMouseWheel="Chart_MouseWheel"
                                        >
 
                         <wpf:CartesianChart.Series>
@@ -312,7 +313,7 @@
                                                 Fill="Transparent"
                                                 PointGeometry="{x:Null}"
                                                 LineSmoothness="0"
-                                                Title="A-F-G-E"
+                                                Title="A-B-C-D-E"
                                                 Stroke="{StaticResource DefaultRedBrush}"
                                                 >
                             </geared:GLineSeries>
@@ -322,10 +323,11 @@
                         <wpf:CartesianChart.AxisX>
                             <wpf:AxesCollection>
                                 <wpf:Axis Foreground="{StaticResource DefaultWhiteBrush}" 
-                                      Title="Number of iteration (x 100)" 
+                                      Title="Number of iteration" 
                                       Position="LeftBottom"
                                       FontSize="15"
-                                      >
+                                      LabelFormatter="{Binding XAxisFormatter}"
+                                     >
                                     <wpf:Axis.Separator>
                                         <wpf:Separator Style="{StaticResource CleanSeparator}"/>
                                     </wpf:Axis.Separator>
@@ -338,6 +340,7 @@
                                 <wpf:Axis Foreground="{StaticResource DefaultWhiteBrush}" 
                                           Title="Time (minutes)" 
                                           FontSize="15"
+                                          x:Name="YAxis"
                                             >
                                     <wpf:Axis.Separator>
                                         <wpf:Separator Style="{StaticResource CleanSeparator}"></wpf:Separator>

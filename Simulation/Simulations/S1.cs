@@ -6,7 +6,6 @@ namespace Simulation.Simulations
 {
     public class S1 : BaseSimulation
     {
-        private Random randomSeed;
        
         #region Distributions
 
@@ -46,7 +45,7 @@ namespace Simulation.Simulations
             HC = new UniformContinuousDistribution(150, 220, random.Next());
             HD = new UniformContinuousDistribution(170, 200, random.Next());
 
-            FG = new DiscreetEmpiricalDistribution(170, 195, 0.2, 196, 280, 0.8, random.Next());
+            FG = new DiscreetEmpiricalDistribution(170, 195, 0.2, 196, 280, random.Next());
 
             GE = new UniformDiscreetDistribution(20, 49, random.Next());
         }
@@ -74,6 +73,7 @@ namespace Simulation.Simulations
             var ge = GE.GetNext();
 
             var route_ABCDE = ab + bc + cd + de;
+
             double route_AFHDE = 0;
 
             if (routeRandom.NextDouble() > 0.05)
@@ -81,24 +81,22 @@ namespace Simulation.Simulations
             else
                 route_AFHDE += af + fh + hc + cd + de;
 
-            double bestRoute = 0;
-            bestRoute += af + fg + ge;
+            double route_AFGE = af + fg + ge;
 
-            double route_AFGE = bestRoute;
             double positive = 0;
 
             //Probability 
-            if (bestRoute <= (timeEnd - timeStart).TotalMinutes)
+            if (route_ABCDE <= (timeEnd - timeStart).TotalMinutes)
             {
                 positive++;
             }
-
+            
             return new double[]
             {
                 route_ABCDE,
                 route_AFHDE,
                 route_AFGE,
-                route_AFGE,
+                route_ABCDE,
                 positive
             };
         }
