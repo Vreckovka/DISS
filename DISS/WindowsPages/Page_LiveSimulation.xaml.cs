@@ -32,30 +32,21 @@ namespace DISS.WindowsPages
     /// </summary>
     public partial class Page_LiveSimulation : Page, INotifyPropertyChanged
     {
-        private string PlayData =
-            "m 17.34375,7.78125 0,16.90625 0,16.9375 L 30.875,33.21875 44.53125,24.6875 30.875,16.1875 17.34375,7.78125 z";
-
-        private string PauseData =
-            "M282.856,0H169.714c-31.228,0-56.571,25.344-56.571,56.571v678.857c0,31.228,25.344,56.571," +
-            "56.571,56.571h113.143 " +
-            "c31.256,0,56.572-25.315,56.572-56.571V56.571C339.428,25.344,314.112,0,282.856,0z " +
-            "M622.285,0H509.143 c-31.256,0-56.572,25.344-56.572,56.571v678.857c0,31.228,25.316,56.571,56.572," +
-            "56.571h113.143 c31.256,0,56.572-25.315,56.572-56.571V56.571C678.857,25.344,653.541,0,622.285,0z";
-
-
         public GearedValues<double> ChartValues;
         private Page_S1 page_S1 = new Page_S1();
         System.Timers.Timer aTimer = new System.Timers.Timer();
         private int _removeNIteration;
         Func<double, string> _XAxisFormatter;
         TimeSpan _simulationTime;
+
+        #region Properties
         public TimeSpan SimulationTime
         {
             get { return _simulationTime; }
             set
             {
-                OnPropertyChanged(nameof(SimulationTime));
                 _simulationTime = value;
+                OnPropertyChanged(nameof(SimulationTime));
             }
         }
 
@@ -64,8 +55,8 @@ namespace DISS.WindowsPages
             get { return _XAxisFormatter; }
             set
             {
-                OnPropertyChanged(nameof(XAxisFormatter));
                 _XAxisFormatter = value;
+                OnPropertyChanged(nameof(XAxisFormatter));
             }
         }
 
@@ -78,6 +69,20 @@ namespace DISS.WindowsPages
                 page_S1 = value;
             }
         }
+
+        public int ActualIteration
+        {
+            get { return acutalIteration; }
+            set
+            {
+                acutalIteration = value;
+                OnPropertyChanged(nameof(ActualIteration));
+            }
+
+        }
+
+        #endregion
+
         public Page_LiveSimulation()
         {
             InitializeComponent();
@@ -109,15 +114,6 @@ namespace DISS.WindowsPages
         {
             SimulationTime = new TimeSpan(SimulationTime.Hours, SimulationTime.Minutes, SimulationTime.Seconds + 1);
         }
-        public int ActualIteration
-        {
-            get { return acutalIteration; }
-            set
-            {
-                OnPropertyChanged(nameof(ActualIteration));
-                acutalIteration = value;
-            }
-        }
 
         List<double> values = new List<double>();
         double oldVal;
@@ -125,6 +121,7 @@ namespace DISS.WindowsPages
         int deltaCount;
         bool _chartScrolled;
         private double everyNIteration = 500;
+
         private void SimulationModel_SimulationReplicationFinished(object sender, double[] e)
         {
             if (acutalIteration % 100000 == 0 && !_chartScrolled)
@@ -134,7 +131,7 @@ namespace DISS.WindowsPages
                     oldVal = e[3];
                     deltaCount++;
                 }
-                else if(ActualIteration > 0)
+                else if (ActualIteration > 0)
                 {
                     Dispatcher.Invoke(() =>
                     {
@@ -150,7 +147,7 @@ namespace DISS.WindowsPages
                         deltaCount++;
                     });
                 }
-               
+
             }
             //Remove noise
             if (ActualIteration > _removeNIteration)
@@ -166,9 +163,7 @@ namespace DISS.WindowsPages
                     if (ActualIteration % everyNIteration == 0)
                     {
                         values.Add(e[3]);
-                        
                     }
-                        
                 }
             }
 
@@ -184,12 +179,12 @@ namespace DISS.WindowsPages
 
             YAxis = new Axis()
             {
-                Foreground = (Brush) Application.Current.Resources["DefaultWhiteBrush"],
+                Foreground = (Brush)Application.Current.Resources["DefaultWhiteBrush"],
                 Title = "Time (minutes)",
                 FontSize = 15,
                 Separator = new LiveCharts.Wpf.Separator()
                 {
-                    Style = (Style) Application.Current.Resources["CleanSeparator"],
+                    Style = (Style)Application.Current.Resources["CleanSeparator"],
                 }
             };
 
@@ -262,8 +257,6 @@ namespace DISS.WindowsPages
                 if (!page_S1.SimulationRunning)
                 {
                     page_S1.ResumeSimulation();
-                    aTimer.Enabled = true;
-
                     page_S1.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfIteration.Text));
 
                 }
@@ -272,16 +265,14 @@ namespace DISS.WindowsPages
                     page_S1.ResumeSimulation();
                 }
 
+                aTimer.Enabled = true;
                 Play_Button.Tag = "Play";
-                PlayButtonData.Data = Geometry.Parse(PauseData);
-
             }
             else
             {
                 aTimer.Enabled = false;
                 page_S1.PauseSimulation();
                 Play_Button.Tag = "Pause";
-                PlayButtonData.Data = Geometry.Parse(PlayData);
             }
         }
 
@@ -293,7 +284,6 @@ namespace DISS.WindowsPages
                 page_S1.StopSimulation();
                 Play_Button.Tag = "Pause";
                 Play_Button.IsEnabled = false;
-                PlayButtonData.Data = Geometry.Parse(PlayData);
             }
         }
 
@@ -305,18 +295,23 @@ namespace DISS.WindowsPages
                 page_S1.ResumeSimulation();
                 aTimer.Enabled = true;
                 page_S1.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfIteration.Text));
+
+                Play_Button.Tag = "Play";
             }
             else
             {
                 Play_Button.IsEnabled = true;
                 Play_Button.Tag = "Pause";
-                PlayButtonData.Data = Geometry.Parse(PlayData);
             }
+
+
+            ChartValues.Clear();
+            values.Clear();
 
             SimulationTime = new TimeSpan(0, 0, 0);
             ActualIteration = 0;
+            ResetChart();
 
-            ChartValues.Clear();
         }
 
         private void TextBox_KeyUp(object sender, KeyEventArgs e)

@@ -63,23 +63,13 @@
 
                         <Button PreviewMouseLeftButtonUp="StartSimulation_Click"  
                         BorderThickness="0"
-                        Style="{StaticResource PlayButton}"
                         Tag="Pause"
                         x:Name="Play_Button"
                         Margin="7"
                         Grid.Column="1"
                         Padding="15"
-                         >
-                            <Path Data="m 17.34375,7.78125 0,16.90625 0,16.9375 
-                              L 30.875,33.21875 44.53125,24.6875 30.875,16.1875 
-                              17.34375,7.78125 z"
-                              Fill="AliceBlue"
-                              Width="20"
-                              Height="20"
-                              Stretch="Fill"
-                              x:Name="PlayButtonData"
-                              />
-                        </Button>
+                        Style="{StaticResource PlayButton}"
+                         />
 
                         <Button PreviewMouseLeftButtonUp="StopSimulation_Click"  
                         BorderThickness="0"
@@ -115,7 +105,7 @@
                                        FontSize="15"
                                        />
                             <TextBlock Grid.Row="1" 
-                                       Text="XAxisLabelFormatterctual iteration: " 
+                                       Text="Actual iteration: " 
                                        FontSize="15"
                                        />
                             <TextBlock Grid.Row="2" 
@@ -133,12 +123,27 @@
                                     <RowDefinition Height="auto"/>
                                     <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
+
                                 <TextBox KeyUp="TextBox_KeyUp" 
                                       x:Name="TextBox_NumberOfIteration" 
                                       Text="100 000 000"
                                       FontSize="15"
                                       Margin="0,2"
-                                      />
+                                      DataContext="{Binding Simulation}"
+                                      >
+                                    <TextBox.Style>
+                                        <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding  SimulationRunning}" Value="True">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                </DataTrigger>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter Property="Foreground" Value="Gray"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBox.Style>
+                                </TextBox>
 
                                 <TextBlock 
                                        Grid.Row="1"                         
@@ -158,8 +163,28 @@
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock Text="Seed: "/>
-                            <TextBlock Grid.Row="1" Text="Random Seed: " Margin="0,8"/>
+                            <TextBlock Text="Seed: ">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Simulation.SimulationRunning}" Value="True">
+                                                <Setter Property="Foreground" Value="Gray"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                            <TextBlock Grid.Row="1" Text="Random Seed: " Margin="0,8">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Simulation.SimulationRunning}" Value="True">
+                                                <Setter Property="Foreground" Value="Gray"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
                         </Grid>
 
                         <Border BorderBrush="{StaticResource DefaultWhiteTransparentBrush}"
@@ -172,18 +197,23 @@
                                 </Grid.RowDefinitions>
                                 <TextBox  FontSize="15" 
                                           KeyUp="TextBox_KeyUp" 
-                                          x:Name="TextBox_Seed">
+                                          x:Name="TextBox_Seed"
+                                          DataContext="{Binding Simulation}">
                                     <TextBox.Style>
                                         <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding ElementName=CheckBox_RandomSeed, Path=IsChecked}" Value="True">
-                                                    <Setter Property="BorderBrush" Value="{StaticResource DefaultRedTransparentBrush}"/>
+                                                    <Setter Property="BorderBrush" Value="Gray"/>
                                                     <Setter Property="IsEnabled" Value="False"/>
-                                                    <Setter Property="Foreground" Value="{StaticResource DefaultRedTransparentBrush}"/>
+                                                    <Setter Property="Foreground" Value="Gray"/>
                                                 </DataTrigger>
-                                                <DataTrigger Binding="{Binding ElementName=CheckBox_RandomSeed, Path=IsChecked}" Value="False">
-                                                    <Setter Property="BorderBrush" Value="{StaticResource DefaultWhiteBrush}"/>
+
+                                                <DataTrigger Binding="{Binding  SimulationRunning}" Value="True">
+                                                    <Setter Property="IsEnabled" Value="False"/>
                                                 </DataTrigger>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter Property="Foreground" Value="Gray"/>
+                                                </Trigger>
                                             </Style.Triggers>
                                         </Style>
                                     </TextBox.Style>
@@ -198,6 +228,15 @@
                                       IsChecked="True"
                                       Margin="0,10"
                                       >
+                                    <CheckBox.Style>
+                                        <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Simulation.SimulationRunning}" Value="True">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </CheckBox.Style>
                                 </CheckBox>
                             </Grid>
                         </Border>
@@ -248,16 +287,20 @@
                                      FontSize="15"
                                      Margin="0,2"
                                      Grid.Row="1"
-                                     
-                            >
+                                     IsReadOnly="False"
+                                     DataContext="{Binding Simulation}"
+                                     >
                                 <TextBox.Style>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding  Simulation.SimulationRunning}" Value="True">
-                                                <Setter Property="IsEnabled" Value="False"/> 
+                                            <DataTrigger Binding="{Binding  SimulationRunning}" Value="True">
+                                                <Setter Property="IsEnabled" Value="False"/>
                                             </DataTrigger>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Foreground" Value="Gray"/>
+                                            </Trigger>
                                         </Style.Triggers>
-                                    </Style>    
+                                    </Style>
                                 </TextBox.Style>
                             </TextBox>
 
@@ -292,7 +335,7 @@
                              Click="ResetButt_Click"
                              Margin="5"
                              >
-                       
+
                     </Button>
 
                     <wpf:CartesianChart Hoverable="False" 
