@@ -52,9 +52,9 @@ namespace DISS.SimulationModels
             throw new NotImplementedException();
         }
 
-        public override double[] StartSimulation(Random random,int replicationCount)
+        public override double[] StartSimulation(Random random,int replicationCount, int fireEveryNIteration)
         {
-            return simulationS1.Simulate(random,replicationCount, true);
+            return simulationS1.Simulate(random,replicationCount, true, fireEveryNIteration);
         }
 
         public override void StartRuns(int runsCount, int replicationCount)

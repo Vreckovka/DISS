@@ -9,8 +9,9 @@ namespace Simulation
         public event EventHandler<double[]> ReplicationFinished;
         public event EventHandler<double[]> SimulationFinished;
         public event EventHandler<double[]> RunFinished;
-
+        public int FireOnEveryNIteration { get; set; }
         SpinWait sw = new SpinWait();
+        private bool pause;
 
         /// <summary>
         /// Simulation delay in running simulation max value = 100, min value = 0
@@ -28,13 +29,15 @@ namespace Simulation
 
         #endregion
 
-        public double[] Simulate(Random random, int replicationCount, bool liveSimulation)
+        public double[] Simulate(Random random, int replicationCount, bool liveSimulation, int everyNIteration = -1)
         {
             int numberOfParameters = -1;
 
             CreateDistributions(random);
 
             double[] totalResult = null;
+
+            FireOnEveryNIteration = everyNIteration;
 
             for (int i = 0; i < replicationCount; i++)
             {
@@ -50,9 +53,16 @@ namespace Simulation
 
                 if (liveSimulation)
                 {
-                    ManageSimulationSpeed();
-                    OnReplicationFinished(GetAcutalResult(totalResult, numberOfParameters, (i + 1)));
-                    waitHandle.WaitOne();
+                    if (SimulationDelay > 0)
+                        ManageSimulationSpeed();
+
+                    if (i % FireOnEveryNIteration == 0)
+                        OnReplicationFinished(GetAcutalResult(totalResult, numberOfParameters, (i + 1)));
+
+                    if (pause)
+                    {
+                        waitHandle.WaitOne();
+                    }
                 }
             }
 
@@ -82,7 +92,7 @@ namespace Simulation
 
             return pom;
         }
-        
+
         public double[] SimulateRuns(int numberOfRuns, int numberOfReplication)
         {
             Random random = new Random();
@@ -133,10 +143,7 @@ namespace Simulation
 
         protected void ManageSimulationSpeed()
         {
-            for (int i = 0; i < SimulationDelay / 10; i++)
-            {
-                sw.SpinOnce();
-            }
+            Thread.SpinWait(SimulationDelay * 100);
         }
 
         protected virtual void OnReplicationFinished(double[] e)
@@ -146,11 +153,13 @@ namespace Simulation
 
         public void OnPauseClick()
         {
+            pause = true;
             waitHandle.Reset();
         }
 
         public void OnResumeClick()
         {
+            pause = false;
             waitHandle.Set();
         }
 

@@ -92,11 +92,13 @@ namespace DISS.WindowsPages
             aTimer.Interval = 1000;
 
             ChartValues = new GearedValues<double>();
-            ChartValues.WithQuality(Quality.Low);
+            ChartValues.WithQuality(Quality.Medium);
 
             Frame_Simulation.Content = page_S1;
+
             page_S1.SimulationModel.Simulation.ReplicationFinished += SimulationModel_SimulationReplicationFinished;
             page_S1.SimulationModel.Simulation.SimulationFinished += Simulation_SimulationFinished;
+
             Chart_Line.Values = ChartValues;
 
             _removeNIteration = ConvertToInt(TextBox_RemoveNIteration.Text);
@@ -120,11 +122,11 @@ namespace DISS.WindowsPages
         double deltas;
         int deltaCount;
         bool _chartScrolled;
-        private double everyNIteration = 500;
+        private int everyNIteration = 1000;
 
         private void SimulationModel_SimulationReplicationFinished(object sender, double[] e)
         {
-            if (acutalIteration % 100000 == 0 && !_chartScrolled)
+            if (ActualIteration % 500000 == 0 && !_chartScrolled)
             {
                 if (ActualIteration > _removeNIteration && deltaCount == 0)
                 {
@@ -147,12 +149,11 @@ namespace DISS.WindowsPages
                         deltaCount++;
                     });
                 }
-
             }
             //Remove noise
             if (ActualIteration > _removeNIteration)
             {
-                if (values.Count >= 50)
+                if (values.Count >= 1)
                 {
                     values.AsGearedValues();
                     ChartValues.AddRange(values);
@@ -160,14 +161,11 @@ namespace DISS.WindowsPages
                 }
                 else
                 {
-                    if (ActualIteration % everyNIteration == 0)
-                    {
-                        values.Add(e[3]);
-                    }
+                    values.Add(e[3]);
                 }
             }
 
-            ActualIteration++;
+            ActualIteration += everyNIteration;
         }
 
         /// <summary>
@@ -257,7 +255,7 @@ namespace DISS.WindowsPages
                 if (!page_S1.SimulationRunning)
                 {
                     page_S1.ResumeSimulation();
-                    page_S1.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfIteration.Text));
+                    page_S1.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfIteration.Text), (int)everyNIteration);
 
                 }
                 else
@@ -294,7 +292,7 @@ namespace DISS.WindowsPages
                 page_S1.StopSimulation();
                 page_S1.ResumeSimulation();
                 aTimer.Enabled = true;
-                page_S1.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfIteration.Text));
+                page_S1.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfIteration.Text), (int)everyNIteration);
 
                 Play_Button.Tag = "Play";
             }
@@ -397,6 +395,7 @@ namespace DISS.WindowsPages
 
         private void Slider_SimulationSpeed_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+ 
             page_S1.SimulationModel.SetSimulationSpeed(100 - (int)Slider_SimulationSpeed.Value);
         }
 
