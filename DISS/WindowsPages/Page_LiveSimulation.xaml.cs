@@ -239,7 +239,7 @@ namespace DISS.WindowsPages
 
         private string XAxisLabelFormatter(double a)
         {
-            return (a * everyNIteration).ToString("N0");
+            return (a * everyNIteration * 2).ToString("N0");
         }
         private Random GetRandom()
         {
