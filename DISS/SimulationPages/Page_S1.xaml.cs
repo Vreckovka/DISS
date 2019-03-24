@@ -49,13 +49,13 @@ namespace DISS.SimulationPages
             DataContext = SimulationModel;
         }
 
-        public void StartSimulation(Random random, int replicationCount)
+        public void StartSimulation(Random random, int replicationCount, int fireEveryNIteration)
         {
             SimulationRunning = true;
 
             _simulationThread = new Thread(() =>
             {
-                SimulationModel.StartSimulation(random, replicationCount);
+                SimulationModel.StartSimulation(random, replicationCount, fireEveryNIteration);
             })
             {
                 IsBackground = true
