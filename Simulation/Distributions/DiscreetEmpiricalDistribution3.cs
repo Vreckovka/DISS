@@ -2,7 +2,7 @@
 
 namespace Simulations.Distributions
 {
-    public class DiscreetEmpiricalDistribution : Distribution
+    public class DiscreetEmpiricalDistribution3 : Distribution
     {
         #region Global variables
 
@@ -12,6 +12,10 @@ namespace Simulations.Distributions
 
         private readonly int _min2;
         private readonly int _max2;
+        private readonly double _p2;
+
+        private readonly int _min3;
+        private readonly int _max3;
 
         private Random _random;
         #endregion
@@ -26,7 +30,8 @@ namespace Simulations.Distributions
         /// <param name="max2">T2_MAX</param>
         /// <param name="p2">Probability for T2</param>
         /// <param name="seed"></param>
-        public DiscreetEmpiricalDistribution(int min1,int max1,double p1,int min2, int max2, 
+        public DiscreetEmpiricalDistribution3(int min1,int max1,double p1,int min2, int max2, double p2,
+            int min3,int max3, 
             int seed) : base(seed)
         {
             _random = new Random(seed);
@@ -36,15 +41,24 @@ namespace Simulations.Distributions
 
             _min2 = min2;
             _max2 = max2;
+            _p2 = p2;
+
+            _min3 = min3;
+            _max3 = max3;
+
 
         }
 
         public override double GetNext()
         {
-            if (_random.NextDouble() < _p1)
+            var next = _random.NextDouble();
+
+            if (next < _p1)
                 return _random.Next(_min1, _max1 + 1);
-            else
+            else if(next < _p2 + _p1)
                 return _random.Next(_min2, _max2 + 1);
+            else
+                return _random.Next(_min3, _max3 + 1);
         }
     }
 }

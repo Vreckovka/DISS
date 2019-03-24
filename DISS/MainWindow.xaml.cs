@@ -18,6 +18,7 @@ using System.Windows.Interop;
 using System.Windows.Navigation;
 using System.Windows.Threading;
 using DISS.WindowsPages;
+using Simulations.UsedSimulations.S2;
 
 
 namespace DISS

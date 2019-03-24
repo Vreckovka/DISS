@@ -14,7 +14,7 @@ namespace DISS.SimulationModels
     public abstract class SimulationModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public BaseSimulation Simulation { get; set; }
+        public BaseMCSimulation McSimulation { get; set; }
         public SimulationModel()
         {
         }

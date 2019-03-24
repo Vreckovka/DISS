@@ -8,7 +8,7 @@
         xmlns:geared="clr-namespace:LiveCharts.Geared;assembly=LiveCharts.Geared"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="Simulation manager" 
+        Title="McSimulation manager" 
         MinHeight="450" 
         MinWidth="800"
         Height="700"
@@ -33,9 +33,9 @@
                           FontSize="15" SelectionChanged="ListView_SelectionChanged"
                             >
 
-            <ListViewItem Content="Live Simulation" 
+            <ListViewItem Content="Live McSimulation" 
                           IsSelected="True" />
-            <ListViewItem Content="Simulation Runs" />
+            <ListViewItem Content="McSimulation Runs" />
         </ListView>
 
         <Frame x:Name="Frame_Simulation" Grid.Column="1" NavigationUIVisibility="Hidden"/>

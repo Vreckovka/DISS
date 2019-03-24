@@ -42,7 +42,7 @@ namespace DISS.WindowsPages
         {
             InitializeComponent();
 
-            page_S1.SimulationModel.Simulation.RunFinished += Simulation_RunFinished; ;
+            page_S1.SimulationModel.McSimulation.RunFinished += Simulation_RunFinished; ;
 
             DataContext = page_S1;
 

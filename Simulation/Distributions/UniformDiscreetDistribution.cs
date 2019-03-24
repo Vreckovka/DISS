@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Simulation.Distributions
+namespace Simulations.Distributions
 {
-    class UniformDiscreetDistribution : Distribution
+   public class UniformDiscreetDistribution : Distribution
     {
         #region Global variables
 

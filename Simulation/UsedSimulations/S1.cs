@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading;
-using Simulation.Distributions;
+using Simulations.Distributions;
 
 namespace Simulation.Simulations
 {
-    public class S1 : BaseSimulation
+    public class S1 : BaseMCSimulation
     {
        
         #region Distributions

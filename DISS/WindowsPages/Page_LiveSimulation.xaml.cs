@@ -95,8 +95,8 @@ namespace DISS.WindowsPages
             ChartValues.WithQuality(Quality.Low);
 
             Frame_Simulation.Content = page_S1;
-            page_S1.SimulationModel.Simulation.ReplicationFinished += SimulationModel_SimulationReplicationFinished;
-            page_S1.SimulationModel.Simulation.SimulationFinished += Simulation_SimulationFinished;
+            page_S1.SimulationModel.McSimulation.ReplicationFinished += SimulationModel_SimulationReplicationFinished;
+            page_S1.SimulationModel.McSimulation.SimulationFinished += Simulation_SimulationFinished;
             Chart_Line.Values = ChartValues;
 
             _removeNIteration = ConvertToInt(TextBox_RemoveNIteration.Text);

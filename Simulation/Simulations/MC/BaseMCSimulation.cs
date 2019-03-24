@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace Simulation
 {
-    public abstract class BaseSimulation
+    public abstract class BaseMCSimulation
     {
         protected static EventWaitHandle waitHandle = new ManualResetEvent(true);
         public event EventHandler<double[]> ReplicationFinished;
@@ -17,7 +17,7 @@ namespace Simulation
         /// </summary>
         public int SimulationDelay { get; set; }
 
-        public BaseSimulation()
+        public BaseMCSimulation()
         {
         }
 

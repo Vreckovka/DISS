@@ -36,6 +36,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PriorityQueues, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PriorityQueues_boraaros.2.0.1\lib\netstandard2.0\PriorityQueues.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,16 +49,44 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Distributions\DiscreetEmpiricalDistribution3.cs" />
     <Compile Include="Distributions\DiscreetEmpiricalDistribution.cs" />
     <Compile Include="Distributions\Distribution.cs" />
-    <Compile Include="BaseSimulation.cs" />
+    <Compile Include="Distributions\ExponentialDistribution.cs" />
+    <Compile Include="Distributions\TriangularDistribution.cs" />
+    <Compile Include="Simulations\EventSimulation\Agent.cs" />
+    <Compile Include="Simulations\EventSimulation\SimulationCore.cs" />
+    <Compile Include="Simulations\EventSimulation\SimulationEvent.cs" />
+    <Compile Include="Simulations\MC\BaseMCSimulation.cs" />
     <Compile Include="Distributions\UniformDiscreetDistribution.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Simulations\S1.cs" />
+    <Compile Include="UsedSimulations\Other\Agent_S2.cs" />
+    <Compile Include="UsedSimulations\Other\Cook.cs" />
+    <Compile Include="UsedSimulations\Other\Food.cs" />
+    <Compile Include="UsedSimulations\Other\Table.cs" />
+    <Compile Include="UsedSimulations\Other\Waiter.cs" />
+    <Compile Include="UsedSimulations\S1.cs" />
     <Compile Include="Distributions\UniformContinuousDistribution.cs" />
+    <Compile Include="UsedSimulations\S2\Events\AgentEvents\ArrivalEvents\ArrivalEvent.cs" />
+    <Compile Include="UsedSimulations\S2\Events\AgentEvents\ArrivalEvents\ArrivalEvent_2.cs" />
+    <Compile Include="UsedSimulations\S2\Events\AgentEvents\ArrivalEvents\ArrivalEvent_6.cs" />
+    <Compile Include="UsedSimulations\S2\Events\AgentEvents\ArrivalEvents\ArrivalEvent_5.cs" />
+    <Compile Include="UsedSimulations\S2\Events\AgentEvents\ArrivalEvents\ArrivalEvent_4.cs" />
+    <Compile Include="UsedSimulations\S2\Events\AgentEvents\ArrivalEvents\ArrivalEvent_3.cs" />
+    <Compile Include="UsedSimulations\S2\Events\AgentEvents\ArrivalEvents\ArrivalEvent_1.cs" />
+    <Compile Include="UsedSimulations\S2\Events\AgentEvents\EndEatingFood_Event.cs" />
+    <Compile Include="UsedSimulations\S2\Events\ChefEvents\EndCooking_Event.cs" />
+    <Compile Include="UsedSimulations\S2\Events\ChefEvents\StartsCooking_Event.cs" />
+    <Compile Include="UsedSimulations\S2\Events\WaiterEvents\EndPaying_Event.cs" />
+    <Compile Include="UsedSimulations\S2\Events\WaiterEvents\StartPaying_Event.cs" />
+    <Compile Include="UsedSimulations\S2\Events\WaiterEvents\DeliveringFood_Event.cs" />
+    <Compile Include="UsedSimulations\S2\Events\WaiterEvents\WaitingForPickFood_Event.cs" />
+    <Compile Include="UsedSimulations\S2\S2_SimulationCore.cs" />
+    <Compile Include="UsedSimulations\S2\Events\WaiterEvents\WaitingForWaiter_Event.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:DISS.WindowsPages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="SimulationRuns_Page">
+      Title="McSimulationRuns_Page">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -69,8 +69,8 @@
                   IsReadOnly="True" 
                   x:Name="DataGrid_SimulationRuns" >
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Simulation number" Width="*" Binding="{Binding [0]}"/>
-                <DataGridTextColumn Header="Simulation outcome"  Width="*" Binding="{Binding [1]}"/>
+                <DataGridTextColumn Header="McSimulation number" Width="*" Binding="{Binding [0]}"/>
+                <DataGridTextColumn Header="McSimulation outcome"  Width="*" Binding="{Binding [1]}"/>
             </DataGrid.Columns>
         </DataGrid>
 

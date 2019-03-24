@@ -1,8 +1,9 @@
 ﻿using System;
+using Simulations.Distributions;
 
-namespace Simulation.Distributions
+namespace Simulations.Distributions
 {
-    class UniformContinuousDistribution : Distribution
+    public class UniformContinuousDistribution : Distribution
     {
         #region Global variables
 

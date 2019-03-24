@@ -34,7 +34,7 @@ namespace DISS.SimulationModels
         {
             simulationS1 = new S1();
             simulationS1.ReplicationFinished += SimulationS1_ReplicationFinished;
-            Simulation = simulationS1;
+            McSimulation = simulationS1;
         }
 
         public override void SetSimulationSpeed(int speed)

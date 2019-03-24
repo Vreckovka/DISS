@@ -8,7 +8,7 @@
       xmlns:geared="clr-namespace:LiveCharts.Geared;assembly=LiveCharts.Geared"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="1000"
-      Title="Page_LiveSimulation"
+      Title="Page_LiveMcSimulation"
       >
 
     <Page.Resources>
@@ -109,7 +109,7 @@
                                        FontSize="15"
                                        />
                             <TextBlock Grid.Row="2" 
-                                       Text="Simulation time: " 
+                                       Text="McSimulation time: " 
                                        FontSize="15"
                                        />
                         </Grid>
@@ -250,7 +250,7 @@
                                     <RowDefinition Height="auto"/>
                                     <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
-                                <TextBlock Text="Simulation speed" 
+                                <TextBlock Text="McSimulation speed" 
                                        HorizontalAlignment="Center" 
                                        />
                                 <Slider 

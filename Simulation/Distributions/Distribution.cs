@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Simulation.Distributions
+namespace Simulations.Distributions
 {
-    abstract class Distribution
+    public abstract class Distribution
     {
         public abstract double GetNext();
         public Distribution(int seed)
