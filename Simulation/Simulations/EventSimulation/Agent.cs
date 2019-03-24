@@ -9,7 +9,6 @@ namespace Simulations.Simulations.EventSimulation
     public class Agent
     {
         public int ID { get; }
-        public TimeSpan TimeInSimulation { get; set; }
         private static int count;
         public Agent()
         {

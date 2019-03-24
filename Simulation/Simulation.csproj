@@ -76,13 +76,12 @@
     <Compile Include="UsedSimulations\S2\Events\AgentEvents\ArrivalEvents\ArrivalEvent_1.cs" />
     <Compile Include="UsedSimulations\S2\Events\AgentEvents\EndEatingFood_Event.cs" />
     <Compile Include="UsedSimulations\S2\Events\ChefEvents\EndCooking_Event.cs" />
-    <Compile Include="UsedSimulations\S2\Events\ChefEvents\StartsCooking_Event.cs" />
     <Compile Include="UsedSimulations\S2\Events\WaiterEvents\EndPaying_Event.cs" />
     <Compile Include="UsedSimulations\S2\Events\WaiterEvents\StartPaying_Event.cs" />
     <Compile Include="UsedSimulations\S2\Events\WaiterEvents\DeliveringFood_Event.cs" />
-    <Compile Include="UsedSimulations\S2\Events\WaiterEvents\WaitingForPickFood_Event.cs" />
+    <Compile Include="UsedSimulations\S2\Events\WaiterEvents\EndOrderFood_Event.cs" />
     <Compile Include="UsedSimulations\S2\S2_SimulationCore.cs" />
-    <Compile Include="UsedSimulations\S2\Events\WaiterEvents\WaitingForWaiter_Event.cs" />
+    <Compile Include="UsedSimulations\S2\Events\WaiterEvents\StartOrder_Event.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -4,25 +4,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Simulations.Simulations.EventSimulation;
+using Simulations.UsedSimulations.Other;
 
 namespace Simulations.UsedSimulations.S2.Events.AgentEvents.ArrivalEvents
 {
-    class ArrivalEvent_3 : SimulationEvent
+    class ArrivalEvent_3 : ArrivalEvent
     {
       
-
-        public override void Execute()
-        {
-            throw new NotImplementedException();
-        }
-
         public ArrivalEvent_3(Agent agent, TimeSpan occurrenceTime, SimulationCore simulationCore) : base(agent, occurrenceTime, simulationCore)
         {
         }
 
-        public override string ToString()
+        public override void Execute()
         {
-            return "Agent " + Agent.ID + " Prichod zakaznika(3) - " + OccurrenceTime;
+            var core = (S2_SimulationCore)SimulationCore;
+
+            var nextArrival = new ArrivalEvent_3(new Agent_S2(3),
+                OccurrenceTime + TimeSpan.FromSeconds(core.arrivalGenerator_3.GetNext()),
+                core);
+
+            SimulationCore.Calendar.Enqueue(nextArrival, nextArrival.OccurrenceTime);
+
+            DefaultArrivalExec();
         }
     }
 }

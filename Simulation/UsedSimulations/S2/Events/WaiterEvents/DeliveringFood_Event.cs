@@ -13,26 +13,37 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
     class DeliveringFood_Event : SimulationEvent
     {
         public Waiter Waiter { get; set; }
-        public DeliveringFood_Event(Agent agent, 
-            TimeSpan occurrenceTime, 
+        public DeliveringFood_Event(Agent agent,
+            TimeSpan occurrenceTime,
             SimulationCore simulationCore,
             Waiter waiter) : base(agent, occurrenceTime, simulationCore)
         {
             Waiter = waiter;
             waiter.Occupied = true;
+            ((Agent_S2)Agent).DeliveredFood = OccurrenceTime;
         }
 
         public override void Execute()
         {
             var core = (S2_SimulationCore)SimulationCore;
 
+            List<TimeSpan> eatinFood = new List<TimeSpan>();
+
+            for (int i = 0; i < ((Agent_S2)Agent).AgentCount; i++)
+            {
+                eatinFood.Add(TimeSpan.FromSeconds(core.eatingFoodGenerator.GetNext()));
+            }
+
+            var last = (from x in eatinFood orderby x.TotalMilliseconds descending select x).First();
+
             var @event = new EndEatingFood_Event(Agent,
-                OccurrenceTime + TimeSpan.FromSeconds(core.eatingFoodGenerator.GetNext()),
+                OccurrenceTime + last,
                 core);
 
             core.Calendar.Enqueue(@event, @event.OccurrenceTime);
 
             Waiter.Occupied = false;
+            Waiter.MakeProperEvent(OccurrenceTime);
         }
 
         public override string ToString()

@@ -21,5 +21,6 @@ namespace Simulations.UsedSimulations.Other
         public Agent Agent { get; set; }
         public Waiter Waiter { get; set; }
         public Cook Cook { get; set; }
+        public bool LastFood { get; set; }
     }
 }

@@ -11,13 +11,14 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
     class StartPaying_Event : SimulationEvent
     {
         public Waiter Waiter { get; set; }
-        public StartPaying_Event(Agent agent, 
-            TimeSpan occurrenceTime, 
+        public StartPaying_Event(Agent agent,
+            TimeSpan occurrenceTime,
             SimulationCore simulationCore,
             Waiter waiter) : base(agent, occurrenceTime, simulationCore)
         {
             Waiter = waiter;
             Waiter.Occupied = true;
+            ((Agent_S2)Agent).StartPaying = OccurrenceTime;
         }
 
         public override void Execute()
@@ -25,9 +26,9 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             var core = (S2_SimulationCore)SimulationCore;
 
             var @event = new EndPaying_Event(Agent,
-                OccurrenceTime + TimeSpan.FromSeconds(core.payingGenerator.GetNext()),
-                core,
-                Waiter);
+                        OccurrenceTime + TimeSpan.FromSeconds(core.payingGenerator.GetNext()),
+                        core,
+                        Waiter);
 
             core.Calendar.Enqueue(@event, @event.OccurrenceTime);
         }

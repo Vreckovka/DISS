@@ -11,43 +11,37 @@ namespace Simulations.UsedSimulations.S2.Events.ChefEvents
 {
     class EndCooking_Event : SimulationEvent
     {
-        public Cook Cook { get; set; }
-        public Food Food { get; set; }
+        private Food Food;
+        private Cook Cook;
         public EndCooking_Event(Agent agent,
             TimeSpan occurrenceTime,
             SimulationCore simulationCore,
+            Food food,
             Cook cook) : base(agent, occurrenceTime, simulationCore)
         {
+            Food = food;
             Cook = cook;
             Cook.Occupied = true;
+           
         }
 
         public override void Execute()
         {
             var core = (S2_SimulationCore)SimulationCore;
-            
-            if (core.FoodsWaintingToCook.Count > 0)
+
+            Cook.MakeProperEvent(OccurrenceTime);
+
+            if (Food.LastFood)
             {
-               Food nextFood = core.FoodsWaintingToCook.Dequeue();
+                core.FoodsWaitingForDeliver.Enqueue(new KeyValuePair<Agent, Food>(Agent, Food));
 
-                var @event = new StartsCooking_Event(nextFood.Agent,
-                    OccurrenceTime + nextFood.Time,
-                    core);
+                var freeWaiter = (from x in core.Waiters where x.Occupied == false select x).FirstOrDefault();
 
-                core.Calendar.Enqueue(@event, @event.OccurrenceTime);
+                if (freeWaiter != null)
+                {
+                   freeWaiter.MakeProperEvent(OccurrenceTime);
+                }
             }
-
-            var freeWaiter = (from x in core.Waiters where x.Occupied == false select x).FirstOrDefault();
-
-            var @event1 = new DeliveringFood_Event(Agent,
-                OccurrenceTime + TimeSpan.FromSeconds(core.deliveringFoodGenerator.GetNext()),
-                core,
-                freeWaiter
-                );
-
-            core.Calendar.Enqueue(@event1, @event1.OccurrenceTime);
-
-            Cook.Occupied = false;
         }
 
         public override string ToString()

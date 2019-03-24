@@ -42,13 +42,18 @@ namespace Simulations.UsedSimulations.S2
 
         #region Statistics
         public int CountOfLeftAgents { get; set; }
+        public int CountOfStayedAgents { get; set; }
+        public int CountOfPaiedAgents { get; set; }
+        public double WaitingTimeOfAgents { get; set; }
         #endregion
 
         public List<Table> Tables { get; set; } = new List<Table>();
         public List<Waiter> Waiters { get; set; } = new List<Waiter>();
         public List<Cook> Cooks { get; set; } = new List<Cook>();
-        public Queue<Food> FoodsWaintingToCook { get; set; } = new Queue<Food>();
+        public Queue<Food> FoodsWaintingForCook { get; set; } = new Queue<Food>();
         public Queue<Agent> AgentsWaitingForOrder { get; set; } = new Queue<Agent>();
+        public Queue<KeyValuePair<Agent, Food>> FoodsWaitingForDeliver { get; set; } = new Queue<KeyValuePair<Agent, Food>>();
+        public Queue<Agent> AgentsWaitingForPaying { get; set; } = new Queue<Agent>();
 
         private void CreateDistributions(Random random)
         {
@@ -59,7 +64,7 @@ namespace Simulations.UsedSimulations.S2
             arrivalGenerator_5 = new ExponentialDistribution(1.0 / ((60.0 / 3) * 60), random.Next());
             arrivalGenerator_6 = new ExponentialDistribution(1.0 / ((60.0 / 4) * 60), random.Next());
 
-            waintingForOrderGenerator = new UniformContinuousDistribution(45, 120, random.Next());
+
             cezarSaladGenerator = new UniformDiscreetDistribution(380, 440, random.Next());
             penneSaladGenerator =
                 new DiscreetEmpiricalDistribution3(185, 330, 0.15, 331, 630, 0.5, 631, 930, random.Next());
@@ -68,9 +73,10 @@ namespace Simulations.UsedSimulations.S2
 
             richSaladGenerator = 180;
 
-            deliveringFoodGenerator = new UniformContinuousDistribution(45, 120, random.Next());
+            waintingForOrderGenerator = new UniformContinuousDistribution(45, 120, random.Next());
             eatingFoodGenerator = new TriangularDistribution(random.Next(), 3 * 60, 30 * 60, 15 * 60);
             payingGenerator = new UniformContinuousDistribution(43, 97, random.Next());
+            deliveringFoodGenerator = new UniformContinuousDistribution(23, 80, random.Next());
 
             pickFoodRandom = new Random(random.Next());
 
@@ -103,41 +109,43 @@ namespace Simulations.UsedSimulations.S2
         }
         protected override void BeforeSimulation()
         {
-            CreateDistributions(new Random(1));
+            CreateDistributions(new Random());
             CreateTables();
-            
+
             Calendar.Enqueue(new ArrivalEvent_1(new Agent_S2(1), SimulationTime, this), SimulationTime);
-            //Calendar.Enqueue(new ArrivalEvent_2(new Agent(), SimulationTime, this), SimulationTime);
-            //Calendar.Enqueue(new ArrivalEvent_3(new Agent(), SimulationTime, this), SimulationTime);
-            //Calendar.Enqueue(new ArrivalEvent_4(new Agent(), SimulationTime, this), SimulationTime);
-            //Calendar.Enqueue(new ArrivalEvent_5(new Agent(), SimulationTime, this), SimulationTime);
-            //Calendar.Enqueue(new ArrivalEvent_6(new Agent(), SimulationTime, this), SimulationTime);
+            Calendar.Enqueue(new ArrivalEvent_2(new Agent_S2(2), SimulationTime, this), SimulationTime);
+            Calendar.Enqueue(new ArrivalEvent_3(new Agent_S2(3), SimulationTime, this), SimulationTime);
+            Calendar.Enqueue(new ArrivalEvent_4(new Agent_S2(4), SimulationTime, this), SimulationTime);
+            Calendar.Enqueue(new ArrivalEvent_5(new Agent_S2(5), SimulationTime, this), SimulationTime);
+            Calendar.Enqueue(new ArrivalEvent_6(new Agent_S2(6), SimulationTime, this), SimulationTime);
         }
 
 
-        public override void Simulate()
+        public override double[] Simulate()
         {
             BeforeSimulation();
 
-            while (SimulationTime <= EndTime)
+            while (SimulationTime <= EndTime && Calendar.Count > 0)
             {
-
                 SimulationEvent acutalEvent = Calendar.Dequeue();
+
+                if (acutalEvent.OccurrenceTime > EndTime)
+                    break;
+
                 Console.WriteLine(acutalEvent);
 
                 SimulationTime = acutalEvent.OccurrenceTime;
                 acutalEvent.Execute();
-
-                PrintSimulation();
             }
-        }
 
-        private void PrintSimulation()
-        {
-            //foreach (var VARIABLE in _allEvents)
-            //{
-            //    Console.WriteLine(VARIABLE);
-            //}
+            return new double[]
+            {
+               (double) CountOfLeftAgents / (CountOfStayedAgents + CountOfLeftAgents),
+               (double) WaitingTimeOfAgents / CountOfStayedAgents,
+               CountOfStayedAgents,
+               CountOfLeftAgents,
+               CountOfPaiedAgents
+            };
         }
 
         public S2_SimulationCore(TimeSpan startTime,
@@ -148,11 +156,11 @@ namespace Simulations.UsedSimulations.S2
 
             for (int i = 0; i < numberOfWaiters; i++)
             {
-                Waiters.Add(new Waiter());
+                Waiters.Add(new Waiter(this));
             }
             for (int i = 0; i < numberOfCooks; i++)
             {
-                Cooks.Add(new Cook());
+                Cooks.Add(new Cook(this));
             }
         }
     }

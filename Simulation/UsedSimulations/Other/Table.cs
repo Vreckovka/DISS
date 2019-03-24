@@ -10,5 +10,10 @@ namespace Simulations.UsedSimulations.Other
     {
         public int Capacity { get; set; }
         public bool Occupied { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Capacity} {Occupied}";
+        }
     }
 }

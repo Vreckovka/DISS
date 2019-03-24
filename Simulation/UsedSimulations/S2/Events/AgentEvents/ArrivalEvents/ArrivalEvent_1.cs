@@ -25,21 +25,7 @@ namespace Simulations.UsedSimulations.S2.Events.AgentEvents.ArrivalEvents
 
             SimulationCore.Calendar.Enqueue(nextArrival, nextArrival.OccurrenceTime);
 
-            var table = GetProperTable();
-
-            if (table == null)
-            {
-                core.CountOfLeftAgents++;
-            }
-            else
-            {
-                table.Occupied = true;
-                ((Agent_S2)Agent).Table = table;
-            }
-
             DefaultArrivalExec();
         }
-
-
     }
 }

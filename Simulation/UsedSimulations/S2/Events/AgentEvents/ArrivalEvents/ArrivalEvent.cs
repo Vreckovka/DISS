@@ -11,40 +11,57 @@ namespace Simulations.UsedSimulations.S2.Events.AgentEvents.ArrivalEvents
 {
     abstract class ArrivalEvent : SimulationEvent
     {
-        public ArrivalEvent(Agent agent, TimeSpan occurrenceTime, SimulationCore simulationCore) : base(agent, occurrenceTime, simulationCore)
+        public ArrivalEvent(Agent agent, 
+            TimeSpan occurrenceTime, 
+            SimulationCore simulationCore) : base(agent, occurrenceTime, simulationCore)
         {
+            ((Agent_S2)Agent).ArrivalTime = OccurrenceTime;
         }
 
-        public  abstract override void Execute();
+        public abstract override void Execute();
 
         protected void DefaultArrivalExec()
         {
             var core = (S2_SimulationCore)SimulationCore;
-            var freeWaiter = (from x in core.Waiters where x.Occupied == false select x).FirstOrDefault();
+            var table = GetProperTable();
 
-            if (freeWaiter != null)
-                SimulationCore.Calendar.Enqueue(new WaitingForWaiter_Event(Agent,
-                        OccurrenceTime,
-                        SimulationCore),
-                    OccurrenceTime);
+            if (table == null)
+            {
+                core.CountOfLeftAgents += ((Agent_S2)Agent).AgentCount;
+                //Console.WriteLine($"Agent {Agent} ------------ ZAKAZNIK ODISIEL ---------------");
+                return;
+            }
             else
             {
-                core.AgentQueue.Enqueue(Agent);
+                table.Occupied = true;
+                ((Agent_S2)Agent).Table = table;
+                core.CountOfStayedAgents += ((Agent_S2)Agent).AgentCount;
+            }
+
+            core.AgentsWaitingForOrder.Enqueue(Agent);
+
+            var freeWaiter = (from x in core.Waiters where x.Occupied == false select x).FirstOrDefault();
+           
+            if (freeWaiter != null)
+            {
+                freeWaiter.MakeProperEvent(OccurrenceTime);
             }
         }
 
         protected Table GetProperTable()
         {
             var core = (S2_SimulationCore)SimulationCore;
-            var tables = (from x in core.Tables orderby x.Capacity where x.Occupied == false select x).ToList();
 
-            var agentCount = ((Agent_S2) Agent).AgentCount;
-            foreach (var table in tables)
+            var table = (from x in core.Tables
+                         orderby x.Capacity
+                         where x.Occupied == false
+                         where x.Capacity >= ((Agent_S2)Agent).AgentCount
+                         select x).FirstOrDefault();
+
+
+            if (table != null)
             {
-                if (table.Capacity >= agentCount)
-                {
-                    return table;
-                }
+                return table;
             }
 
             return null;

@@ -52,13 +52,20 @@ namespace Simulations.Distributions
         public override double GetNext()
         {
             var next = _random.NextDouble();
-
+                
             if (next < _p1)
+            {
                 return _random.Next(_min1, _max1 + 1);
-            else if(next < _p2 + _p1)
+                
+            }
+            else if (next < _p2 + _p1)
+            {
                 return _random.Next(_min2, _max2 + 1);
+            }
             else
+            {
                 return _random.Next(_min3, _max3 + 1);
+            }  
         }
     }
 }

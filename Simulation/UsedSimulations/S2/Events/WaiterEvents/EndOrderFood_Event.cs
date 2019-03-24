@@ -5,45 +5,64 @@ using System.Text;
 using System.Threading.Tasks;
 using Simulations.Simulations.EventSimulation;
 using Simulations.UsedSimulations.Other;
+using Simulations.UsedSimulations.S2.Events.ChefEvents;
 
-namespace Simulations.UsedSimulations.S2.Events.ChefEvents
+namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
 {
-    class StartsCooking_Event : SimulationEvent
+    class EndOrderFood_Event : SimulationEvent
     {
-        public StartsCooking_Event(Agent agent, TimeSpan occurrenceTime, SimulationCore simulationCore) : base(agent, occurrenceTime, simulationCore)
+        public Waiter Waiter { get; set; }
+        public EndOrderFood_Event(Agent agent,
+            TimeSpan occurrenceTime,
+            SimulationCore simulationCore,
+            Waiter waiter) : base(agent, occurrenceTime, simulationCore)
         {
+            Waiter = waiter;
+            Waiter.Occupied = true;
+            ((Agent_S2)Agent).EndOrder = OccurrenceTime;
         }
 
         public override void Execute()
         {
             var core = (S2_SimulationCore)SimulationCore;
 
-            Food food = GetFood();
-            
-            var freeCook = (from x in core.Cooks where x.Occupied == false select x).FirstOrDefault();
+            List<Food> foods = new List<Food>();
 
-            if (freeCook == null)
+            for (int i = 0; i < ((Agent_S2)Agent).AgentCount; i++)
             {
-                core.FoodsWaintingToCook.Enqueue(food);
+                foods.Add(GetFood());
             }
-            else
-            {
-                food.Cook = freeCook;
 
-                var @event = new EndCooking_Event(Agent,
-                    food.Time + OccurrenceTime,
-                    core,
-                    freeCook
+            (from x in foods orderby x.Time descending select x).First().LastFood = true;
+
+            foreach (var food in foods)
+            {
+                var freeCook = (from x in core.Cooks where x.Occupied == false select x).FirstOrDefault();
+
+                if (freeCook == null)
+                {
+                    core.FoodsWaintingForCook.Enqueue(food);
+                }
+                else
+                {
+                    food.Cook = freeCook;
+                    var @event = new EndCooking_Event(Agent,
+                        food.Time + OccurrenceTime,
+                        core,
+                        food,
+                        freeCook
                     );
-
-                @event.Food = food;
-
-                core.Calendar.Enqueue(@event, @event.OccurrenceTime);
+                    core.Calendar.Enqueue(@event, @event.OccurrenceTime);
+                }
             }
+
+            Waiter.Occupied = false;
+            Waiter.MakeProperEvent(OccurrenceTime);
         }
 
         private Food GetFood()
         {
+          
             var core = (S2_SimulationCore)SimulationCore;
             var prb = core.pickFoodRandom.NextDouble();
 
@@ -53,12 +72,14 @@ namespace Simulations.UsedSimulations.S2.Events.ChefEvents
                 {
                     FoodType = FoodType.CezarSalad,
                     Time = TimeSpan.FromSeconds(core.cezarSaladGenerator.GetNext()),
-                    Agent = Agent
+                    Agent = Agent,
+                    
                 };
             }
 
             else if (prb < 0.65)
             {
+               
                 return new Food()
                 {
                     FoodType = FoodType.PenneSalad,
@@ -88,7 +109,7 @@ namespace Simulations.UsedSimulations.S2.Events.ChefEvents
 
         public override string ToString()
         {
-            return $"Agent: {Agent}\t\t  Zaciatok varenia  \t{OccurrenceTime}";
+            return $"Agent: {Agent}, Obsluha: {Waiter.Id}  Vyber jedla   \t{OccurrenceTime}";
         }
     }
 }

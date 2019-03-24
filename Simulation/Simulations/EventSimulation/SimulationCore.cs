@@ -11,13 +11,12 @@ namespace Simulations.Simulations.EventSimulation
     {
         public TimeSpan SimulationTime { get; set; }
         public FibonacciHeap<SimulationEvent, TimeSpan> Calendar { get; set; } = new FibonacciHeap<SimulationEvent, TimeSpan>(PriorityQueueType.Minimum);
-        public Queue<Agent> AgentQueue { get; set; } = new Queue<Agent>();
         public bool IsServiceOccupied { get; set; }
 
         TimeSpan _lastTime;
 
         protected abstract void BeforeSimulation();
-        public abstract void Simulate();
+        public abstract double[] Simulate();
         public TimeSpan EndTime { get; set; }
         public SimulationCore(TimeSpan startTime, TimeSpan endTime)
         {

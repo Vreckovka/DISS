@@ -12,6 +12,14 @@ namespace Simulations.UsedSimulations.Other
         public Table Table { get; set; }
         public int AgentCount { get; set; }
 
+        public TimeSpan WaitingTime { get; set; }
+        public TimeSpan ArrivalTime { get; set; }
+        public TimeSpan StartOrder { get; set; }
+        public TimeSpan EndOrder { get; set; }
+        public TimeSpan DeliveredFood { get; set; }
+        public TimeSpan EndEatingFood { get; set; }
+        public TimeSpan StartPaying { get; set; }
+
         public Agent_S2(int agentCount)
         {
             AgentCount = agentCount;

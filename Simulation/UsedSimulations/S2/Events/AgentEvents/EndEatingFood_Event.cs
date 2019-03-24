@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Simulations.Simulations.EventSimulation;
+using Simulations.UsedSimulations.Other;
 using Simulations.UsedSimulations.S2.Events.WaiterEvents;
 
 namespace Simulations.UsedSimulations.S2.Events.AgentEvents
@@ -12,23 +13,20 @@ namespace Simulations.UsedSimulations.S2.Events.AgentEvents
     {
         public EndEatingFood_Event(Agent agent, TimeSpan occurrenceTime, SimulationCore simulationCore) : base(agent, occurrenceTime, simulationCore)
         {
+            ((Agent_S2)Agent).EndEatingFood = OccurrenceTime;
         }
 
         public override void Execute()
         {
-           
             var core = (S2_SimulationCore)SimulationCore;
+
+            core.AgentsWaitingForPaying.Enqueue(Agent);
 
             var freeWaiter = (from x in core.Waiters where x.Occupied == false select x).FirstOrDefault();
 
             if (freeWaiter != null)
             {
-                var @event = new StartPaying_Event(Agent,
-                    OccurrenceTime,
-                    core,
-                    freeWaiter);
-
-                core.Calendar.Enqueue(@event, @event.OccurrenceTime);
+                freeWaiter.MakeProperEvent(OccurrenceTime);
             }
         }
 
