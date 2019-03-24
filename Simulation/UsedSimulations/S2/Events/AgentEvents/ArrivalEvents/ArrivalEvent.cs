@@ -11,8 +11,8 @@ namespace Simulations.UsedSimulations.S2.Events.AgentEvents.ArrivalEvents
 {
     abstract class ArrivalEvent : SimulationEvent
     {
-        public ArrivalEvent(Agent agent, 
-            TimeSpan occurrenceTime, 
+        public ArrivalEvent(Agent agent,
+            TimeSpan occurrenceTime,
             SimulationCore simulationCore) : base(agent, occurrenceTime, simulationCore)
         {
             ((Agent_S2)Agent).ArrivalTime = OccurrenceTime;
@@ -41,11 +41,9 @@ namespace Simulations.UsedSimulations.S2.Events.AgentEvents.ArrivalEvents
             core.AgentsWaitingForOrder.Enqueue(Agent);
 
             var freeWaiter = (from x in core.Waiters where x.Occupied == false select x).FirstOrDefault();
-           
+
             if (freeWaiter != null)
-            {
-                freeWaiter.MakeProperEvent(OccurrenceTime);
-            }
+                freeWaiter.Occupied = freeWaiter.MakeProperEvent(OccurrenceTime);
         }
 
         protected Table GetProperTable()

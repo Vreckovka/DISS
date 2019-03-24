@@ -23,9 +23,8 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
         {
             var core = (S2_SimulationCore)SimulationCore;
 
-            Waiter.Occupied = false;
             ((Agent_S2) Agent).Table.Occupied = false;
-            Waiter.MakeProperEvent(OccurrenceTime);
+            Waiter.Occupied = Waiter.MakeProperEvent(OccurrenceTime);
 
             ((Agent_S2)Agent).WaitingTime += ((Agent_S2)Agent).StartOrder - ((Agent_S2)Agent).ArrivalTime;
             ((Agent_S2)Agent).WaitingTime += ((Agent_S2)Agent).DeliveredFood - ((Agent_S2)Agent).EndOrder;

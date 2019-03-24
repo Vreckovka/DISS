@@ -17,7 +17,6 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             Waiter waiter) : base(agent, occurrenceTime, simulationCore)
         {
             Waiter = waiter;
-            waiter.Occupied = true;
             ((Agent_S2)Agent).StartOrder = OccurrenceTime;
         }
 

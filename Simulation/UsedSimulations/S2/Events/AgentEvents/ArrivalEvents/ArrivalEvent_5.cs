@@ -22,7 +22,8 @@ namespace Simulations.UsedSimulations.S2.Events.AgentEvents.ArrivalEvents
                 OccurrenceTime + TimeSpan.FromSeconds(core.arrivalGenerator_5.GetNext()),
                 core);
 
-            SimulationCore.Calendar.Enqueue(nextArrival, nextArrival.OccurrenceTime);   
+            if (nextArrival.OccurrenceTime <= SimulationCore.EndTime)
+                SimulationCore.Calendar.Enqueue(nextArrival, nextArrival.OccurrenceTime);   
 
             DefaultArrivalExec();
         }

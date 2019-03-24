@@ -25,9 +25,7 @@ namespace Simulations.UsedSimulations.S2.Events.AgentEvents
             var freeWaiter = (from x in core.Waiters where x.Occupied == false select x).FirstOrDefault();
 
             if (freeWaiter != null)
-            {
-                freeWaiter.MakeProperEvent(OccurrenceTime);
-            }
+                freeWaiter.Occupied = freeWaiter.MakeProperEvent(OccurrenceTime);
         }
 
         public override string ToString()

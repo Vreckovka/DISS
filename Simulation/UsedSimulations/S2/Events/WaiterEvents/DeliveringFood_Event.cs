@@ -42,8 +42,7 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
 
             core.Calendar.Enqueue(@event, @event.OccurrenceTime);
 
-            Waiter.Occupied = false;
-            Waiter.MakeProperEvent(OccurrenceTime);
+            Waiter.Occupied = Waiter.MakeProperEvent(OccurrenceTime);
         }
 
         public override string ToString()

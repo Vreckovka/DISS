@@ -112,12 +112,20 @@ namespace Simulations.UsedSimulations.S2
             CreateDistributions(new Random());
             CreateTables();
 
-            Calendar.Enqueue(new ArrivalEvent_1(new Agent_S2(1), SimulationTime, this), SimulationTime);
-            Calendar.Enqueue(new ArrivalEvent_2(new Agent_S2(2), SimulationTime, this), SimulationTime);
-            Calendar.Enqueue(new ArrivalEvent_3(new Agent_S2(3), SimulationTime, this), SimulationTime);
-            Calendar.Enqueue(new ArrivalEvent_4(new Agent_S2(4), SimulationTime, this), SimulationTime);
-            Calendar.Enqueue(new ArrivalEvent_5(new Agent_S2(5), SimulationTime, this), SimulationTime);
-            Calendar.Enqueue(new ArrivalEvent_6(new Agent_S2(6), SimulationTime, this), SimulationTime);
+            var time_1 = TimeSpan.FromSeconds(arrivalGenerator_1.GetNext());
+            var time_2 = TimeSpan.FromSeconds(arrivalGenerator_1.GetNext());
+            var time_3 = TimeSpan.FromSeconds(arrivalGenerator_1.GetNext());
+            var time_4 = TimeSpan.FromSeconds(arrivalGenerator_1.GetNext());
+            var time_5 = TimeSpan.FromSeconds(arrivalGenerator_1.GetNext());
+            var time_6 = TimeSpan.FromSeconds(arrivalGenerator_1.GetNext());
+
+
+            Calendar.Enqueue(new ArrivalEvent_1(new Agent_S2(1), time_1, this), time_1);
+            Calendar.Enqueue(new ArrivalEvent_2(new Agent_S2(2), time_2, this), time_2);
+            Calendar.Enqueue(new ArrivalEvent_3(new Agent_S2(3), time_3, this), time_3);
+            Calendar.Enqueue(new ArrivalEvent_4(new Agent_S2(4), time_4, this), time_4);
+            Calendar.Enqueue(new ArrivalEvent_5(new Agent_S2(5), time_5, this), time_5);
+            Calendar.Enqueue(new ArrivalEvent_6(new Agent_S2(6), time_6, this), time_6);
         }
 
 
@@ -125,14 +133,11 @@ namespace Simulations.UsedSimulations.S2
         {
             BeforeSimulation();
 
-            while (SimulationTime <= EndTime && Calendar.Count > 0)
+            while (Calendar.Count > 0)
             {
                 SimulationEvent acutalEvent = Calendar.Dequeue();
 
-                if (acutalEvent.OccurrenceTime > EndTime)
-                    break;
-
-                Console.WriteLine(acutalEvent);
+                //Console.WriteLine(acutalEvent);
 
                 SimulationTime = acutalEvent.OccurrenceTime;
                 acutalEvent.Execute();

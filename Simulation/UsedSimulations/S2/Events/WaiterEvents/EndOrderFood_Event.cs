@@ -38,31 +38,18 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             foreach (var food in foods)
             {
                 var freeCook = (from x in core.Cooks where x.Occupied == false select x).FirstOrDefault();
+                core.FoodsWaintingForCook.Enqueue(food);
 
-                if (freeCook == null)
-                {
-                    core.FoodsWaintingForCook.Enqueue(food);
-                }
-                else
-                {
-                    food.Cook = freeCook;
-                    var @event = new EndCooking_Event(Agent,
-                        food.Time + OccurrenceTime,
-                        core,
-                        food,
-                        freeCook
-                    );
-                    core.Calendar.Enqueue(@event, @event.OccurrenceTime);
-                }
+                if (freeCook != null)
+                    freeCook.MakeProperEvent(OccurrenceTime);
             }
 
-            Waiter.Occupied = false;
-            Waiter.MakeProperEvent(OccurrenceTime);
+            Waiter.Occupied = Waiter.MakeProperEvent(OccurrenceTime);
         }
 
         private Food GetFood()
         {
-          
+
             var core = (S2_SimulationCore)SimulationCore;
             var prb = core.pickFoodRandom.NextDouble();
 
@@ -73,13 +60,13 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
                     FoodType = FoodType.CezarSalad,
                     Time = TimeSpan.FromSeconds(core.cezarSaladGenerator.GetNext()),
                     Agent = Agent,
-                    
+
                 };
             }
 
             else if (prb < 0.65)
             {
-               
+
                 return new Food()
                 {
                     FoodType = FoodType.PenneSalad,
