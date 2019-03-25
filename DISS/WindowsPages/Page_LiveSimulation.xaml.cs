@@ -257,7 +257,7 @@ namespace DISS.WindowsPages
                 if (!page_S1.SimulationRunning)
                 {
                     page_S1.ResumeSimulation();
-                    page_S1.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfIteration.Text));
+                    page_S1.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfIteration.Text),10);
 
                 }
                 else
@@ -294,7 +294,7 @@ namespace DISS.WindowsPages
                 page_S1.StopSimulation();
                 page_S1.ResumeSimulation();
                 aTimer.Enabled = true;
-                page_S1.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfIteration.Text));
+                page_S1.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfIteration.Text),10);
 
                 Play_Button.Tag = "Play";
             }

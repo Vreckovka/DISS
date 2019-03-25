@@ -19,8 +19,10 @@ namespace Simulations.UsedSimulations.Other
         public FoodType FoodType { get; set; }
         public TimeSpan Time { get; set; }
         public Agent Agent { get; set; }
-        public Waiter Waiter { get; set; }
-        public Cook Cook { get; set; }
-        public bool LastFood { get; set; }
+
+        public override string ToString()
+        {
+            return $"{FoodType} {Time} ";
+        }
     }
 }

@@ -28,20 +28,16 @@ namespace Simulations.UsedSimulations.S2.Events.ChefEvents
         public override void Execute()
         {
             var core = (S2_SimulationCore)SimulationCore;
+            ((Agent_S2) Agent).FoodLeft--;
 
-            Cook.MakeProperEvent(OccurrenceTime);
-
-            if (Food.LastFood)
+            if (((Agent_S2)Agent).FoodLeft == 0)
             {
-                core.FoodsWaitingForDeliver.Enqueue(new KeyValuePair<Agent, Food>(Agent, Food));
-
-                var freeWaiter = (from x in core.Waiters where x.Occupied == false select x).FirstOrDefault();
-
-                if (freeWaiter != null)
-                {
-                   freeWaiter.MakeProperEvent(OccurrenceTime);
-                }
+                core.AgentsWaitingForDeliver.Enqueue(Agent);
+                core.CheckWaiters(OccurrenceTime);
             }
+
+            Cook.Occupied = false;
+            core.CheckCooks(OccurrenceTime);
         }
 
         public override string ToString()

@@ -8,36 +8,35 @@ using Simulations.UsedSimulations.Other;
 
 namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
 {
-    class StartPaying_Event : SimulationEvent
+    class StartDeliveringFood_Event : SimulationEvent
     {
-        public Waiter Waiter { get; set; }
-        public StartPaying_Event(Agent agent,
-            TimeSpan occurrenceTime,
+        private Waiter Waiter;
+        public StartDeliveringFood_Event(Agent agent, 
+            TimeSpan occurrenceTime, 
             SimulationCore simulationCore,
             Waiter waiter) : base(agent, occurrenceTime, simulationCore)
         {
             Waiter = waiter;
-            ((Agent_S2)Agent).StartPaying = OccurrenceTime;
         }
 
         public override void Execute()
         {
             var core = (S2_SimulationCore)SimulationCore;
-
-            var @event = new EndPaying_Event(Agent,
-                        OccurrenceTime + TimeSpan.FromSeconds(core.payingGenerator.GetNext()),
-                        core,
-                        Waiter);
+            
+            var @event = new EndDeliveringFood_Event(Agent,
+                OccurrenceTime + TimeSpan.FromSeconds(core.deliveringFoodGenerator.GetNext()),
+                core,
+                Waiter
+            );
 
             core.Calendar.Enqueue(@event, @event.OccurrenceTime);
 
             Waiter.Occupied = true;
-
         }
 
         public override string ToString()
         {
-            return $"Agent: {Agent}, Obsluha: {Waiter.Id}  Zaciatok platenia  \t{OccurrenceTime}";
+            return $"Agent: {Agent}, Obsluha: {Waiter.Id} Zaciatok Prinesenie jedla  \t{OccurrenceTime}";
         }
     }
 }

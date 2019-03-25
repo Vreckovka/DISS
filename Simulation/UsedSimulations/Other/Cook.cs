@@ -29,17 +29,13 @@ namespace Simulations.UsedSimulations.Other
             {
                 Food nextFood = _core.FoodsWaintingForCook.Dequeue();
 
-                var @event = new EndCooking_Event(nextFood.Agent,
-                    OccurrenceTime + nextFood.Time,
+                var @event = new StartCooking_Event(nextFood.Agent,
+                    OccurrenceTime,
                     _core,
-                    nextFood,
-                    this);
+                    this,
+                    nextFood);
 
                 _core.Calendar.Enqueue(@event, @event.OccurrenceTime);
-            }
-            else
-            {
-                this.Occupied = false;
             }
         }
 

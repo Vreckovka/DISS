@@ -35,15 +35,11 @@ namespace Simulations.UsedSimulations.S2.Events.AgentEvents.ArrivalEvents
             {
                 table.Occupied = true;
                 ((Agent_S2)Agent).Table = table;
+
                 core.CountOfStayedAgents += ((Agent_S2)Agent).AgentCount;
+                core.AgentsWaitingForOrder.Enqueue(Agent);
+                core.CheckWaiters(OccurrenceTime);
             }
-
-            core.AgentsWaitingForOrder.Enqueue(Agent);
-
-            var freeWaiter = (from x in core.Waiters where x.Occupied == false select x).FirstOrDefault();
-
-            if (freeWaiter != null)
-                freeWaiter.Occupied = freeWaiter.MakeProperEvent(OccurrenceTime);
         }
 
         protected Table GetProperTable()

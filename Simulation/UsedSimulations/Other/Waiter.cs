@@ -23,7 +23,7 @@ namespace Simulations.UsedSimulations.Other
             _core = core;
         }
 
-        public bool MakeProperEvent(TimeSpan OccurrenceTime)
+        public void MakeProperEvent(TimeSpan OccurrenceTime)
         {
             if (_core.AgentsWaitingForOrder.Count != 0)
             {
@@ -35,20 +35,18 @@ namespace Simulations.UsedSimulations.Other
                 );
 
                 _core.Calendar.Enqueue(@event, @event.OccurrenceTime);
-                return true;
             }
-            else if (_core.FoodsWaitingForDeliver.Count != 0)
+            else if (_core.AgentsWaitingForDeliver.Count != 0)
             {
-                var food = _core.FoodsWaitingForDeliver.Dequeue();
+                var agent = _core.AgentsWaitingForDeliver.Dequeue();
 
-                var @event = new DeliveringFood_Event(food.Key,
-                    OccurrenceTime + TimeSpan.FromSeconds(_core.deliveringFoodGenerator.GetNext()),
+                var @event = new StartDeliveringFood_Event(agent,
+                    OccurrenceTime,
                     _core,
                     this
                 );
 
                 _core.Calendar.Enqueue(@event, @event.OccurrenceTime);
-                return true;
             }
             else if (_core.AgentsWaitingForPaying.Count != 0)
             {
@@ -60,10 +58,12 @@ namespace Simulations.UsedSimulations.Other
                     this);
 
                 _core.Calendar.Enqueue(@event, @event.OccurrenceTime);
-                return true;
             }
+        }
 
-            return false;
+        public override string ToString()
+        {
+            return $"{Id} {Occupied}";
         }
     }
 }

@@ -52,7 +52,7 @@ namespace Simulations.UsedSimulations.S2
         public List<Cook> Cooks { get; set; } = new List<Cook>();
         public Queue<Food> FoodsWaintingForCook { get; set; } = new Queue<Food>();
         public Queue<Agent> AgentsWaitingForOrder { get; set; } = new Queue<Agent>();
-        public Queue<KeyValuePair<Agent, Food>> FoodsWaitingForDeliver { get; set; } = new Queue<KeyValuePair<Agent, Food>>();
+        public Queue<Agent> AgentsWaitingForDeliver { get; set; } = new Queue<Agent>();
         public Queue<Agent> AgentsWaitingForPaying { get; set; } = new Queue<Agent>();
 
         private void CreateDistributions(Random random)
@@ -66,11 +66,8 @@ namespace Simulations.UsedSimulations.S2
 
 
             cezarSaladGenerator = new UniformDiscreetDistribution(380, 440, random.Next());
-            penneSaladGenerator =
-                new DiscreetEmpiricalDistribution3(185, 330, 0.15, 331, 630, 0.5, 631, 930, random.Next());
-            wholeWheatSpaghettiGenerator =
-                new DiscreetEmpiricalDistribution3(290, 356, 0.2, 357, 540, 0.43, 541, 600, random.Next());
-
+            penneSaladGenerator = new DiscreetEmpiricalDistribution3(185, 330, 0.15, 331, 630, 0.5, 631, 930, random.Next());
+            wholeWheatSpaghettiGenerator = new DiscreetEmpiricalDistribution3(290, 356, 0.2, 357, 540, 0.43, 541, 600, random.Next());
             richSaladGenerator = 180;
 
             waintingForOrderGenerator = new UniformContinuousDistribution(45, 120, random.Next());
@@ -107,28 +104,45 @@ namespace Simulations.UsedSimulations.S2
                 });
             }
         }
+
+        public void CheckCooks(TimeSpan OccurrenceTime)
+        {
+            var freeCook = (from x in Cooks where x.Occupied == false select x).FirstOrDefault();
+
+            if (freeCook != null)
+                freeCook.MakeProperEvent(OccurrenceTime);
+        }
+
+        public void CheckWaiters(TimeSpan OccurrenceTime)
+        {
+            var freeWaiter = (from x in Waiters where x.Occupied == false select x).FirstOrDefault();
+
+            if (freeWaiter != null)
+                freeWaiter.MakeProperEvent(OccurrenceTime);
+
+        }
         protected override void BeforeSimulation()
         {
             CreateDistributions(new Random());
             CreateTables();
 
             var time_1 = TimeSpan.FromSeconds(arrivalGenerator_1.GetNext());
-            var time_2 = TimeSpan.FromSeconds(arrivalGenerator_1.GetNext());
-            var time_3 = TimeSpan.FromSeconds(arrivalGenerator_1.GetNext());
-            var time_4 = TimeSpan.FromSeconds(arrivalGenerator_1.GetNext());
-            var time_5 = TimeSpan.FromSeconds(arrivalGenerator_1.GetNext());
-            var time_6 = TimeSpan.FromSeconds(arrivalGenerator_1.GetNext());
+            var time_2 = TimeSpan.FromSeconds(arrivalGenerator_2.GetNext());
+            var time_3 = TimeSpan.FromSeconds(arrivalGenerator_3.GetNext());
+            var time_4 = TimeSpan.FromSeconds(arrivalGenerator_4.GetNext());
+            var time_5 = TimeSpan.FromSeconds(arrivalGenerator_5.GetNext());
+            var time_6 = TimeSpan.FromSeconds(arrivalGenerator_6.GetNext());
 
 
-            Calendar.Enqueue(new ArrivalEvent_1(new Agent_S2(1), time_1, this), time_1);
-            Calendar.Enqueue(new ArrivalEvent_2(new Agent_S2(2), time_2, this), time_2);
-            Calendar.Enqueue(new ArrivalEvent_3(new Agent_S2(3), time_3, this), time_3);
-            Calendar.Enqueue(new ArrivalEvent_4(new Agent_S2(4), time_4, this), time_4);
-            Calendar.Enqueue(new ArrivalEvent_5(new Agent_S2(5), time_5, this), time_5);
-            Calendar.Enqueue(new ArrivalEvent_6(new Agent_S2(6), time_6, this), time_6);
+            Calendar.Enqueue(new ArrivalEvent_1(new Agent_S2(1), time_1 + SimulationTime, this), time_1 + SimulationTime);
+            Calendar.Enqueue(new ArrivalEvent_2(new Agent_S2(2), time_2 + SimulationTime, this), time_2 + SimulationTime);
+            Calendar.Enqueue(new ArrivalEvent_3(new Agent_S2(3), time_3 + SimulationTime, this), time_3 + SimulationTime);
+            Calendar.Enqueue(new ArrivalEvent_4(new Agent_S2(4), time_4 + SimulationTime, this), time_4 + SimulationTime);
+            Calendar.Enqueue(new ArrivalEvent_5(new Agent_S2(5), time_5 + SimulationTime, this), time_5 + SimulationTime);
+            Calendar.Enqueue(new ArrivalEvent_6(new Agent_S2(6), time_6 + SimulationTime, this), time_6 + SimulationTime);
         }
 
-
+   
         public override double[] Simulate()
         {
             BeforeSimulation();
@@ -136,11 +150,17 @@ namespace Simulations.UsedSimulations.S2
             while (Calendar.Count > 0)
             {
                 SimulationEvent acutalEvent = Calendar.Dequeue();
+                SimulationTime = acutalEvent.OccurrenceTime;
+
+                if (!Cooling)
+                {
+                    if (SimulationTime >= EndTime)
+                        break;
+                }
 
                 //Console.WriteLine(acutalEvent);
+                acutalEvent.Execute();      
 
-                SimulationTime = acutalEvent.OccurrenceTime;
-                acutalEvent.Execute();
             }
 
             return new double[]
@@ -156,7 +176,8 @@ namespace Simulations.UsedSimulations.S2
         public S2_SimulationCore(TimeSpan startTime,
             TimeSpan endTime,
             int numberOfWaiters,
-            int numberOfCooks) : base(startTime, endTime)
+            int numberOfCooks,
+            bool cooling) : base(startTime, endTime, cooling)
         {
 
             for (int i = 0; i < numberOfWaiters; i++)

@@ -20,6 +20,8 @@ namespace Simulations.UsedSimulations.Other
         public TimeSpan EndEatingFood { get; set; }
         public TimeSpan StartPaying { get; set; }
 
+        public int FoodLeft { get; set; }
+
         public Agent_S2(int agentCount)
         {
             AgentCount = agentCount;

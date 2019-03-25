@@ -23,7 +23,7 @@ namespace S2
             for (int i = 0; i < count; i++)
             {
                 S2_SimulationCore s2_SimulationCore =
-                    new S2_SimulationCore(new TimeSpan(11, 0, 0), new TimeSpan(20, 0, 0), 5, 14);
+                    new S2_SimulationCore(new TimeSpan(11, 0, 0), new TimeSpan(20, 0, 0), 5, 14, false);
 
                 var sim = s2_SimulationCore.Simulate();
                 celkoOdislo += sim[0];
@@ -32,14 +32,24 @@ namespace S2
                 prisloC += sim[2];
                 celkoOdisloC += sim[3];
                 plateny += sim[4];
+
+                if (i % 1000 == 0)
+                {
+                    Console.Clear();
+                    Console.WriteLine($"Pocet odidenych {celkoOdislo / i}\n" +
+                                      $"Priemerny cas cakania {casCakania / i}\n" +
+                                      $"Pocet ostajucich {prisloC / i}\n" +
+                                      $"Pocet odidenych {celkoOdisloC / i},\n" +
+                                      $"Pocet zaplatenych {plateny / i}");
+                }
             }
 
-            Console.WriteLine( $"Pocet odidenych {celkoOdislo / count}\n" +
-                               $"Priemerny cas cakania {casCakania / count}\n" +
-                               $"Pocet ostajucich {prisloC/count}\n" +
-                               $"Pocet odidenych {celkoOdisloC/count},\n" +
-                               $"Pocet zaplatenych {plateny/count}");
 
+            Console.WriteLine($"Pocet odidenych {celkoOdislo / count}\n" +
+                              $"Priemerny cas cakania {casCakania / count}\n" +
+                              $"Pocet ostajucich {prisloC / count}\n" +
+                              $"Pocet odidenych {celkoOdisloC / count},\n" +
+                              $"Pocet zaplatenych {plateny / count}");
             Console.ReadLine();
         }
     }

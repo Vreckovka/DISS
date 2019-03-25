@@ -19,13 +19,9 @@ namespace Simulations.UsedSimulations.S2.Events.AgentEvents
         public override void Execute()
         {
             var core = (S2_SimulationCore)SimulationCore;
-
             core.AgentsWaitingForPaying.Enqueue(Agent);
 
-            var freeWaiter = (from x in core.Waiters where x.Occupied == false select x).FirstOrDefault();
-
-            if (freeWaiter != null)
-                freeWaiter.Occupied = freeWaiter.MakeProperEvent(OccurrenceTime);
+            core.CheckWaiters(OccurrenceTime);
         }
 
         public override string ToString()

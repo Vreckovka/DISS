@@ -10,16 +10,15 @@ using Simulations.UsedSimulations.S2.Events.ChefEvents;
 
 namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
 {
-    class DeliveringFood_Event : SimulationEvent
+    class EndDeliveringFood_Event : SimulationEvent
     {
         public Waiter Waiter { get; set; }
-        public DeliveringFood_Event(Agent agent,
+        public EndDeliveringFood_Event(Agent agent,
             TimeSpan occurrenceTime,
             SimulationCore simulationCore,
             Waiter waiter) : base(agent, occurrenceTime, simulationCore)
         {
             Waiter = waiter;
-            waiter.Occupied = true;
             ((Agent_S2)Agent).DeliveredFood = OccurrenceTime;
         }
 
@@ -42,12 +41,14 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
 
             core.Calendar.Enqueue(@event, @event.OccurrenceTime);
 
-            Waiter.Occupied = Waiter.MakeProperEvent(OccurrenceTime);
+            Waiter.Occupied = false;
+
+            core.CheckWaiters(OccurrenceTime);
         }
 
         public override string ToString()
         {
-            return $"Agent: {Agent}, Obsluha: {Waiter.Id}  Prinesenie jedla  \t{OccurrenceTime}";
+            return $"Agent: {Agent}, Obsluha: {Waiter.Id} Koniec Prinesenie jedla  \t{OccurrenceTime}";
         }
     }
 }

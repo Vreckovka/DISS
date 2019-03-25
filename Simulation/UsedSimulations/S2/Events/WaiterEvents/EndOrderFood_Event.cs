@@ -18,7 +18,7 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             Waiter waiter) : base(agent, occurrenceTime, simulationCore)
         {
             Waiter = waiter;
-            Waiter.Occupied = true;
+          
             ((Agent_S2)Agent).EndOrder = OccurrenceTime;
         }
 
@@ -33,18 +33,16 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
                 foods.Add(GetFood());
             }
 
-            (from x in foods orderby x.Time descending select x).First().LastFood = true;
+            ((Agent_S2) Agent).FoodLeft = ((Agent_S2) Agent).AgentCount;
 
             foreach (var food in foods)
             {
-                var freeCook = (from x in core.Cooks where x.Occupied == false select x).FirstOrDefault();
                 core.FoodsWaintingForCook.Enqueue(food);
-
-                if (freeCook != null)
-                    freeCook.MakeProperEvent(OccurrenceTime);
+                core.CheckCooks(OccurrenceTime);
             }
 
-            Waiter.Occupied = Waiter.MakeProperEvent(OccurrenceTime);
+            Waiter.Occupied = false;
+            core.CheckWaiters(OccurrenceTime);
         }
 
         private Food GetFood()
@@ -60,7 +58,6 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
                     FoodType = FoodType.CezarSalad,
                     Time = TimeSpan.FromSeconds(core.cezarSaladGenerator.GetNext()),
                     Agent = Agent,
-
                 };
             }
 
