@@ -23,11 +23,6 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
         {
             var core = (S2_SimulationCore)SimulationCore;
 
-            ((Agent_S2)Agent).WaitingTime += ((Agent_S2)Agent).StartOrder - ((Agent_S2)Agent).ArrivalTime;
-            ((Agent_S2)Agent).WaitingTime += ((Agent_S2)Agent).DeliveredFood - ((Agent_S2)Agent).EndOrder;
-            ((Agent_S2)Agent).WaitingTime += ((Agent_S2)Agent).StartPaying - ((Agent_S2)Agent).EndEatingFood;
-
-             core.WaitingTimeOfAgents += ((Agent_S2)Agent).WaitingTime.TotalSeconds * ((Agent_S2)Agent).AgentCount;
              core.CountOfPaiedAgents += ((Agent_S2) Agent).AgentCount;
 
              Waiter.Occupied = false;

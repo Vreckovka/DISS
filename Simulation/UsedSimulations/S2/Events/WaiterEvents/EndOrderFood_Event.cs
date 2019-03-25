@@ -18,7 +18,7 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             Waiter waiter) : base(agent, occurrenceTime, simulationCore)
         {
             Waiter = waiter;
-            ((Agent_S2)Agent).EndOrder = OccurrenceTime;
+            
         }
 
         public override void Execute()
@@ -42,6 +42,8 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
 
             Waiter.Occupied = false;
             core.CheckWaiters(OccurrenceTime);
+
+            ((Agent_S2)Agent).EndOrder = OccurrenceTime;
         }
 
         private Food GetFood()

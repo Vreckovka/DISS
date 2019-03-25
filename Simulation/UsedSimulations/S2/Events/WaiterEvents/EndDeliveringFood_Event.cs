@@ -19,7 +19,7 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             Waiter waiter) : base(agent, occurrenceTime, simulationCore)
         {
             Waiter = waiter;
-            ((Agent_S2)Agent).DeliveredFood = OccurrenceTime;
+           
         }
 
         public override void Execute()
@@ -42,8 +42,10 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             core.Calendar.Enqueue(@event, @event.OccurrenceTime);
 
             Waiter.Occupied = false;
-
             core.CheckWaiters(OccurrenceTime);
+
+            ((Agent_S2)Agent).DeliveredFood = OccurrenceTime;
+            core.WaitingTimeOfAgents += (((Agent_S2)Agent).DeliveredFood - ((Agent_S2)Agent).EndOrder).TotalSeconds * ((Agent_S2)Agent).AgentCount;
         }
 
         public override string ToString()

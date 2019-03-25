@@ -15,7 +15,7 @@ namespace Simulations.UsedSimulations.S2.Events.AgentEvents.ArrivalEvents
             TimeSpan occurrenceTime,
             SimulationCore simulationCore) : base(agent, occurrenceTime, simulationCore)
         {
-            ((Agent_S2)Agent).ArrivalTime = OccurrenceTime;
+           
         }
 
         public abstract override void Execute();
@@ -24,6 +24,7 @@ namespace Simulations.UsedSimulations.S2.Events.AgentEvents.ArrivalEvents
         {
             var core = (S2_SimulationCore)SimulationCore;
             var table = GetProperTable();
+            ((Agent_S2)Agent).ArrivalTime = OccurrenceTime;
 
             if (table == null)
             {
