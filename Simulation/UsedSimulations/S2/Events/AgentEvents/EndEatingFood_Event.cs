@@ -13,12 +13,14 @@ namespace Simulations.UsedSimulations.S2.Events.AgentEvents
     {
         public EndEatingFood_Event(Agent agent, TimeSpan occurrenceTime, SimulationCore simulationCore) : base(agent, occurrenceTime, simulationCore)
         {
-            ((Agent_S2)Agent).EndEatingFood = OccurrenceTime;
+            
         }
 
         public override void Execute()
         {
             var core = (S2_SimulationCore)SimulationCore;
+
+            ((Agent_S2)Agent).EndEatingFood = OccurrenceTime;
             core.AgentsWaitingForPaying.Enqueue(Agent);
 
             core.CheckWaiters(OccurrenceTime);

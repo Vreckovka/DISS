@@ -166,7 +166,7 @@ namespace Simulations.UsedSimulations.S2
             return new double[]
             {
                (double) CountOfLeftAgents / (CountOfStayedAgents + CountOfLeftAgents),
-               (double) WaitingTimeOfAgents / CountOfStayedAgents,
+               (double) WaitingTimeOfAgents / CountOfPaiedAgents,
                CountOfStayedAgents,
                CountOfLeftAgents,
                CountOfPaiedAgents

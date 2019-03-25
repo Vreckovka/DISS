@@ -35,7 +35,7 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
 
             Waiter.Occupied = true;
 
-            core.WaitingTimeOfAgents += (((Agent_S2)Agent).StartPaying - ((Agent_S2)Agent).EndEatingFood).TotalSeconds * ((Agent_S2)Agent).AgentCount;
+            
         }
 
         public override string ToString()

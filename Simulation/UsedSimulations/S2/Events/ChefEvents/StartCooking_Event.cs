@@ -34,7 +34,6 @@ namespace Simulations.UsedSimulations.S2.Events.ChefEvents
 
             core.Calendar.Enqueue(@event, @event.OccurrenceTime);
 
-            Cook.Occupied = true;
         }
 
         public override string ToString()

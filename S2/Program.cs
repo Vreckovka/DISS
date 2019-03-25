@@ -23,7 +23,7 @@ namespace S2
             for (int i = 0; i < count; i++)
             {
                 S2_SimulationCore s2_SimulationCore =
-                    new S2_SimulationCore(new TimeSpan(11, 0, 0), new TimeSpan(20, 0, 0), 5, 14, false);
+                    new S2_SimulationCore(new TimeSpan(11, 0, 0), new TimeSpan(20, 0, 0), 4, 16, false);
 
                 var sim = s2_SimulationCore.Simulate();
                 celkoOdislo += sim[0];
@@ -33,7 +33,7 @@ namespace S2
                 celkoOdisloC += sim[3];
                 plateny += sim[4];
 
-                if (i % 1000 == 0)
+                if (i % 500 == 0)
                 {
                     Console.Clear();
                     Console.WriteLine($"Pocet odidenych {celkoOdislo / i}\n" +

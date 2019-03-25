@@ -25,6 +25,7 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
         public override void Execute()
         {
             var core = (S2_SimulationCore)SimulationCore;
+            ((Agent_S2)Agent).DeliveredFood = OccurrenceTime;
 
             List<TimeSpan> eatinFood = new List<TimeSpan>();
 
@@ -44,8 +45,6 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             Waiter.Occupied = false;
             core.CheckWaiters(OccurrenceTime);
 
-            ((Agent_S2)Agent).DeliveredFood = OccurrenceTime;
-            core.WaitingTimeOfAgents += (((Agent_S2)Agent).DeliveredFood - ((Agent_S2)Agent).EndOrder).TotalSeconds * ((Agent_S2)Agent).AgentCount;
         }
 
         public override string ToString()

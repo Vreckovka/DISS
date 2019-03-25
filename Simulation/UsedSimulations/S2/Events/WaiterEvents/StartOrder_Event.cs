@@ -34,7 +34,7 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
 
             Waiter.Occupied = true;
 
-            core.WaitingTimeOfAgents += (((Agent_S2)Agent).StartOrder - ((Agent_S2)Agent).ArrivalTime).TotalSeconds * ((Agent_S2)Agent).AgentCount;
+          
         }
 
         public override string ToString()

@@ -36,6 +36,8 @@ namespace Simulations.UsedSimulations.Other
                     nextFood);
 
                 _core.Calendar.Enqueue(@event, @event.OccurrenceTime);
+
+                this.Occupied = true;
             }
         }
 

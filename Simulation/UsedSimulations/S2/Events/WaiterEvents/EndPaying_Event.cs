@@ -11,8 +11,8 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
     class EndPaying_Event : SimulationEvent
     {
         public Waiter Waiter { get; set; }
-        public EndPaying_Event(Agent agent, 
-            TimeSpan occurrenceTime, 
+        public EndPaying_Event(Agent agent,
+            TimeSpan occurrenceTime,
             SimulationCore simulationCore,
             Waiter waiter) : base(agent, occurrenceTime, simulationCore)
         {
@@ -23,12 +23,18 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
         {
             var core = (S2_SimulationCore)SimulationCore;
 
-             core.CountOfPaiedAgents += ((Agent_S2) Agent).AgentCount;
+            core.WaitingTimeOfAgents += (((Agent_S2)Agent).StartOrder - ((Agent_S2)Agent).ArrivalTime).TotalSeconds * ((Agent_S2)Agent).AgentCount;
+            core.WaitingTimeOfAgents += (((Agent_S2)Agent).DeliveredFood - ((Agent_S2)Agent).EndOrder).TotalSeconds * ((Agent_S2)Agent).AgentCount;
+            core.WaitingTimeOfAgents += (((Agent_S2)Agent).StartPaying - ((Agent_S2)Agent).EndEatingFood).TotalSeconds * ((Agent_S2)Agent).AgentCount;
+                        
+            core.CountOfPaiedAgents += ((Agent_S2)Agent).AgentCount;
 
-             Waiter.Occupied = false;
-             ((Agent_S2)Agent).Table.Occupied = false;
 
-             core.CheckWaiters(OccurrenceTime);
+
+            Waiter.Occupied = false;
+            ((Agent_S2)Agent).Table.Occupied = false;
+
+            core.CheckWaiters(OccurrenceTime);
         }
 
         public override string ToString()
