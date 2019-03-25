@@ -18,7 +18,6 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             Waiter waiter) : base(agent, occurrenceTime, simulationCore)
         {
             Waiter = waiter;
-          
             ((Agent_S2)Agent).EndOrder = OccurrenceTime;
         }
 
@@ -47,7 +46,6 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
 
         private Food GetFood()
         {
-
             var core = (S2_SimulationCore)SimulationCore;
             var prb = core.pickFoodRandom.NextDouble();
 
