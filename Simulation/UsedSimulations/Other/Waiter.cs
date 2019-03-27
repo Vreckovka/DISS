@@ -23,6 +23,8 @@ namespace Simulations.UsedSimulations.Other
             _core = core;
         }
 
+       
+
         public void MakeProperEvent(TimeSpan OccurrenceTime)
         {
             if (_core.AgentsWaitingForOrder.Count != 0)
@@ -35,6 +37,7 @@ namespace Simulations.UsedSimulations.Other
                 );
 
                 _core.Calendar.Enqueue(@event, @event.OccurrenceTime);
+                this.Occupied = true;
             }
             else if (_core.AgentsWaitingForDeliver.Count != 0)
             {
@@ -45,7 +48,7 @@ namespace Simulations.UsedSimulations.Other
                     _core,
                     this
                 );
-
+                this.Occupied = true;
                 _core.Calendar.Enqueue(@event, @event.OccurrenceTime);
             }
             else if (_core.AgentsWaitingForPaying.Count != 0)
@@ -58,7 +61,8 @@ namespace Simulations.UsedSimulations.Other
                     this);
 
                 _core.Calendar.Enqueue(@event, @event.OccurrenceTime);
-            }
+                this.Occupied = true;
+            }           
         }
 
         public override string ToString()

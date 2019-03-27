@@ -33,11 +33,14 @@ namespace Simulations.UsedSimulations.S2.Events.ChefEvents
             if (((Agent_S2)Agent).FoodLeft == 0)
             {
                 core.AgentsWaitingForDeliver.Enqueue(Agent);
-                core.CheckWaiters(OccurrenceTime);
+               
             }
 
             Cook.Occupied = false;
+            core.FreeCooks.Enqueue(Cook);
+
             core.CheckCooks(OccurrenceTime);
+            core.CheckWaiters(OccurrenceTime);
         }
 
         public override string ToString()

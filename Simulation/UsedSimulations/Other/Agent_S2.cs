@@ -11,7 +11,6 @@ namespace Simulations.UsedSimulations.Other
     {
         public Table Table { get; set; }
         public int AgentCount { get; set; }
-
         public TimeSpan WaitingTime { get; set; }
         public TimeSpan ArrivalTime { get; set; }
         public TimeSpan StartOrder { get; set; }

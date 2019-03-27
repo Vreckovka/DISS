@@ -50,6 +50,8 @@ namespace Simulations.UsedSimulations.S2
         public List<Table> Tables { get; set; } = new List<Table>();
         public List<Waiter> Waiters { get; set; } = new List<Waiter>();
         public List<Cook> Cooks { get; set; } = new List<Cook>();
+        public Queue<Cook> FreeCooks { get; set; }
+        public Queue<Waiter> FreeWaiters { get; set; }
         public Queue<Food> FoodsWaintingForCook { get; set; } = new Queue<Food>();
         public Queue<Agent> AgentsWaitingForOrder { get; set; } = new Queue<Agent>();
         public Queue<Agent> AgentsWaitingForDeliver { get; set; } = new Queue<Agent>();
@@ -76,6 +78,8 @@ namespace Simulations.UsedSimulations.S2
             deliveringFoodGenerator = new UniformContinuousDistribution(23, 80, random.Next());
 
             pickFoodRandom = new Random(random.Next());
+
+
 
         }
         private void CreateTables()
@@ -107,19 +111,38 @@ namespace Simulations.UsedSimulations.S2
 
         public void CheckCooks(TimeSpan OccurrenceTime)
         {
-            var freeCook = (from x in Cooks where x.Occupied == false select x).FirstOrDefault();
+            //var freeCook = (from x in Cooks where x.Occupied == false select x).FirstOrDefault();
+            if (FreeCooks.Count > 0)
+            {
+                var freeCook = FreeCooks.Dequeue();
 
-            if (freeCook != null)
-                freeCook.MakeProperEvent(OccurrenceTime);
+                if (freeCook != null)
+                    freeCook.MakeProperEvent(OccurrenceTime);
+            }
         }
+        public bool CheckWaiterEvents()
+        {
+            if (AgentsWaitingForOrder.Count != 0 || AgentsWaitingForDeliver.Count != 0 || AgentsWaitingForPaying.Count != 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+
 
         public void CheckWaiters(TimeSpan OccurrenceTime)
         {
-            var freeWaiter = (from x in Waiters where x.Occupied == false select x).FirstOrDefault();
-
-            if (freeWaiter != null)
-                freeWaiter.MakeProperEvent(OccurrenceTime);
-
+            //var freeWaiter = (from x in Waiters where x.Occupied == false select x).FirstOrDefault();
+            if (FreeWaiters.Count > 0)
+            {
+                if (CheckWaiterEvents())
+                {
+                    var freeWaiter = FreeWaiters.Dequeue();
+                    freeWaiter.MakeProperEvent(OccurrenceTime);
+                }
+            }
         }
         protected override void BeforeSimulation()
         {
@@ -142,7 +165,7 @@ namespace Simulations.UsedSimulations.S2
             Calendar.Enqueue(new ArrivalEvent_6(new Agent_S2(6), time_6 + SimulationTime, this), time_6 + SimulationTime);
         }
 
-   
+
         public override double[] Simulate()
         {
             BeforeSimulation();
@@ -152,15 +175,15 @@ namespace Simulations.UsedSimulations.S2
                 SimulationEvent acutalEvent = Calendar.Dequeue();
                 SimulationTime = acutalEvent.OccurrenceTime;
 
+              
+
+                acutalEvent.Execute();
+
                 if (!Cooling)
                 {
                     if (SimulationTime >= EndTime)
                         break;
                 }
-
-                //Console.WriteLine(acutalEvent);
-                acutalEvent.Execute();      
-
             }
 
             return new double[]
@@ -169,24 +192,38 @@ namespace Simulations.UsedSimulations.S2
                (double) WaitingTimeOfAgents / CountOfPaiedAgents,
                CountOfStayedAgents,
                CountOfLeftAgents,
-               CountOfPaiedAgents
+               CountOfPaiedAgents,
+               CountOfStayedAgents + CountOfLeftAgents
             };
         }
 
+        private void Check()
+        {
+            var freeWaiters = (from x in Waiters where x.Occupied == false select x).Count();
+            var freeChefs = (from x in Cooks where x.Occupied == false select x).Count();
+
+            if (freeChefs > 0 && FoodsWaintingForCook.Count > 0)
+                ;
+
+            if (freeWaiters > 0 && (AgentsWaitingForOrder.Count > 0 || AgentsWaitingForDeliver.Count > 0 || AgentsWaitingForPaying.Count > 0))
+                ;
+        }
         public S2_SimulationCore(TimeSpan startTime,
             TimeSpan endTime,
             int numberOfWaiters,
             int numberOfCooks,
             bool cooling) : base(startTime, endTime, cooling)
         {
+            FreeWaiters = new Queue<Waiter>();
+            FreeCooks = new Queue<Cook>();
 
             for (int i = 0; i < numberOfWaiters; i++)
             {
-                Waiters.Add(new Waiter(this));
+                FreeWaiters.Enqueue(new Waiter(this));
             }
             for (int i = 0; i < numberOfCooks; i++)
             {
-                Cooks.Add(new Cook(this));
+                FreeCooks.Enqueue(new Cook(this));
             }
         }
     }

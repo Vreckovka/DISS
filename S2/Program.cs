@@ -17,13 +17,14 @@ namespace S2
             double celkoOdisloC = 0;
             double prisloC = 0;
             double plateny = 0;
+            double celkovo = 0;
 
-            int count = 10000;
+            int count = 100000;
 
             for (int i = 0; i < count; i++)
             {
                 S2_SimulationCore s2_SimulationCore =
-                    new S2_SimulationCore(new TimeSpan(11, 0, 0), new TimeSpan(20, 0, 0), 4, 16, false);
+                    new S2_SimulationCore(new TimeSpan(11, 0, 0), new TimeSpan(20, 0, 0), 4, 16, true);
 
                 var sim = s2_SimulationCore.Simulate();
                 celkoOdislo += sim[0];
@@ -32,15 +33,19 @@ namespace S2
                 prisloC += sim[2];
                 celkoOdisloC += sim[3];
                 plateny += sim[4];
+                celkovo += sim[5];
+
 
                 if (i % 500 == 0)
                 {
                     Console.Clear();
+                    Console.WriteLine(i);
                     Console.WriteLine($"Pocet odidenych {celkoOdislo / i}\n" +
                                       $"Priemerny cas cakania {casCakania / i}\n" +
                                       $"Pocet ostajucich {prisloC / i}\n" +
                                       $"Pocet odidenych {celkoOdisloC / i},\n" +
-                                      $"Pocet zaplatenych {plateny / i}");
+                                      $"Pocet zaplatenych {plateny / i}\n" +
+                                      $"Celkovy pocet {celkovo / i}");
                 }
             }
 

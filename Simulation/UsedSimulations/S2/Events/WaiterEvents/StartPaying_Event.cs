@@ -18,6 +18,7 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             Waiter waiter) : base(agent, occurrenceTime, simulationCore)
         {
             Waiter = waiter;
+            Waiter.Occupied = true;
         }
 
 
@@ -34,8 +35,6 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             core.Calendar.Enqueue(@event, @event.OccurrenceTime);
 
             Waiter.Occupied = true;
-
-            
         }
 
         public override string ToString()

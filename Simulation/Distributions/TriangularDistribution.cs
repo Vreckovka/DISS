@@ -24,8 +24,8 @@ namespace Simulations.Distributions
         public override double GetNext()
         {
             double F = (double)(c - a) / (b - a);
-            double rand = _random.NextDouble()
-                ;
+            double rand = _random.NextDouble();
+                
             if (rand < F)
             {
                 return a + Math.Sqrt(rand * (b - a) * (c - a));

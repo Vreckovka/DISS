@@ -29,9 +29,9 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
                         
             core.CountOfPaiedAgents += ((Agent_S2)Agent).AgentCount;
 
-
-
             Waiter.Occupied = false;
+            core.FreeWaiters.Enqueue(Waiter);
+
             ((Agent_S2)Agent).Table.Occupied = false;
 
             core.CheckWaiters(OccurrenceTime);

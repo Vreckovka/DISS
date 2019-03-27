@@ -24,6 +24,7 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
         public override void Execute()
         {
             var core = (S2_SimulationCore)SimulationCore;
+            ((Agent_S2)Agent).EndOrder = OccurrenceTime;
 
             List<Food> foods = new List<Food>();
 
@@ -41,9 +42,11 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             }
 
             Waiter.Occupied = false;
+            core.FreeWaiters.Enqueue(Waiter);
+
             core.CheckWaiters(OccurrenceTime);
 
-            ((Agent_S2)Agent).EndOrder = OccurrenceTime;
+            
         }
 
         private Food GetFood()
@@ -93,7 +96,7 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
 
         public override string ToString()
         {
-            return $"Agent: {Agent}, Obsluha: {Waiter.Id}  Vyber jedla   \t{OccurrenceTime}";
+            return $"Agent: {Agent}, Obsluha: {Waiter.Id} koniec Vyber jedla   \t{OccurrenceTime}";
         }
     }
 }

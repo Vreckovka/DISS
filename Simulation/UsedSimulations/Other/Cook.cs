@@ -39,6 +39,10 @@ namespace Simulations.UsedSimulations.Other
 
                 this.Occupied = true;
             }
+            else
+            {
+                _core.FreeCooks.Enqueue(this);
+            }
         }
 
         public override string ToString()

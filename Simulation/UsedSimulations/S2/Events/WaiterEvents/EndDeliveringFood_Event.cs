@@ -43,6 +43,8 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             core.Calendar.Enqueue(@event, @event.OccurrenceTime);
 
             Waiter.Occupied = false;
+            core.FreeWaiters.Enqueue(Waiter);
+
             core.CheckWaiters(OccurrenceTime);
 
         }
