@@ -29,11 +29,11 @@ namespace Simulations.UsedSimulations.S2.Events.AgentEvents.ArrivalEvents
                     break;
                 case 2:
                     nextArrival = new Arrival_Event(new Agent_S2(2),
-                        OccurrenceTime +SimulationCore.arrivalGenerator_2.GetNext(), SimulationCore);
+                        OccurrenceTime + SimulationCore.arrivalGenerator_2.GetNext(), SimulationCore);
                     break;
                 case 3:
                     nextArrival = new Arrival_Event(new Agent_S2(3),
-                        OccurrenceTime +SimulationCore.arrivalGenerator_3.GetNext(), SimulationCore);
+                        OccurrenceTime + SimulationCore.arrivalGenerator_3.GetNext(), SimulationCore);
                     break;
                 case 4:
                     nextArrival = new Arrival_Event(new Agent_S2(4),
@@ -85,15 +85,10 @@ namespace Simulations.UsedSimulations.S2.Events.AgentEvents.ArrivalEvents
 
         protected Table GetProperTable()
         {
-            var core = (SimulationCore_S2)SimulationCore;
-
-            var table = (from x in core.Tables
-                         orderby x.Capacity
-                         where x.Occupied == false
-                         where x.Capacity >= ((Agent_S2)Agent).AgentCount
-                         select x).FirstOrDefault();
-
-            return table;
+            return (from x in SimulationCore.Tables
+                    where x.Occupied == false
+                    where x.Capacity >= Agent.AgentCount
+                    select x).FirstOrDefault();
         }
 
         public override string ToString()

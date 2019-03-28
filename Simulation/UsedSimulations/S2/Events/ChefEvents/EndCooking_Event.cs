@@ -22,23 +22,20 @@ namespace Simulations.UsedSimulations.S2.Events.ChefEvents
 
         public override void Execute()
         {
-            var core = SimulationCore;
             Agent.FoodLeft--;
 
             if (Agent.FoodLeft == 0)
             {
-                core.AgentsWaitingForDeliver.Enqueue(Agent);
-
+                SimulationCore.AgentsWaitingForDeliver.Enqueue(Agent);
+                SimulationCore.CheckWaiters(OccurrenceTime);
             }
 
             Cook.Occupied = false;
             Cook.WorkedTime += OccurrenceTime - Cook.LastEventTime;
-            core.ChangeCooksStats(OccurrenceTime);
+            SimulationCore.ChangeCooksStats(OccurrenceTime);
 
-            core.FreeCooks.Enqueue(Cook);
-
-            core.CheckCooks(OccurrenceTime);
-            core.CheckWaiters(OccurrenceTime);
+            SimulationCore.FreeCooks.Enqueue(Cook);
+            SimulationCore.CheckCooks(OccurrenceTime);
         }
 
         public override string ToString()

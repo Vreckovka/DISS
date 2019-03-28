@@ -7,22 +7,15 @@ using Simulations.Simulations.EventSimulation;
 
 namespace Simulations.UsedSimulations.Other
 {
-    public enum FoodType
-    {
-        CezarSalad,
-        PenneSalad,
-        WholeWheatSpaghetti,
-        RichSalad
-    }
+
     public class Food
     {
-        public FoodType FoodType { get; set; }
         public double Time { get; set; }
         public Agent_S2 Agent { get; set; }
 
         public override string ToString()
         {
-            return $"{FoodType} {Time} ";
+            return $"{Time} ";
         }
     }
 }

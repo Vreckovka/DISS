@@ -90,7 +90,7 @@ namespace Simulations.UsedSimulations.S2
         public List<Waiter> Waiters { get; set; } = new List<Waiter>();
         public List<Cook> Cooks { get; set; } = new List<Cook>();
         public Queue<Cook> FreeCooks { get; set; }
-        public FibonacciHeap<Waiter, double> FreeWaiters { get; set; }
+        public BinaryHeap<Waiter, double> FreeWaiters { get; set; }
         public Queue<Food> FoodsWaintingForCook { get; set; } = new Queue<Food>();
         public Queue<Agent_S2> AgentsWaitingForOrder { get; set; } = new Queue<Agent_S2>();
         public Queue<Agent_S2> AgentsWaitingForDeliver { get; set; } = new Queue<Agent_S2>();
@@ -196,23 +196,17 @@ namespace Simulations.UsedSimulations.S2
             _lastChangeTimeTable_2 = StartTime.TotalSeconds;
             _lastChangeTimeTable_4 = StartTime.TotalSeconds;
             _lastChangeTimeTable_6 = StartTime.TotalSeconds;
+
+            Tables = Tables.OrderBy(x => x.Capacity).ToList();
         }
         #endregion
 
         #region Simulation Methods
-        public bool CheckCooksEvents()
-        {
-            if (FoodsWaintingForCook.Count > 0)
-            {
-                return true;
-            }
-            return false;
-        }
         public void CheckCooks(double OccurrenceTime)
         {
             if (FreeCooks.Count > 0)
             {
-                if (CheckCooksEvents())
+                if (FoodsWaintingForCook.Count > 0)
                 {
                     ChangeCooksStats(OccurrenceTime);
 
@@ -221,23 +215,13 @@ namespace Simulations.UsedSimulations.S2
                 }
             }
         }
-
-        public bool CheckWaiterEvents()
-        {
-            if (AgentsWaitingForOrder.Count != 0 || AgentsWaitingForDeliver.Count != 0 || AgentsWaitingForPaying.Count != 0)
-            {
-                return true;
-            }
-            return false;
-        }
         public void CheckWaiters(double OccurrenceTime)
         {
             if (FreeWaiters.Count > 0)
             {
-                if (CheckWaiterEvents())
+                if (AgentsWaitingForOrder.Count != 0 || AgentsWaitingForDeliver.Count != 0 || AgentsWaitingForPaying.Count != 0)
                 {
                     ChangeWaitersStats(OccurrenceTime);
-
                     var freeWaiter = FreeWaiters.Dequeue();
                     freeWaiter.MakeProperEvent(OccurrenceTime);
                 }
@@ -408,7 +392,7 @@ namespace Simulations.UsedSimulations.S2
             int numberOfCooks,
             bool cooling) : base(startTime, endTime, cooling)
         {
-            FreeWaiters = new FibonacciHeap<Waiter, double>(PriorityQueueType.Minimum);
+            FreeWaiters = new BinaryHeap<Waiter, double>(PriorityQueueType.Minimum);
             FreeCooks = new Queue<Cook>();
 
             for (int i = 0; i < numberOfWaiters; i++)

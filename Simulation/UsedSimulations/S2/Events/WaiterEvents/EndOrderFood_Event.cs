@@ -23,31 +23,21 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
 
         public override void Execute()
         {
-            var core = SimulationCore;
             Agent.EndOrder = OccurrenceTime;
-
-            List<Food> foods = new List<Food>();
 
             for (int i = 0; i < Agent.AgentCount; i++)
             {
-                foods.Add(GetFood());
-            }
-
-            Agent.FoodLeft = Agent.AgentCount;
-
-            foreach (var food in foods)
-            {
-                core.FoodsWaintingForCook.Enqueue(food);
-                core.CheckCooks(OccurrenceTime);
+                var food = GetFood();
+                SimulationCore.FoodsWaintingForCook.Enqueue(food);
+                SimulationCore.CheckCooks(OccurrenceTime);
             }
 
             Waiter.Occupied = false;
             Waiter.WorkedTime += OccurrenceTime - Waiter.LastEventTime;
-            core.ChangeWaitersStats(OccurrenceTime);
+            SimulationCore.ChangeWaitersStats(OccurrenceTime);
 
-            core.FreeWaiters.Enqueue(Waiter, Waiter.WorkedTime);
-
-            core.CheckWaiters(OccurrenceTime);
+            SimulationCore.FreeWaiters.Enqueue(Waiter, Waiter.WorkedTime);
+            SimulationCore.CheckWaiters(OccurrenceTime);
         }
 
         private Food GetFood()
@@ -59,7 +49,6 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             {
                 return new Food()
                 {
-                    FoodType = FoodType.CezarSalad,
                     Time = core.cezarSaladGenerator.GetNext(),
                     Agent = Agent,
                 };
@@ -69,7 +58,6 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             {
                 return new Food()
                 {
-                    FoodType = FoodType.PenneSalad,
                     Time = core.penneSaladGenerator.GetNext(),
                     Agent = Agent
                 };
@@ -78,7 +66,6 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             {
                 return new Food()
                 {
-                    FoodType = FoodType.WholeWheatSpaghetti,
                     Time = core.wholeWheatSpaghettiGenerator.GetNext(),
                     Agent = Agent
                 };
@@ -87,7 +74,6 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             {
                 return new Food()
                 {
-                    FoodType = FoodType.RichSalad,
                     Time = core.richSaladGenerator,
                     Agent = Agent
                 };

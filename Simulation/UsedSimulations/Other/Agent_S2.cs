@@ -23,6 +23,7 @@ namespace Simulations.UsedSimulations.Other
         public Agent_S2(int agentCount)
         {
             AgentCount = agentCount;
+            FoodLeft = agentCount;
         }
 
         public override string ToString()

@@ -26,14 +26,15 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             var core = SimulationCore;
             Agent.DeliveredFood = OccurrenceTime;
 
-            List<double> eatinFood = new List<double>();
+            double last = 0;
 
             for (int i = 0; i < Agent.AgentCount; i++)
             {
-                eatinFood.Add(core.eatingFoodGenerator.GetNext());
-            }
+                var food = core.eatingFoodGenerator.GetNext();
 
-            var last = (from x in eatinFood orderby x descending select x).First();
+                if (food > last)
+                    last = food;
+            }
 
             var @event = new EndEatingFood_Event(Agent,
                 OccurrenceTime + last,
