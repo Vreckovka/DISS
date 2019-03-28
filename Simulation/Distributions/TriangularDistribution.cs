@@ -11,11 +11,9 @@ namespace Simulations.Distributions
         private int a;
         private int b;
         private int c;
-        private Random _random;
         
         public TriangularDistribution(int seed, int min, int max, int modus) : base(seed)
         {
-            _random = new Random(seed);
             a = min;
             b = max;
             c = modus;

@@ -8,33 +8,30 @@ using Simulations.UsedSimulations.Other;
 
 namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
 {
-    class StartPaying_Event : SimulationEvent
+    class StartPaying_Event : Event_S2
     {
         public Waiter Waiter { get; set; }
 
-        public StartPaying_Event(Agent agent,
-            TimeSpan occurrenceTime,
-            SimulationCore simulationCore,
+        public StartPaying_Event(Agent_S2 agent,
+            double occurrenceTime,
+            SimulationCore_S2 simulationCore,
             Waiter waiter) : base(agent, occurrenceTime, simulationCore)
         {
             Waiter = waiter;
-            Waiter.Occupied = true;
         }
 
 
         public override void Execute()
         {
-            var core = (S2_SimulationCore)SimulationCore;
-            ((Agent_S2)Agent).StartPaying = OccurrenceTime;
+            var core = SimulationCore;
+            Agent.StartPaying = OccurrenceTime;
 
             var @event = new EndPaying_Event(Agent,
-                            OccurrenceTime + TimeSpan.FromSeconds(core.payingGenerator.GetNext()),
+                            OccurrenceTime + core.payingGenerator.GetNext(),
                             core,
                             Waiter);
 
             core.Calendar.Enqueue(@event, @event.OccurrenceTime);
-
-            Waiter.Occupied = true;
         }
 
         public override string ToString()

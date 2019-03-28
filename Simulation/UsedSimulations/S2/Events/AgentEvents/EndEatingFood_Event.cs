@@ -9,21 +9,19 @@ using Simulations.UsedSimulations.S2.Events.WaiterEvents;
 
 namespace Simulations.UsedSimulations.S2.Events.AgentEvents
 {
-    class EndEatingFood_Event : SimulationEvent
+    class EndEatingFood_Event : Event_S2
     {
-        public EndEatingFood_Event(Agent agent, TimeSpan occurrenceTime, SimulationCore simulationCore) : base(agent, occurrenceTime, simulationCore)
+        public EndEatingFood_Event(Agent_S2 agent, double occurrenceTime, SimulationCore_S2 simulationCore) : base(agent, occurrenceTime, simulationCore)
         {
-            
+
         }
 
         public override void Execute()
         {
-            var core = (S2_SimulationCore)SimulationCore;
+            Agent.EndEatingFood = OccurrenceTime;
 
-            ((Agent_S2)Agent).EndEatingFood = OccurrenceTime;
-            core.AgentsWaitingForPaying.Enqueue(Agent);
-
-            core.CheckWaiters(OccurrenceTime);
+            SimulationCore.AgentsWaitingForPaying.Enqueue(Agent);
+            SimulationCore.CheckWaiters(OccurrenceTime);
         }
 
         public override string ToString()

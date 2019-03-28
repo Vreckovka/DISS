@@ -7,17 +7,16 @@ using Simulations.Simulations.EventSimulation;
 
 namespace Simulations.UsedSimulations.Other
 {
-    class Agent_S2 : Agent
+    public class Agent_S2 : Agent
     {
         public Table Table { get; set; }
         public int AgentCount { get; set; }
-        public TimeSpan WaitingTime { get; set; }
-        public TimeSpan ArrivalTime { get; set; }
-        public TimeSpan StartOrder { get; set; }
-        public TimeSpan EndOrder { get; set; }
-        public TimeSpan DeliveredFood { get; set; }
-        public TimeSpan EndEatingFood { get; set; }
-        public TimeSpan StartPaying { get; set; }
+        public double ArrivalTime { get; set; }
+        public double StartOrder { get; set; }
+        public double EndOrder { get; set; }
+        public double DeliveredFood { get; set; }
+        public double EndEatingFood { get; set; }
+        public double StartPaying { get; set; }
 
         public int FoodLeft { get; set; }
 

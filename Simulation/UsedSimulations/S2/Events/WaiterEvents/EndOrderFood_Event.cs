@@ -9,12 +9,12 @@ using Simulations.UsedSimulations.S2.Events.ChefEvents;
 
 namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
 {
-    class EndOrderFood_Event : SimulationEvent
+    class EndOrderFood_Event : Event_S2
     {
         public Waiter Waiter { get; set; }
-        public EndOrderFood_Event(Agent agent,
-            TimeSpan occurrenceTime,
-            SimulationCore simulationCore,
+        public EndOrderFood_Event(Agent_S2 agent,
+            double occurrenceTime,
+            SimulationCore_S2 simulationCore,
             Waiter waiter) : base(agent, occurrenceTime, simulationCore)
         {
             Waiter = waiter;
@@ -23,17 +23,17 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
 
         public override void Execute()
         {
-            var core = (S2_SimulationCore)SimulationCore;
-            ((Agent_S2)Agent).EndOrder = OccurrenceTime;
+            var core = SimulationCore;
+            Agent.EndOrder = OccurrenceTime;
 
             List<Food> foods = new List<Food>();
 
-            for (int i = 0; i < ((Agent_S2)Agent).AgentCount; i++)
+            for (int i = 0; i < Agent.AgentCount; i++)
             {
                 foods.Add(GetFood());
             }
 
-            ((Agent_S2) Agent).FoodLeft = ((Agent_S2) Agent).AgentCount;
+            Agent.FoodLeft = Agent.AgentCount;
 
             foreach (var food in foods)
             {
@@ -42,16 +42,17 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             }
 
             Waiter.Occupied = false;
-            core.FreeWaiters.Enqueue(Waiter);
+            Waiter.WorkedTime += OccurrenceTime - Waiter.LastEventTime;
+            core.ChangeWaitersStats(OccurrenceTime);
+
+            core.FreeWaiters.Enqueue(Waiter, Waiter.WorkedTime);
 
             core.CheckWaiters(OccurrenceTime);
-
-            
         }
 
         private Food GetFood()
         {
-            var core = (S2_SimulationCore)SimulationCore;
+            var core = SimulationCore;
             var prb = core.pickFoodRandom.NextDouble();
 
             if (prb < 0.3)
@@ -59,18 +60,17 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
                 return new Food()
                 {
                     FoodType = FoodType.CezarSalad,
-                    Time = TimeSpan.FromSeconds(core.cezarSaladGenerator.GetNext()),
+                    Time = core.cezarSaladGenerator.GetNext(),
                     Agent = Agent,
                 };
             }
 
             else if (prb < 0.65)
             {
-
                 return new Food()
                 {
                     FoodType = FoodType.PenneSalad,
-                    Time = TimeSpan.FromSeconds(core.penneSaladGenerator.GetNext()),
+                    Time = core.penneSaladGenerator.GetNext(),
                     Agent = Agent
                 };
             }
@@ -79,7 +79,7 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
                 return new Food()
                 {
                     FoodType = FoodType.WholeWheatSpaghetti,
-                    Time = TimeSpan.FromSeconds(core.wholeWheatSpaghettiGenerator.GetNext()),
+                    Time = core.wholeWheatSpaghettiGenerator.GetNext(),
                     Agent = Agent
                 };
             }
@@ -88,7 +88,7 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
                 return new Food()
                 {
                     FoodType = FoodType.RichSalad,
-                    Time = TimeSpan.FromSeconds(core.richSaladGenerator),
+                    Time = core.richSaladGenerator,
                     Agent = Agent
                 };
             }

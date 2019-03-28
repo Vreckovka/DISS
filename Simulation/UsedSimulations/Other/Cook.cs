@@ -12,18 +12,20 @@ namespace Simulations.UsedSimulations.Other
     {
         public int Id { get; set; }
         public bool Occupied { get; set; }
+        public double WorkedTime { get; set; }
+        public double LastEventTime { get; set; }
 
-        public S2_SimulationCore _core;
+        public SimulationCore_S2 _core;
         private static int _count;
 
-        public Cook(S2_SimulationCore core)
+        public Cook(SimulationCore_S2 core)
         {
             Id = _count;
             _count++;
             _core = core;
         }
 
-        public void MakeProperEvent(TimeSpan OccurrenceTime)
+        public void MakeProperEvent(double OccurrenceTime)
         {
             if (_core.FoodsWaintingForCook.Count > 0)
             {
@@ -38,16 +40,13 @@ namespace Simulations.UsedSimulations.Other
                 _core.Calendar.Enqueue(@event, @event.OccurrenceTime);
 
                 this.Occupied = true;
-            }
-            else
-            {
-                _core.FreeCooks.Enqueue(this);
+                this.LastEventTime = @event.OccurrenceTime;
             }
         }
 
         public override string ToString()
         {
-            return $"{Id} {Occupied}";
+            return $"{Id} {Occupied} {WorkedTime}";
         }
     }
 }

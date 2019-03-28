@@ -9,34 +9,32 @@ using Simulations.UsedSimulations.S2.Events.WaiterEvents;
 
 namespace Simulations.UsedSimulations.S2.Events.ChefEvents
 {
-    class EndCooking_Event : SimulationEvent
+    class EndCooking_Event : Event_S2
     {
-        private Food Food;
         private Cook Cook;
-        public EndCooking_Event(Agent agent,
-            TimeSpan occurrenceTime,
-            SimulationCore simulationCore,
-            Food food,
+        public EndCooking_Event(Agent_S2 agent,
+            double occurrenceTime,
+            SimulationCore_S2 simulationCore,
             Cook cook) : base(agent, occurrenceTime, simulationCore)
         {
-            Food = food;
             Cook = cook;
-            Cook.Occupied = true;
-           
         }
 
         public override void Execute()
         {
-            var core = (S2_SimulationCore)SimulationCore;
-            ((Agent_S2) Agent).FoodLeft--;
+            var core = SimulationCore;
+            Agent.FoodLeft--;
 
-            if (((Agent_S2)Agent).FoodLeft == 0)
+            if (Agent.FoodLeft == 0)
             {
                 core.AgentsWaitingForDeliver.Enqueue(Agent);
-               
+
             }
 
             Cook.Occupied = false;
+            Cook.WorkedTime += OccurrenceTime - Cook.LastEventTime;
+            core.ChangeCooksStats(OccurrenceTime);
+
             core.FreeCooks.Enqueue(Cook);
 
             core.CheckCooks(OccurrenceTime);

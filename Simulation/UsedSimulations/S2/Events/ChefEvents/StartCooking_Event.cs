@@ -8,13 +8,13 @@ using Simulations.UsedSimulations.Other;
 
 namespace Simulations.UsedSimulations.S2.Events.ChefEvents
 {
-    class StartCooking_Event : SimulationEvent
+    class StartCooking_Event : Event_S2
     {
         Cook Cook;
         private Food Food;
-        public StartCooking_Event(Agent agent, 
-            TimeSpan occurrenceTime, 
-            SimulationCore simulationCore,
+        public StartCooking_Event(Agent_S2 agent,
+            double occurrenceTime, 
+            SimulationCore_S2 simulationCore,
             Cook cook,
             Food food) : base(agent, occurrenceTime, simulationCore)
         {
@@ -24,12 +24,11 @@ namespace Simulations.UsedSimulations.S2.Events.ChefEvents
 
         public override void Execute()
         {
-            var core = (S2_SimulationCore)SimulationCore;
+            var core = SimulationCore;
 
             var @event = new EndCooking_Event(Food.Agent,
                 OccurrenceTime + Food.Time,
                 core,
-                Food,
                 Cook);
 
             core.Calendar.Enqueue(@event, @event.OccurrenceTime);

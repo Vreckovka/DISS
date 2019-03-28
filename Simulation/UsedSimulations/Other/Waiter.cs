@@ -12,20 +12,19 @@ namespace Simulations.UsedSimulations.Other
     public class Waiter
     {
         public int Id { get; set; }
-        public Table Table { get; set; }
+        public double WorkedTime { get; set; }
+        public double LastEventTime { get; set; }
         public bool Occupied { get; set; }
         private static int _count;
-        private S2_SimulationCore _core;
-        public Waiter(S2_SimulationCore core)
+        private SimulationCore_S2 _core;
+        public Waiter(SimulationCore_S2 core)
         {
             Id = _count;
             _count++;
             _core = core;
         }
 
-       
-
-        public void MakeProperEvent(TimeSpan OccurrenceTime)
+        public void MakeProperEvent(double OccurrenceTime)
         {
             if (_core.AgentsWaitingForOrder.Count != 0)
             {
@@ -37,7 +36,9 @@ namespace Simulations.UsedSimulations.Other
                 );
 
                 _core.Calendar.Enqueue(@event, @event.OccurrenceTime);
+
                 this.Occupied = true;
+                this.LastEventTime = @event.OccurrenceTime;
             }
             else if (_core.AgentsWaitingForDeliver.Count != 0)
             {
@@ -48,8 +49,11 @@ namespace Simulations.UsedSimulations.Other
                     _core,
                     this
                 );
-                this.Occupied = true;
+               
                 _core.Calendar.Enqueue(@event, @event.OccurrenceTime);
+
+                this.Occupied = true;
+                this.LastEventTime = @event.OccurrenceTime;
             }
             else if (_core.AgentsWaitingForPaying.Count != 0)
             {
@@ -61,13 +65,15 @@ namespace Simulations.UsedSimulations.Other
                     this);
 
                 _core.Calendar.Enqueue(@event, @event.OccurrenceTime);
+
                 this.Occupied = true;
+                this.LastEventTime = @event.OccurrenceTime;
             }           
         }
 
         public override string ToString()
         {
-            return $"{Id} {Occupied}";
+            return $"{Id} {Occupied} {WorkedTime}";
         }
     }
 }

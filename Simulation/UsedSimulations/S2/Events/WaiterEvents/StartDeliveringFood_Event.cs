@@ -8,24 +8,23 @@ using Simulations.UsedSimulations.Other;
 
 namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
 {
-    class StartDeliveringFood_Event : SimulationEvent
+    class StartDeliveringFood_Event : Event_S2
     {
         private Waiter Waiter;
-        public StartDeliveringFood_Event(Agent agent, 
-            TimeSpan occurrenceTime, 
-            SimulationCore simulationCore,
+        public StartDeliveringFood_Event(Agent_S2 agent,
+            double occurrenceTime, 
+            SimulationCore_S2 simulationCore,
             Waiter waiter) : base(agent, occurrenceTime, simulationCore)
         {
             Waiter = waiter;
-            Waiter.Occupied = true;
         }
 
         public override void Execute()
         {
-            var core = (S2_SimulationCore)SimulationCore;
+            var core = SimulationCore;
             
             var @event = new EndDeliveringFood_Event(Agent,
-                OccurrenceTime + TimeSpan.FromSeconds(core.deliveringFoodGenerator.GetNext()),
+                OccurrenceTime + core.deliveringFoodGenerator.GetNext(),
                 core,
                 Waiter
             );

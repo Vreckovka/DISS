@@ -17,8 +17,8 @@ namespace Simulations.UsedSimulations.Other
     public class Food
     {
         public FoodType FoodType { get; set; }
-        public TimeSpan Time { get; set; }
-        public Agent Agent { get; set; }
+        public double Time { get; set; }
+        public Agent_S2 Agent { get; set; }
 
         public override string ToString()
         {

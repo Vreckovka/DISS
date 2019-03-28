@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Simulations.Distributions;
 
@@ -45,7 +46,13 @@ namespace Simulation.Simulations
             HC = new UniformContinuousDistribution(150, 220, random.Next());
             HD = new UniformContinuousDistribution(170, 200, random.Next());
 
-            FG = new DiscreetEmpiricalDistribution(170, 195, 0.2, 196, 280, random.Next());
+            var FGData = new List<DiscreetEmpiricalDistributionData>()
+            {
+                new DiscreetEmpiricalDistributionData(170, 195, 0.2),
+                new DiscreetEmpiricalDistributionData(196, 280, 0.8),
+            };
+
+            FG = new DiscreetEmpiricalDistribution(FGData, random.Next());
 
             GE = new UniformDiscreetDistribution(20, 49, random.Next());
         }

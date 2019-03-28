@@ -49,8 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Distributions\DiscreetEmpiricalDistribution3.cs" />
-    <Compile Include="Distributions\DiscreetEmpiricalDistribution.cs" />
+    <Compile Include="Distributions\DiscreetEmpiricalDistribution\DiscreetEmpiricalDistributionData.cs" />
+    <Compile Include="Distributions\DiscreetEmpiricalDistribution\DiscreetEmpiricalDistribution.cs" />
     <Compile Include="Distributions\Distribution.cs" />
     <Compile Include="Distributions\ExponentialDistribution.cs" />
     <Compile Include="Distributions\TriangularDistribution.cs" />
@@ -67,22 +67,17 @@
     <Compile Include="UsedSimulations\Other\Waiter.cs" />
     <Compile Include="UsedSimulations\S1.cs" />
     <Compile Include="Distributions\UniformContinuousDistribution.cs" />
-    <Compile Include="UsedSimulations\S2\Events\AgentEvents\ArrivalEvents\ArrivalEvent.cs" />
-    <Compile Include="UsedSimulations\S2\Events\AgentEvents\ArrivalEvents\ArrivalEvent_2.cs" />
-    <Compile Include="UsedSimulations\S2\Events\AgentEvents\ArrivalEvents\ArrivalEvent_6.cs" />
-    <Compile Include="UsedSimulations\S2\Events\AgentEvents\ArrivalEvents\ArrivalEvent_5.cs" />
-    <Compile Include="UsedSimulations\S2\Events\AgentEvents\ArrivalEvents\ArrivalEvent_4.cs" />
-    <Compile Include="UsedSimulations\S2\Events\AgentEvents\ArrivalEvents\ArrivalEvent_3.cs" />
-    <Compile Include="UsedSimulations\S2\Events\AgentEvents\ArrivalEvents\ArrivalEvent_1.cs" />
+    <Compile Include="UsedSimulations\S2\Events\AgentEvents\ArrivalEvents\Arrival_Event.cs" />
     <Compile Include="UsedSimulations\S2\Events\AgentEvents\EndEatingFood_Event.cs" />
     <Compile Include="UsedSimulations\S2\Events\ChefEvents\EndCooking_Event.cs" />
     <Compile Include="UsedSimulations\S2\Events\ChefEvents\StartCooking_Event.cs" />
+    <Compile Include="UsedSimulations\S2\Events\Event_S2.cs" />
     <Compile Include="UsedSimulations\S2\Events\WaiterEvents\EndPaying_Event.cs" />
     <Compile Include="UsedSimulations\S2\Events\WaiterEvents\StartDeliveringFood_Event.cs" />
     <Compile Include="UsedSimulations\S2\Events\WaiterEvents\StartPaying_Event.cs" />
     <Compile Include="UsedSimulations\S2\Events\WaiterEvents\EndDeliveringFood_Event.cs" />
     <Compile Include="UsedSimulations\S2\Events\WaiterEvents\EndOrderFood_Event.cs" />
-    <Compile Include="UsedSimulations\S2\S2_SimulationCore.cs" />
+    <Compile Include="UsedSimulations\S2\SimulationCore_S2.cs" />
     <Compile Include="UsedSimulations\S2\Events\WaiterEvents\StartOrder_Event.cs" />
   </ItemGroup>
   <ItemGroup>

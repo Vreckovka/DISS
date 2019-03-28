@@ -12,12 +12,10 @@ namespace Simulations.Distributions
 
         private readonly int _min;
         private readonly int _max;
-        private Random _random;
         #endregion
 
         public UniformDiscreetDistribution(int min, int max,int seed) : base(seed)
         {
-            _random = new Random(seed);
             _min = min;
             _max = max;
         }

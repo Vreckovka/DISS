@@ -10,31 +10,30 @@ using Simulations.UsedSimulations.S2.Events.ChefEvents;
 
 namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
 {
-    class EndDeliveringFood_Event : SimulationEvent
+    class EndDeliveringFood_Event : Event_S2
     {
         public Waiter Waiter { get; set; }
-        public EndDeliveringFood_Event(Agent agent,
-            TimeSpan occurrenceTime,
-            SimulationCore simulationCore,
+        public EndDeliveringFood_Event(Agent_S2 agent,
+            double occurrenceTime,
+            SimulationCore_S2 simulationCore,
             Waiter waiter) : base(agent, occurrenceTime, simulationCore)
         {
             Waiter = waiter;
-           
         }
 
         public override void Execute()
         {
-            var core = (S2_SimulationCore)SimulationCore;
-            ((Agent_S2)Agent).DeliveredFood = OccurrenceTime;
+            var core = SimulationCore;
+            Agent.DeliveredFood = OccurrenceTime;
 
-            List<TimeSpan> eatinFood = new List<TimeSpan>();
+            List<double> eatinFood = new List<double>();
 
-            for (int i = 0; i < ((Agent_S2)Agent).AgentCount; i++)
+            for (int i = 0; i < Agent.AgentCount; i++)
             {
-                eatinFood.Add(TimeSpan.FromSeconds(core.eatingFoodGenerator.GetNext()));
+                eatinFood.Add(core.eatingFoodGenerator.GetNext());
             }
 
-            var last = (from x in eatinFood orderby x.TotalMilliseconds descending select x).First();
+            var last = (from x in eatinFood orderby x descending select x).First();
 
             var @event = new EndEatingFood_Event(Agent,
                 OccurrenceTime + last,
@@ -43,8 +42,10 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             core.Calendar.Enqueue(@event, @event.OccurrenceTime);
 
             Waiter.Occupied = false;
-            core.FreeWaiters.Enqueue(Waiter);
+            Waiter.WorkedTime += OccurrenceTime - Waiter.LastEventTime;
+            core.ChangeWaitersStats(OccurrenceTime);
 
+            core.FreeWaiters.Enqueue(Waiter, Waiter.WorkedTime);
             core.CheckWaiters(OccurrenceTime);
 
         }

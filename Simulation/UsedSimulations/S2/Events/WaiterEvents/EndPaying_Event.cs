@@ -8,12 +8,12 @@ using Simulations.UsedSimulations.Other;
 
 namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
 {
-    class EndPaying_Event : SimulationEvent
+    class EndPaying_Event : Event_S2
     {
         public Waiter Waiter { get; set; }
-        public EndPaying_Event(Agent agent,
-            TimeSpan occurrenceTime,
-            SimulationCore simulationCore,
+        public EndPaying_Event(Agent_S2 agent,
+            double occurrenceTime,
+            SimulationCore_S2 simulationCore,
             Waiter waiter) : base(agent, occurrenceTime, simulationCore)
         {
             Waiter = waiter;
@@ -21,18 +21,22 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
 
         public override void Execute()
         {
-            var core = (S2_SimulationCore)SimulationCore;
+            var core = SimulationCore;
 
-            core.WaitingTimeOfAgents += (((Agent_S2)Agent).StartOrder - ((Agent_S2)Agent).ArrivalTime).TotalSeconds * ((Agent_S2)Agent).AgentCount;
-            core.WaitingTimeOfAgents += (((Agent_S2)Agent).DeliveredFood - ((Agent_S2)Agent).EndOrder).TotalSeconds * ((Agent_S2)Agent).AgentCount;
-            core.WaitingTimeOfAgents += (((Agent_S2)Agent).StartPaying - ((Agent_S2)Agent).EndEatingFood).TotalSeconds * ((Agent_S2)Agent).AgentCount;
+            core.WaitingTimeOfAgents += (Agent.StartOrder - Agent.ArrivalTime) * Agent.AgentCount;
+            core.WaitingTimeOfAgents += (Agent.DeliveredFood - Agent.EndOrder) * Agent.AgentCount;
+            core.WaitingTimeOfAgents += (Agent.StartPaying - Agent.EndEatingFood) * Agent.AgentCount;
                         
-            core.CountOfPaiedAgents += ((Agent_S2)Agent).AgentCount;
+            core.CountOfPaiedAgents += Agent.AgentCount;
 
             Waiter.Occupied = false;
-            core.FreeWaiters.Enqueue(Waiter);
+            Waiter.WorkedTime += OccurrenceTime - Waiter.LastEventTime;
+            core.ChangeWaitersStats(OccurrenceTime);
 
-            ((Agent_S2)Agent).Table.Occupied = false;
+            core.FreeWaiters.Enqueue(Waiter, Waiter.WorkedTime);
+
+            Agent.Table.Occupied = false;
+            core.ChangeTableStats(OccurrenceTime, Agent.Table, true);
 
             core.CheckWaiters(OccurrenceTime);
         }
