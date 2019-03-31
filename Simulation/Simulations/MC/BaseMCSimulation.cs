@@ -1,32 +1,22 @@
 ﻿using System;
 using System.Threading;
+using Simulations.Simulations;
 
 namespace Simulation
 {
-    public abstract class BaseMCSimulation
+    public abstract class BaseMCSimulation : BaseSimulation
     {
-        protected static EventWaitHandle waitHandle = new ManualResetEvent(true);
-        public event EventHandler<double[]> ReplicationFinished;
-        public event EventHandler<double[]> SimulationFinished;
-        public event EventHandler<double[]> RunFinished;
         public int FireOnEveryNIteration { get; set; }
-        SpinWait sw = new SpinWait();
-        private bool pause;
-
+       
         /// <summary>
         /// Simulation delay in running simulation max value = 100, min value = 0
         /// </summary>
-        public int SimulationDelay { get; set; }
-
-        public BaseMCSimulation()
-        {
-        }
+       
 
         #region Abstract methods
         protected abstract void CreateDistributions(Random random);
-
         protected abstract double[] DoSimulationReplication();
-
+        public event EventHandler<double[]> ReplicationFinished;
         #endregion
 
         public double[] Simulate(Random random, int replicationCount, bool liveSimulation, int everyNIteration = -1)
@@ -141,36 +131,9 @@ namespace Simulation
             };
         }
 
-        protected void ManageSimulationSpeed()
-        {
-            Thread.SpinWait(SimulationDelay * 100);
-        }
-
         protected virtual void OnReplicationFinished(double[] e)
         {
             ReplicationFinished?.Invoke(this, e);
-        }
-
-        public void OnPauseClick()
-        {
-            pause = true;
-            waitHandle.Reset();
-        }
-
-        public void OnResumeClick()
-        {
-            pause = false;
-            waitHandle.Set();
-        }
-
-        protected virtual void OnRunFinished(double[] e)
-        {
-            RunFinished?.Invoke(this, e);
-        }
-
-        protected virtual void OnSimulationFinished(double[] e)
-        {
-            SimulationFinished?.Invoke(this, e);
         }
     }
 }

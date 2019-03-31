@@ -21,24 +21,25 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
 
         public override void Execute()
         {
-            var core = SimulationCore;
+            if (!SimulationCore.LiveSimulation)
+            {
+                SimulationCore.WaitingTimeOfAgents += (Agent.StartOrder - Agent.ArrivalTime) * Agent.AgentCount;
+                SimulationCore.WaitingTimeOfAgents += (Agent.DeliveredFood - Agent.EndOrder) * Agent.AgentCount;
+                SimulationCore.WaitingTimeOfAgents += (Agent.StartPaying - Agent.EndEatingFood) * Agent.AgentCount;
+            }
 
-            core.WaitingTimeOfAgents += (Agent.StartOrder - Agent.ArrivalTime) * Agent.AgentCount;
-            core.WaitingTimeOfAgents += (Agent.DeliveredFood - Agent.EndOrder) * Agent.AgentCount;
-            core.WaitingTimeOfAgents += (Agent.StartPaying - Agent.EndEatingFood) * Agent.AgentCount;
-                        
-            core.CountOfPaiedAgents += Agent.AgentCount;
+            SimulationCore.CountOfPaiedAgents += Agent.AgentCount;
+
 
             Waiter.Occupied = false;
-            Waiter.WorkedTime += OccurrenceTime - Waiter.LastEventTime;
-            core.ChangeWaitersStats(OccurrenceTime);
-
-            core.FreeWaiters.Enqueue(Waiter, Waiter.WorkedTime);
+            Waiter.WorkedTime += (OccurrenceTime - Waiter.LastEventTime);
+            SimulationCore.ChangeWaitersStats(OccurrenceTime);
 
             Agent.Table.Occupied = false;
-            core.ChangeTableStats(OccurrenceTime, Agent.Table, true);
+            SimulationCore.ChangeTableStats(OccurrenceTime, Agent.Table, true);
 
-            core.CheckWaiters(OccurrenceTime);
+            SimulationCore.FreeWaiters.Enqueue(Waiter, Waiter.WorkedTime);
+            SimulationCore.CheckWaiters(OccurrenceTime);
         }
 
         public override string ToString()

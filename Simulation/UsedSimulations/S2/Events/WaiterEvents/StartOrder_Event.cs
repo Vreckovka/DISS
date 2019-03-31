@@ -24,6 +24,9 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             var core = SimulationCore;
             Agent.StartOrder = OccurrenceTime;
 
+            if (SimulationCore.LiveSimulation)
+                SimulationCore.WaitingTimeOfAgents += (Agent.StartOrder - Agent.ArrivalTime) * Agent.AgentCount;
+
             var @event = new EndOrderFood_Event(Agent,
                 OccurrenceTime + core.waintingForOrderGenerator.GetNext(),
                 core,

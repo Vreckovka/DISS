@@ -21,6 +21,8 @@ namespace Simulations.UsedSimulations.S2.Events.AgentEvents
             Agent.EndEatingFood = OccurrenceTime;
 
             SimulationCore.AgentsWaitingForPaying.Enqueue(Agent);
+            SimulationCore.CountOfWaitingAgents_Pay += Agent.AgentCount;
+
             SimulationCore.CheckWaiters(OccurrenceTime);
         }
 

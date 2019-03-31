@@ -11,7 +11,7 @@ namespace Simulations.Simulations.EventSimulation
         public double OccurrenceTime { get; set; }
         public abstract void Execute();
         public Agent Agent { get; set; }
-        public virtual SimulationCore SimulationCore { get; set; }
+        public SimulationCore SimulationCore { get; set; }
         public SimulationEvent(Agent agent, double occurrenceTime, SimulationCore simulationCore)
         {
             Agent = agent;

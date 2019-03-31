@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PropertyChanged;
 using Simulations.Simulations.EventSimulation;
 
 namespace Simulations.UsedSimulations.Other
 {
+    [AddINotifyPropertyChangedInterface]
     public class Agent_S2 : Agent
     {
         public Table Table { get; set; }

@@ -30,6 +30,7 @@ namespace DISS
     {
         private Page_LiveSimulation page_LiveSimulation = new Page_LiveSimulation();
         private Page_SimulationRuns page_SimulationRuns = new Page_SimulationRuns();
+        private Page_Graphs page_Graphs = new Page_Graphs();
 
         public MainWindow()
         {
@@ -37,12 +38,6 @@ namespace DISS
             Frame_Simulation.Content = page_LiveSimulation;
         }
 
-        private void WindowLoaded(object sender, RoutedEventArgs e)
-        {
-            HwndSource hwndSource = PresentationSource.FromVisual(this) as HwndSource;
-            HwndTarget hwndTarget = hwndSource.CompositionTarget;
-            hwndTarget.RenderMode = RenderMode.SoftwareOnly;
-        }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -52,10 +47,14 @@ namespace DISS
                 {
                     page_LiveSimulation.CreateChart();
                     Frame_Simulation.Content = page_LiveSimulation;
-                    }
-                else
+                }
+                else if (((ListView)sender).SelectedItem == ((ListView)sender).Items[1])
                 {
                     Frame_Simulation.Content = page_SimulationRuns;
+                }
+                else
+                {
+                    Frame_Simulation.Content = page_Graphs;
                 }
             }
         }

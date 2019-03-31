@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -12,79 +13,48 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DISS.Annotations;
 using DISS.SimulationPages;
+using Simulations.ConfidenceInterval;
 
 namespace DISS.WindowsPages
 {
     /// <summary>
     /// Interaction logic for SimulationRuns_Page.xaml
     /// </summary>
-    public partial class Page_SimulationRuns : Page, INotifyPropertyChanged
+    public partial class Page_SimulationRuns : Page
     {
-        private Page_S1 page_S1 = new Page_S1();
-
-        public Page_S1 Page_S1
-        {
-            get { return page_S1; }
-            set
-            {
-                OnPropertyChanged(nameof(Page_S1));
-                page_S1 = value;
-            }
-        }
+        private Page_S2 page_S1 = new Page_S2();
 
         public Page_SimulationRuns()
         {
             InitializeComponent();
-
-            page_S1.SimulationModel.McSimulation.RunFinished += Simulation_RunFinished; ;
-
+            page_S1.SimulationModel.Simulation.RunFinished += Simulation_RunFinished; ; ;
             DataContext = page_S1;
-
+          
         }
 
         private void Simulation_RunFinished(object sender, double[] e)
         {
             Dispatcher.Invoke(() =>
             {
-                DataGrid_SimulationRuns.Items.Add(new string[]
-                {
-                    DataGrid_SimulationRuns.Items.Count.ToString(),
-                    "A-B-C-D-E: " + (e[0]) + "\n" +
-                    "A-F-H-D-E: " + (e[1]) + "\n" +
-                    "A-F-G-E: " + (e[2])  + "\n" +
-                    "Probability: " + (e[3])
-
-                });
-
-                if (DataGrid_SimulationRuns.Items.Count > 0)
-                {
-                    var border = VisualTreeHelper.GetChild(DataGrid_SimulationRuns, 0) as Decorator;
-                    var scroll = border?.Child as ScrollViewer;
-                    scroll?.ScrollToEnd();
-                }
+                DataContext = null;
+                DataContext = page_S1;
             });
         }
 
         private void Start_Click(object sender, RoutedEventArgs e)
         {
             if (!page_S1.SimulationRunning)
-                page_S1.StartRuns(ConvertToInt(TextBox_NumberOfRuns.Text),
-                    ConvertToInt(TextBox_NumberOfReplication.Text));
-        }
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                page_S1.StartRuns(ConvertToInt("10"),
+                    ConvertToInt(TextBox_NumberOfReplication.Text), 
+                    ConvertToInt(TextBox_NumberOfWaiters.Text), 
+                    ConvertToInt(TextBox_NumberOfCooks.Text), Convert.ToBoolean(CheckBox_Cooling.IsChecked));
         }
 
         private void TextBox_KeyUp(object sender, KeyEventArgs e)
@@ -146,6 +116,25 @@ namespace DISS.WindowsPages
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
             page_S1.StopSimulation();
+        }
+    }
+
+    public class ConfidenceIntervalConverter : MarkupExtension, IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var str = ConfidenceInterval.ToStringInterval(0.95, (ConfidenceInterval.SampleStandardDeviationData)value);
+            return str;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override object ProvideValue(IServiceProvider serviceProvider)
+        {
+            return this;
         }
     }
 }

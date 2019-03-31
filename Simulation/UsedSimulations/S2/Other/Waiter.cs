@@ -1,36 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PropertyChanged;
 using Simulations.Simulations.EventSimulation;
 using Simulations.UsedSimulations.S2;
 using Simulations.UsedSimulations.S2.Events.WaiterEvents;
 
 namespace Simulations.UsedSimulations.Other
 {
+    [AddINotifyPropertyChangedInterface]
     public class Waiter
     {
         public int Id { get; set; }
         public double WorkedTime { get; set; }
         public double LastEventTime { get; set; }
         public bool Occupied { get; set; }
-        private static int _count;
+        public static int Count;
         private SimulationCore_S2 _core;
         public Waiter(SimulationCore_S2 core)
         {
-            Id = _count;
-            _count++;
+            Id = Count;
+            Count++;
             _core = core;
         }
 
-        public void MakeProperEvent(double OccurrenceTime)
+        public void MakeProperEvent(double occurrenceTime)
         {
             if (_core.AgentsWaitingForOrder.Count != 0)
             {
                 var agent = _core.AgentsWaitingForOrder.Dequeue();
+                _core.CountOfWaitingAgents_Order -= agent.AgentCount;
+
                 var @event = new StartOrder_Event(agent,
-                    OccurrenceTime,
+                    occurrenceTime,
                     _core,
                     this
                 );
@@ -43,9 +48,10 @@ namespace Simulations.UsedSimulations.Other
             else if (_core.AgentsWaitingForDeliver.Count != 0)
             {
                 var agent = _core.AgentsWaitingForDeliver.Dequeue();
+                _core.CountOfWaitingAgents_Deliver -= agent.AgentCount;
 
                 var @event = new StartDeliveringFood_Event(agent,
-                    OccurrenceTime,
+                    occurrenceTime,
                     _core,
                     this
                 );
@@ -58,9 +64,10 @@ namespace Simulations.UsedSimulations.Other
             else if (_core.AgentsWaitingForPaying.Count != 0)
             {
                 var agent = _core.AgentsWaitingForPaying.Dequeue();
+                _core.CountOfWaitingAgents_Pay -= agent.AgentCount;
 
                 var @event = new StartPaying_Event(agent,
-                    OccurrenceTime,
+                    occurrenceTime,
                     _core,
                     this);
 

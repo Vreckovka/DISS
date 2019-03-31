@@ -1,29 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PriorityQueues;
+using PropertyChanged;
 
 namespace Simulations.Simulations.EventSimulation
 {
-    public abstract class SimulationCore
+    [AddINotifyPropertyChangedInterface]
+    public abstract class SimulationCore : BaseSimulation
     {
         public double SimulationTime { get; set; }
         public BinaryHeap<SimulationEvent, double> Calendar { get; set; } = new BinaryHeap<SimulationEvent, double>(PriorityQueueType.Minimum);
         public bool Cooling { get; set; }
-        protected abstract void BeforeSimulation();
-        protected abstract void AfterSimulation();
-        public abstract double[] Simulate();
-        protected double[] SimulationData { get; set; }
+        public abstract void BeforeSimulation(TimeSpan startTime, TimeSpan endTime, int numberOfWaiters, int numberOfCooks, bool cooling);
+        protected abstract double[] CalculateStatistics();
+        public abstract double[] Simulate(TimeSpan startTime,TimeSpan endTime, int numberOfWaiters, int numberOfCooks, bool cooling, bool run);
+        public abstract double[] SimulateRuns(TimeSpan startTime, TimeSpan endTime, int numberOfWaiters, int numberOfCooks, bool cooling, int numberOfReplications);
+        protected double[] SimulationResult { get; set; }
         public TimeSpan EndTime { get; set; }
         public TimeSpan StartTime { get; set; }
-        public SimulationCore(TimeSpan startTime, TimeSpan endTime, bool cooling)
+        public SimulationCore()
         {
-            SimulationTime = startTime.TotalSeconds;
-            StartTime = startTime;
-            EndTime = endTime;
-            Cooling = cooling;
         }
     }
 }

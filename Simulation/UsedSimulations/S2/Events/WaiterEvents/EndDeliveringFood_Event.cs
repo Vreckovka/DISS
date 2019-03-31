@@ -26,13 +26,16 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             var core = SimulationCore;
             Agent.DeliveredFood = OccurrenceTime;
 
+            if (SimulationCore.LiveSimulation)
+                SimulationCore.WaitingTimeOfAgents += (Agent.DeliveredFood - Agent.EndOrder) * Agent.AgentCount;
+
             double last = 0;
 
             for (int i = 0; i < Agent.AgentCount; i++)
             {
                 var food = core.eatingFoodGenerator.GetNext();
 
-                if (food > last)
+                if (food >= last)
                     last = food;
             }
 

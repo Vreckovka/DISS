@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -11,51 +13,58 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DISS.Annotations;
-using Simulation.Simulations;
 using DISS.SimulationModels;
+using OxyPlot;
+using PropertyChanged;
+using Simulations.ConfidenceInterval;
+using Simulations.UsedSimulations.Other;
+using Simulations.UsedSimulations.S2;
 
 namespace DISS.SimulationPages
 {
     /// <summary>
-    /// Interaction logic for S1.xaml
+    /// Interaction logic for Page_S2.xaml
     /// </summary>
-    public partial class Page_S1 : Page, INotifyPropertyChanged
+    [AddINotifyPropertyChangedInterface]
+    public partial class Page_S2 : Page
     {
-        public SimulationModel SimulationModel { get; private set; }
         private bool _simulationRunning;
-
-        public bool SimulationRunning
-        {
-            get { return _simulationRunning; }
-            private set
-            {
-                _simulationRunning = value;
-                OnPropertyChanged(nameof(SimulationRunning));
-
-            }
-        }
-
         private Thread _simulationThread;
-        public Page_S1()
+        public bool SimulationRunning;
+        public SimulationModel_2 SimulationModel { get; set; }
+        public Page_S2()
         {
             InitializeComponent();
+            SimulationModel = new SimulationModel_2();
+            SimulationModel.Simulation.SimulationFinished += Simulation_SimulationFinished;
 
-            SimulationModel = new SimulationModel_1();
-            DataContext = SimulationModel;
+            DataContext = this;
         }
 
-        public void StartSimulation(Random random, int replicationCount, int fireEveryNIteration)
+        private void Simulation_SimulationFinished(object sender, double[] e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                DataContext = null;
+                DataContext = this;
+            });
+        }
+
+        public void StartSimulation(Random random, int numberOfWaiters, int numberOfCooks, bool cooling)
         {
             SimulationRunning = true;
+            SimulationModel.Simulation.BeforeSimulation(new TimeSpan(11,0,0),new TimeSpan(20,0,0), numberOfWaiters, numberOfCooks,cooling);
+
 
             _simulationThread = new Thread(() =>
             {
-                SimulationModel.StartSimulation(random, replicationCount, fireEveryNIteration);
+                SimulationModel.StartSimulation(random, numberOfWaiters, numberOfCooks, cooling);
             })
             {
                 IsBackground = true
@@ -64,13 +73,13 @@ namespace DISS.SimulationPages
             _simulationThread.Start();
         }
 
-        public void StartRuns(int runsCount, int replicationCount)
+        public void StartRuns(int runsCount, int numberOfReplications, int numberOfWaiter, int numberOfCooks, bool cooling)
         {
             SimulationRunning = true;
 
             _simulationThread = new Thread(() =>
             {
-                    SimulationModel.StartRuns(runsCount, replicationCount);
+                SimulationModel.StartRuns(runsCount, numberOfReplications, numberOfWaiter, numberOfCooks, cooling);
             })
             {
                 IsBackground = true
@@ -98,13 +107,7 @@ namespace DISS.SimulationPages
         {
             SimulationModel.ResumeSimulation();
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
+
+   
 }

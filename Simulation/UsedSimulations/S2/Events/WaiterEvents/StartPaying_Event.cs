@@ -26,6 +26,9 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             var core = SimulationCore;
             Agent.StartPaying = OccurrenceTime;
 
+            if (SimulationCore.LiveSimulation)
+                SimulationCore.WaitingTimeOfAgents += (Agent.StartPaying - Agent.EndEatingFood) * Agent.AgentCount;
+
             var @event = new EndPaying_Event(Agent,
                             OccurrenceTime + core.payingGenerator.GetNext(),
                             core,

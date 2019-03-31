@@ -76,9 +76,9 @@ namespace Simulations.UsedSimulations.S2.Events.AgentEvents.ArrivalEvents
 
                 SimulationCore.CountOfStayedAgents += Agent.AgentCount;
                 SimulationCore.AgentsWaitingForOrder.Enqueue(Agent);
-
+                SimulationCore.CountOfWaitingAgents_Order += Agent.AgentCount;
+                
                 SimulationCore.CheckWaiters(OccurrenceTime);
-
                 SimulationCore.ChangeTableStats(OccurrenceTime, table, false);
             }
         }

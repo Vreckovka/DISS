@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -13,6 +15,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -22,97 +25,36 @@ using DISS.SimulationPages;
 using LiveCharts;
 using LiveCharts.Configurations;
 using LiveCharts.Defaults;
-using LiveCharts.Geared;
 using LiveCharts.Wpf;
+using OxyPlot;
+using PropertyChanged;
 
 namespace DISS.WindowsPages
 {
+
     /// <summary>
     /// Interaction logic for Page_LiveSimulation.xaml
     /// </summary>
-    public partial class Page_LiveSimulation : Page, INotifyPropertyChanged
+    [AddINotifyPropertyChangedInterface]
+    public partial class Page_LiveSimulation : Page
     {
-        public GearedValues<double> ChartValues;
-        private Page_S1 page_S1 = new Page_S1();
-        System.Timers.Timer aTimer = new System.Timers.Timer();
-        private int _removeNIteration;
-        Func<double, string> _XAxisFormatter;
-        TimeSpan _simulationTime;
-
-        #region Properties
-        public TimeSpan SimulationTime
-        {
-            get { return _simulationTime; }
-            set
-            {
-                _simulationTime = value;
-                OnPropertyChanged(nameof(SimulationTime));
-            }
-        }
-
-        public Func<double, string> XAxisFormatter
-        {
-            get { return _XAxisFormatter; }
-            set
-            {
-                _XAxisFormatter = value;
-                OnPropertyChanged(nameof(XAxisFormatter));
-            }
-        }
-
-        public Page_S1 Simulation
-        {
-            get { return page_S1; }
-            set
-            {
-                OnPropertyChanged(nameof(Simulation));
-                page_S1 = value;
-            }
-        }
-
-        public int ActualIteration
-        {
-            get { return acutalIteration; }
-            set
-            {
-                acutalIteration = value;
-                OnPropertyChanged(nameof(ActualIteration));
-            }
-
-        }
-
-        #endregion
+        public Func<double, string> XAxisFormatter { get; set; }
+        public Page_S2 Page_S2 { get; set; } = new Page_S2();
 
         public Page_LiveSimulation()
         {
             InitializeComponent();
             DataContext = this;
 
-            aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-            aTimer.Interval = 1000;
+            Frame_Simulation.Content = Page_S2;
+            Page_S2.SimulationModel.Simulation.SimulationFinished += Simulation_SimulationFinished;
 
-            ChartValues = new GearedValues<double>();
-            ChartValues.WithQuality(Quality.Low);
-
-            Frame_Simulation.Content = page_S1;
-            page_S1.SimulationModel.McSimulation.ReplicationFinished += SimulationModel_SimulationReplicationFinished;
-            page_S1.SimulationModel.McSimulation.SimulationFinished += Simulation_SimulationFinished;
-            Chart_Line.Values = ChartValues;
-
-            _removeNIteration = ConvertToInt(TextBox_RemoveNIteration.Text);
+            //Chart_Line.Values = ChartValues;
             XAxisFormatter = XAxisLabelFormatter;
         }
 
         private void Simulation_SimulationFinished(object sender, double[] e)
         {
-            aTimer.Enabled = false;
-        }
-
-        int acutalIteration;
-
-        private void OnTimedEvent(object source, ElapsedEventArgs e)
-        {
-            SimulationTime = new TimeSpan(SimulationTime.Hours, SimulationTime.Minutes, SimulationTime.Seconds + 1);
         }
 
         List<double> values = new List<double>();
@@ -120,128 +62,80 @@ namespace DISS.WindowsPages
         double deltas;
         int deltaCount;
         bool _chartScrolled;
-        private double everyNIteration = 500;
-
-        private void SimulationModel_SimulationReplicationFinished(object sender, double[] e)
-        {
-            if (acutalIteration % 100000 == 0 && !_chartScrolled)
-            {
-                if (ActualIteration > _removeNIteration && deltaCount == 0)
-                {
-                    oldVal = e[3];
-                    deltaCount++;
-                }
-                else if (ActualIteration > 0)
-                {
-                    Dispatcher.Invoke(() =>
-                    {
-                        double delta = Math.Abs(oldVal - e[3]) * 0.04;
-
-                        deltas += delta;
-                        var a = (deltas / deltaCount);
-
-                        YAxis.MaxValue = e[3] * (1 + a);
-                        YAxis.MinValue = e[3] * (1 - a);
-
-                        oldVal = e[3];
-                        deltaCount++;
-                    });
-                }
-
-            }
-            //Remove noise
-            if (ActualIteration > _removeNIteration)
-            {
-                if (values.Count >= 50)
-                {
-                    values.AsGearedValues();
-                    ChartValues.AddRange(values);
-                    values.Clear();
-                }
-                else
-                {
-                    if (ActualIteration % everyNIteration == 0)
-                    {
-                        values.Add(e[3]);
-                    }
-                }
-            }
-
-            ActualIteration++;
-        }
+        private double everyNIteration = 1;
 
         /// <summary>
         /// Solving issue with tab control, Chart starts freezing after switchin tab
         /// </summary>
         public void CreateChart()
         {
-            Grid_Chart.Children.Remove(Chart);
+            //Grid_Chart.Children.Remove(Chart);
 
-            YAxis = new Axis()
-            {
-                Foreground = (Brush)Application.Current.Resources["DefaultWhiteBrush"],
-                Title = "Time (minutes)",
-                FontSize = 15,
-                Separator = new LiveCharts.Wpf.Separator()
-                {
-                    Style = (Style)Application.Current.Resources["CleanSeparator"],
-                }
-            };
+            //YAxis = new Axis()
+            //{
+            //    Foreground = (Brush)Application.Current.Resources["DefaultWhiteBrush"],
+            //    Title = "Waiting time (seconds)",
+            //    FontSize = 15,
+            //    Separator = new LiveCharts.Wpf.Separator()
+            //    {
+            //        Style = (Style)Application.Current.Resources["CleanSeparator"],
+            //    }
+            //};
 
-            Chart = new CartesianChart()
-            {
-                Background = null,
-                Hoverable = false,
-                DataTooltip = null,
-                DisableAnimations = true,
-                LegendLocation = LegendLocation.Right,
-                Zoom = ZoomingOptions.X,
-                Pan = PanningOptions.X,
-                Margin = new Thickness(10),
-                AxisX = new AxesCollection()
-                {
-                    new Axis()
-                     {
-                        Foreground = (Brush)Application.Current.Resources["DefaultWhiteBrush"],
-                        Title = "Number of iteration",
-                        Position = AxisPosition.LeftBottom,
-                        FontSize = 15,
-                        Separator = new LiveCharts.Wpf.Separator()
-                        {
-                           Style = (Style)Application.Current.Resources["CleanSeparator"],
-                        },
-                      LabelFormatter = XAxisLabelFormatter
-                    }
-                },
-                AxisY = new AxesCollection()
-                {
-                   YAxis
-                }
-            };
+            //Chart = new CartesianChart()
+            //{
+            //    Background = null,
+            //    Hoverable = false,
+            //    DataTooltip = null,
+            //    DisableAnimations = true,
+            //    LegendLocation = LegendLocation.Right,
+            //    Zoom = ZoomingOptions.X,
+            //    Pan = PanningOptions.X,
+            //    Margin = new Thickness(10),
+            //    AxisX = new AxesCollection()
+            //    {
+            //        new Axis()
+            //         {
+            //            Foreground = (Brush)Application.Current.Resources["DefaultWhiteBrush"],
+            //            Title = "Simulation time",
+            //            Position = AxisPosition.LeftBottom,
+            //            FontSize = 15,
+            //            Separator = new LiveCharts.Wpf.Separator()
+            //            {
+            //               Style = (Style)Application.Current.Resources["CleanSeparator"],
+            //            },
+            //          LabelFormatter = XAxisLabelFormatter
+            //        }
+            //    },
+            //    AxisY = new AxesCollection()
+            //    {
+            //       YAxis
+            //    }
+            //};
 
-            Grid.SetRow(Chart, 1);
+            //Grid.SetRow(Chart, 1);
 
-            SeriesCollection series = new SeriesCollection()
-            {
-                new GLineSeries()
-                {
-                    Stroke = (Brush) Application.Current.Resources["DefaultRedBrush"],
-                    Values = ChartValues,
-                    Fill = Brushes.Transparent,
-                    PointGeometry = null,
-                    LineSmoothness = 0,
-                    Title = "A-B-C-D-E",
-                }
-            };
+            //SeriesCollection series = new SeriesCollection()
+            //{
+            //    new LineSeries()
+            //    {
+            //        Stroke = (Brush)Application.Current.Resources["DefaultRedBrush"],
+            //        Values = ChartValues,
+            //        Fill = Brushes.Transparent,
+            //        PointGeometry = null,
+            //        LineSmoothness = 1,
+            //        Title = "Avrage waiting time of customer",
+            //    }
+            //};
 
-            Chart.Series = series;
-            Grid_Chart.Children.Add(Chart);
+            //Chart.Series = series;
+            //Grid_Chart.Children.Add(Chart);
 
         }
 
         private string XAxisLabelFormatter(double a)
         {
-            return (a * everyNIteration).ToString("N0");
+            return TimeSpan.FromSeconds((a * 15)  + 39600).ToString();
         }
         private Random GetRandom()
         {
@@ -252,36 +146,33 @@ namespace DISS.WindowsPages
         }
         private void StartSimulation_Click(object sender, MouseButtonEventArgs e)
         {
-            if (Play_Button.Tag.Equals("Pause") && ConvertToInt(TextBox_NumberOfIteration.Text) != 0)
+            if (Play_Button.Tag.Equals("Pause") && ConvertToInt(TextBox_NumberOfCooks.Text) != 0)
             {
-                if (!page_S1.SimulationRunning)
+                if (!Page_S2.SimulationRunning)
                 {
-                    page_S1.ResumeSimulation();
-                    page_S1.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfIteration.Text),10);
+                    Page_S2.ResumeSimulation();
+                    Page_S2.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfWaiters.Text), ConvertToInt(TextBox_NumberOfCooks.Text), Convert.ToBoolean(CheckBox_Cooling.IsChecked));
 
                 }
                 else
                 {
-                    page_S1.ResumeSimulation();
+                    Page_S2.ResumeSimulation();
                 }
 
-                aTimer.Enabled = true;
                 Play_Button.Tag = "Play";
             }
             else
             {
-                aTimer.Enabled = false;
-                page_S1.PauseSimulation();
+                Page_S2.PauseSimulation();
                 Play_Button.Tag = "Pause";
             }
         }
 
         private void StopSimulation_Click(object sender, MouseButtonEventArgs e)
         {
-            if (page_S1.SimulationRunning)
+            if (Page_S2.SimulationRunning)
             {
-                aTimer.Enabled = false;
-                page_S1.StopSimulation();
+                Page_S2.StopSimulation();
                 Play_Button.Tag = "Pause";
                 Play_Button.IsEnabled = false;
             }
@@ -289,12 +180,11 @@ namespace DISS.WindowsPages
 
         private void RefreshSimulation_Click(object sender, MouseButtonEventArgs e)
         {
-            if (page_S1.SimulationRunning)
+            if (Page_S2.SimulationRunning)
             {
-                page_S1.StopSimulation();
-                page_S1.ResumeSimulation();
-                aTimer.Enabled = true;
-                page_S1.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfIteration.Text),10);
+                Page_S2.StopSimulation();
+                Page_S2.ResumeSimulation();
+                Page_S2.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfWaiters.Text), ConvertToInt(TextBox_NumberOfCooks.Text), Convert.ToBoolean(CheckBox_Cooling.IsChecked));
 
                 Play_Button.Tag = "Play";
             }
@@ -304,14 +194,8 @@ namespace DISS.WindowsPages
                 Play_Button.Tag = "Pause";
             }
 
-
-            ChartValues.Clear();
             values.Clear();
-
-            SimulationTime = new TimeSpan(0, 0, 0);
-            ActualIteration = 0;
             ResetChart();
-
         }
 
         private void TextBox_KeyUp(object sender, KeyEventArgs e)
@@ -328,7 +212,7 @@ namespace DISS.WindowsPages
                     else
                         ((TextBox)sender).Text = "";
 
-                    ((TextBox)sender).CaretIndex = TextBox_NumberOfIteration.Text.Length;
+                    ((TextBox)sender).CaretIndex = TextBox_NumberOfCooks.Text.Length;
 
                 }
                 catch (OverflowException)
@@ -342,8 +226,6 @@ namespace DISS.WindowsPages
                     ((TextBox)sender).Text = number.ToString("N0");
                     ((TextBox)sender).CaretIndex = ((TextBox)sender).Text.Length;
                 }
-
-                _removeNIteration = ConvertToInt(TextBox_RemoveNIteration.Text);
             }
         }
 
@@ -386,24 +268,34 @@ namespace DISS.WindowsPages
             Chart.AxisY[0].MaxValue = double.NaN;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
-        }
-
         private void Slider_SimulationSpeed_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            page_S1.SimulationModel.SetSimulationSpeed(100 - (int)Slider_SimulationSpeed.Value);
+            if (Page_S2.SimulationModel != null)
+                Page_S2.SimulationModel.SetSimulationSpeed(100 - (int)Slider_SimulationSpeed.Value);
         }
 
         private void Chart_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             _chartScrolled = true;
             ResetChart();
+        }
+    }
+
+    public class SimulationTimeConverter : MarkupExtension, IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return TimeSpan.FromSeconds((double) value).ToString("hh\\:mm\\:ss");
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override object ProvideValue(IServiceProvider serviceProvider)
+        {
+            return this;
         }
     }
 }

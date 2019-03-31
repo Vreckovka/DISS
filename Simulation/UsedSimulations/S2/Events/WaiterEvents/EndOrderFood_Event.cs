@@ -33,7 +33,7 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             }
 
             Waiter.Occupied = false;
-            Waiter.WorkedTime += OccurrenceTime - Waiter.LastEventTime;
+            Waiter.WorkedTime += (OccurrenceTime - Waiter.LastEventTime);
             SimulationCore.ChangeWaitersStats(OccurrenceTime);
 
             SimulationCore.FreeWaiters.Enqueue(Waiter, Waiter.WorkedTime);
@@ -49,7 +49,7 @@ namespace Simulations.UsedSimulations.S2.Events.WaiterEvents
             {
                 return new Food()
                 {
-                    Time = core.cezarSaladGenerator.GetNext(),
+                    Time =core.cezarSaladGenerator.GetNext(),
                     Agent = Agent,
                 };
             }

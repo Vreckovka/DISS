@@ -1,0 +1,31 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+
+    <DataTemplate x:Key="WorkerTemplate">
+        <Grid Margin="0,5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Margin="3,0">
+                <Run Text="ID: "/>
+                <Run Text="{Binding Id}"/>
+            </TextBlock>
+
+            <TextBlock Grid.Row="1" Margin="3,0">
+                <Run Text="Occupied: "/>
+                <Run Text="{Binding Occupied}"/>
+            </TextBlock>
+
+            <TextBlock Grid.Row="2" Text="{Binding WorkedTime}" Margin="3,0">
+                <Run Text="Worked time: "/>
+                <Run Text="{Binding WorkedTime}"/>
+                <Run Text="s"/>
+            </TextBlock>
+        </Grid>
+    </DataTemplate>
+
+</ResourceDictionary>

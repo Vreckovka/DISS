@@ -27,11 +27,12 @@ namespace Simulations.UsedSimulations.S2.Events.ChefEvents
             if (Agent.FoodLeft == 0)
             {
                 SimulationCore.AgentsWaitingForDeliver.Enqueue(Agent);
+                SimulationCore.CountOfWaitingAgents_Deliver += Agent.AgentCount;
                 SimulationCore.CheckWaiters(OccurrenceTime);
             }
 
             Cook.Occupied = false;
-            Cook.WorkedTime += OccurrenceTime - Cook.LastEventTime;
+            Cook.WorkedTime += (OccurrenceTime - Cook.LastEventTime);
             SimulationCore.ChangeCooksStats(OccurrenceTime);
 
             SimulationCore.FreeCooks.Enqueue(Cook);

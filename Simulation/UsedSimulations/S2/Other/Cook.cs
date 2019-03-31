@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PropertyChanged;
 using Simulations.UsedSimulations.S2;
 using Simulations.UsedSimulations.S2.Events.ChefEvents;
 
 namespace Simulations.UsedSimulations.Other
 {
+    [AddINotifyPropertyChangedInterface]
     public class Cook
     {
         public int Id { get; set; }
@@ -16,12 +18,12 @@ namespace Simulations.UsedSimulations.Other
         public double LastEventTime { get; set; }
 
         public SimulationCore_S2 _core;
-        private static int _count;
+        public static int Count;
 
         public Cook(SimulationCore_S2 core)
         {
-            Id = _count;
-            _count++;
+            Id = Count;
+            Count++;
             _core = core;
         }
 
