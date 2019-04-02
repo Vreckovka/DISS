@@ -59,7 +59,7 @@ namespace DISS.SimulationPages
         public void StartSimulation(Random random, int numberOfWaiters, int numberOfCooks, bool cooling)
         {
             SimulationRunning = true;
-            SimulationModel.Simulation.BeforeSimulation(new TimeSpan(11,0,0),new TimeSpan(20,0,0), numberOfWaiters, numberOfCooks,cooling);
+            SimulationModel.Simulation.BeforeSimulation(new TimeSpan(11, 0, 0), new TimeSpan(20, 0, 0), numberOfWaiters, numberOfCooks, cooling);
 
 
             _simulationThread = new Thread(() =>
@@ -107,7 +107,13 @@ namespace DISS.SimulationPages
         {
             SimulationModel.ResumeSimulation();
         }
-    }
 
-   
+        private void GeneratingColumns(object sender, DataGridAutoGeneratingColumnEventArgs e)
+        {
+            if (e.PropertyName.Equals("LastEventTime"))
+            {
+                e.Cancel = true;
+            }
+        }
+    }
 }

@@ -179,28 +179,7 @@
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock Text="Seed: ">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Simulation.SimulationRunning}" Value="True">
-                                                <Setter Property="Foreground" Value="Gray"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                            <TextBlock Grid.Row="1" Text="Random Seed: " Margin="0,5">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Simulation.SimulationRunning}" Value="True">
-                                                <Setter Property="Foreground" Value="Gray"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
+                          
 
                             <TextBlock Grid.Row="2" Text="Cooling: " Margin="0,5">
                                 <TextBlock.Style>
@@ -224,50 +203,7 @@
                                     <RowDefinition Height="auto"/>
                                     <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
-                                <TextBox  FontSize="15" 
-                                          KeyUp="TextBox_KeyUp" 
-                                          x:Name="TextBox_Seed"
-                                          DataContext="{Binding Simulation}">
-                                    <TextBox.Style>
-                                        <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding ElementName=CheckBox_RandomSeed, Path=IsChecked}" Value="True">
-                                                    <Setter Property="BorderBrush" Value="Gray"/>
-                                                    <Setter Property="IsEnabled" Value="False"/>
-                                                    <Setter Property="Foreground" Value="Gray"/>
-                                                </DataTrigger>
-
-                                                <DataTrigger Binding="{Binding  SimulationRunning}" Value="True">
-                                                    <Setter Property="IsEnabled" Value="False"/>
-                                                </DataTrigger>
-                                                <Trigger Property="IsEnabled" Value="False">
-                                                    <Setter Property="Foreground" Value="Gray"/>
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBox.Style>
-                                </TextBox>
-
-                                <CheckBox Grid.Row="1" 
-                                      HorizontalAlignment="Left" 
-                                      VerticalAlignment="Center" 
-                                      x:Name="CheckBox_RandomSeed"
-                                      Width="15"
-                                      Height="15"
-                                      IsChecked="True"
-                                      Margin="0,8"
-                                      >
-                                    <CheckBox.Style>
-                                        <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Simulation.SimulationRunning}" Value="True">
-                                                    <Setter Property="IsEnabled" Value="False"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </CheckBox.Style>
-                                </CheckBox>
-
+                                
                                 <CheckBox Grid.Row="2" 
                                           HorizontalAlignment="Left" 
                                           VerticalAlignment="Center" 

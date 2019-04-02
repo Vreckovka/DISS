@@ -56,10 +56,8 @@ namespace Simulations.ConfidenceInterval
                     new Chart().DataManipulator.Statistics.InverseTDistribution(1 - confidence,
                         sampleStandardDeviationData.Count - 1);
 
-                interval[0] = sampleStandardDeviationData.Mean -
-                              res * (standardDeviation / Math.Sqrt(sampleStandardDeviationData.Count));
-                interval[1] = sampleStandardDeviationData.Mean +
-                              res * (standardDeviation / Math.Sqrt(sampleStandardDeviationData.Count));
+                interval[0] = sampleStandardDeviationData.Mean - res * (standardDeviation / Math.Sqrt(sampleStandardDeviationData.Count));
+                interval[1] = sampleStandardDeviationData.Mean + res * (standardDeviation / Math.Sqrt(sampleStandardDeviationData.Count));
 
                 return interval;
             }

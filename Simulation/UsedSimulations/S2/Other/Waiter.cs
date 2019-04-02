@@ -16,6 +16,7 @@ namespace Simulations.UsedSimulations.Other
     {
         public int Id { get; set; }
         public double WorkedTime { get; set; }
+        [DoNotNotify]
         public double LastEventTime { get; set; }
         public bool Occupied { get; set; }
         public static int Count;

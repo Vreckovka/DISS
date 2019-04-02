@@ -47,7 +47,7 @@
                     <wpf:LineSeries
                                                 Fill="Transparent"
                                                 PointGeometry="{x:Null}"
-                                                LineSmoothness="1"
+                                                LineSmoothness="0.35"
                                                 Title="Avrage waiting &#x0a;time of customer"
                                                 Stroke="{StaticResource DefaultRedBrush}"
                                                 Values="{Binding WaiterChartValues}"
@@ -108,7 +108,7 @@
                                                 x:Name="Chart_Line"
                                                 Fill="Transparent"
                                                 PointGeometry="{x:Null}"
-                                                LineSmoothness="1"
+                                                LineSmoothness=".4"
                                                 Title="Avrage waiting &#x0a;time of customer"
                                                 Stroke="{StaticResource DefaultRedBrush}"
                                                 Values="{Binding CooksChartValues}"

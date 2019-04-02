@@ -212,18 +212,18 @@ namespace Simulations.UsedSimulations.S2
 
             var penneSaladGeneratorData = new List<DiscreetEmpiricalDistributionData>()
             {
-                new DiscreetEmpiricalDistributionData(185, 330, 0.15),
-                new DiscreetEmpiricalDistributionData(331, 630, 0.5),
-                new DiscreetEmpiricalDistributionData(631, 930, 0.35),
+                new DiscreetEmpiricalDistributionData(185, 330, 0.15, random.Next()),
+                new DiscreetEmpiricalDistributionData(331, 630, 0.5,random.Next()),
+                new DiscreetEmpiricalDistributionData(631, 930, 0.35,random.Next()),
             };
 
             penneSaladGenerator = new DiscreetEmpiricalDistribution(penneSaladGeneratorData, random.Next());
 
             var wholeWheatSpaghettiGeneratorData = new List<DiscreetEmpiricalDistributionData>()
             {
-                new DiscreetEmpiricalDistributionData(290, 356, 0.2),
-                new DiscreetEmpiricalDistributionData(357, 540, 0.43),
-                new DiscreetEmpiricalDistributionData(541, 600, 0.37),
+                new DiscreetEmpiricalDistributionData(290, 356, 0.2,random.Next()),
+                new DiscreetEmpiricalDistributionData(357, 540, 0.43,random.Next()),
+                new DiscreetEmpiricalDistributionData(541, 600, 0.37,random.Next()),
             };
 
 
@@ -417,7 +417,7 @@ namespace Simulations.UsedSimulations.S2
             }
 
             var simTimeSeconds = (EndTime - StartTime).TotalSeconds;
-            return ((workTime / Waiters.Count) * 100) / simTimeSeconds;
+            return  100 - (((workTime / Waiters.Count) * 100) / simTimeSeconds);
         }
         private double CalculateFreeTimeOfCooks()
         {
@@ -428,7 +428,7 @@ namespace Simulations.UsedSimulations.S2
             }
 
             var simTimeSeconds = (EndTime - StartTime).TotalSeconds;
-            return ((workTime / Cooks.Count) * 100) / simTimeSeconds;
+            return 100 - (((workTime / Cooks.Count) * 100) / simTimeSeconds);
         }
         private double CalculateAvrageWaitingTime()
         {
