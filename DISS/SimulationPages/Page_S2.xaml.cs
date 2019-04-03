@@ -20,7 +20,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DISS.Annotations;
 using DISS.SimulationModels;
-using OxyPlot;
 using PropertyChanged;
 using Simulations.ConfidenceInterval;
 using Simulations.UsedSimulations.Other;

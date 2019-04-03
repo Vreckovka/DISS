@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DISS.Annotations;
-using OxyPlot;
 using PropertyChanged;
 using Simulations.UsedSimulations.S2;
 

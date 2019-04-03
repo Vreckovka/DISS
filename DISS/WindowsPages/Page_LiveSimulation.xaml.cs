@@ -26,7 +26,6 @@ using LiveCharts;
 using LiveCharts.Configurations;
 using LiveCharts.Defaults;
 using LiveCharts.Wpf;
-using OxyPlot;
 using PropertyChanged;
 
 namespace DISS.WindowsPages
