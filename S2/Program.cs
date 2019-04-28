@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using simulation;
+using Simulations.ConfidenceInterval;
+using Simulations.UsedSimulations.S2;
 using Simulations.UsedSimulations.S3;
 
 
