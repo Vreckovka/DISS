@@ -27,18 +27,28 @@ namespace continualAssistants
         public void ProcessStart(MessageForm message)
         {
             message.Code = Mc.CestujuciNastupil;
-            
+
             ((MyMessage)message).Autobus.StojiNaZastavke = true;
 
             if (((MyMessage)message).Autobus.IndexAktualnaZastavkaVLinke != ((MyMessage)message).Autobus.Linka.Zastavky.Count)
             {
-                ((MyMessage) message).Autobus.AktualnaZastavka =
-                    ((MyMessage) message).Autobus.Linka
-                    .Zastavky[((MyMessage) message).Autobus.IndexAktualnaZastavkaVLinke].Key;
+                ((MyMessage)message).Autobus.AktualnaZastavka =
+                    ((MyMessage)message).Autobus.Linka
+                    .Zastavky[((MyMessage)message).Autobus.IndexAktualnaZastavkaVLinke].Key;
             }
 
-            var next = triangularDistribution.GetNext();
-            Hold(next, message);
+            if (((MyMessage) message).Autobus.KapacitaOsob == ((MyMessage) message).Autobus.Cestujuci.Count &&
+                !((MyMessage) message).Autobus.PlnyAutobus)
+            {
+                ((MyMessage) message).Autobus.PlnyAutobus = true;
+                UkonciNastupovanie(message);
+            }
+               
+            else
+            {
+                var next = triangularDistribution.GetNext();
+                Hold(next, message);
+            }
         }
 
         //meta! userInfo="Process messages defined in code", id="0"
@@ -55,7 +65,7 @@ namespace continualAssistants
                     newMessage.Autobus = sprava.Autobus;
                     newMessage.Code = sprava.Code;
 
-                   
+                    Thread.Sleep(50);
 
                     if (sprava.Autobus.StojiNaZastavke)
                     {

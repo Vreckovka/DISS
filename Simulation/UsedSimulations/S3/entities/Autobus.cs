@@ -17,7 +17,7 @@ namespace Simulations.UsedSimulations.S3.entities
         public bool StojiNaZastavke { get; set; }
         public List<Cestujuci> Cestujuci { get; set; }
         public Linka Linka { get; set; }
-
+        public bool PlnyAutobus { get; set; }
         public int IndexStartZastavka { get; set; }
         public Zastavka AktualnaZastavka { get; set; }
         public int CelkovyPocetPrevezenych { get; set; }
@@ -35,6 +35,7 @@ namespace Simulations.UsedSimulations.S3.entities
         public void Reset()
         {
             AktualnyPocetPrevezenych = 0;
+            PlnyAutobus = false;
             Cestujuci.Clear();
             IndexAktualnaZastavkaVLinke = IndexStartZastavka;
         }
