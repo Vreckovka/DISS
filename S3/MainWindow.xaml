@@ -1,0 +1,74 @@
+﻿<Window x:Class="S3.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:S3"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock>
+            <Run Text="Simulation time: "/>
+            <Run  Name="SimulationTimeRun"/>
+        </TextBlock>
+
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Header="LINKA A">
+                <DataGrid Name="A" ItemsSource="{Binding AgentOkolia.Linky[0].Zastavky, Mode=OneWay}" Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Meno" Binding="{Binding Key.Meno}" />
+                        <DataGridTextColumn Header="Pocet cestujucich na zastavke" Binding="{Binding Key.Cestujuci.Count}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+
+            <GroupBox Header="LINKA B" Grid.Column="1">
+                <DataGrid Name="B" ItemsSource="{Binding AgentOkolia.Linky[1].Zastavky, Mode=OneWay}" Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Meno" Binding="{Binding Key.Meno}" />
+                        <DataGridTextColumn Header="Pocet cestujucich na zastavke" Binding="{Binding Key.Cestujuci.Count}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+
+            <GroupBox Header="LINKA C" Grid.Column="2">
+                <DataGrid Name="C" ItemsSource="{Binding AgentOkolia.Linky[2].Zastavky, Mode=OneWay}" Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Meno" Binding="{Binding Key.Meno}" />
+                        <DataGridTextColumn Header="Pocet cestujucich na zastavke" Binding="{Binding Key.Cestujuci.Count}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+        </Grid>
+
+
+        <Grid Grid.Row="2">
+            <GroupBox Header="Autobusy">
+                <DataGrid ItemsSource="{Binding AgentAutobusov.Autobusy}" AutoGenerateColumns="False" Name="Autobusy">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
+                        <DataGridTextColumn Header="Actualna zastavka" Binding="{Binding AktualnaZastavka.Meno}"/>
+                        <DataGridTextColumn Header="Aktualny pocet cestujucich" Binding="{Binding AktualnyPocetPrevezenych}"/>
+                        <DataGridTextColumn Header="Celkovy pocet cestujucich" Binding="{Binding CelkovyPocetPrevezenych}"/>
+                        <DataGridTextColumn Header="Stoji na zastavke" Binding="{Binding StojiNaZastavke}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+        </Grid>
+        <Button Content="START" Grid.Row="3" Margin="10" Click="Button_Click"/>
+    </Grid>
+</Window>

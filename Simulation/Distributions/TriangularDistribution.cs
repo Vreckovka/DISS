@@ -8,11 +8,11 @@ namespace Simulations.Distributions
 {
     public class TriangularDistribution : Distribution
     {
-        private int a;
-        private int b;
-        private int c;
+        private double a;
+        private double b;
+        private double c;
         
-        public TriangularDistribution(int seed, int min, int max, int modus) : base(seed)
+        public TriangularDistribution(int seed, double min, double max, double modus) : base(seed)
         {
             a = min;
             b = max;

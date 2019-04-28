@@ -39,6 +39,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ABACore">
+      <HintPath>..\DLL\ABACore.dll</HintPath>
+    </Reference>
     <Reference Include="LiveCharts, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
       <HintPath>..\packages\LiveCharts.0.9.7\lib\net45\LiveCharts.dll</HintPath>
     </Reference>
@@ -104,6 +107,32 @@
     <Compile Include="UsedSimulations\S2\Events\WaiterEvents\EndOrderFood_Event.cs" />
     <Compile Include="UsedSimulations\S2\SimulationCore_S2.cs" />
     <Compile Include="UsedSimulations\S2\Events\WaiterEvents\StartOrder_Event.cs" />
+    <Compile Include="UsedSimulations\S3\agents\AgentAutobusov.cs" />
+    <Compile Include="UsedSimulations\S3\agents\AgentLiniek.cs" />
+    <Compile Include="UsedSimulations\S3\agents\AgentModelu.cs" />
+    <Compile Include="UsedSimulations\S3\agents\AgentOkolia.cs" />
+    <Compile Include="UsedSimulations\S3\agents\AgentZastavok.cs" />
+    <Compile Include="UsedSimulations\S3\Config.cs" />
+    <Compile Include="UsedSimulations\S3\continualAssistants\JazdaProces .cs" />
+    <Compile Include="UsedSimulations\S3\continualAssistants\InitJazdaProces.cs" />
+    <Compile Include="UsedSimulations\S3\continualAssistants\NastupovanieProces.cs" />
+    <Compile Include="UsedSimulations\S3\continualAssistants\PrichodyCestujucichNaZastavkuProces.cs" />
+    <Compile Include="UsedSimulations\S3\continualAssistants\PrichodyCestujucichProces.cs" />
+    <Compile Include="UsedSimulations\S3\entities\Autobus.cs" />
+    <Compile Include="UsedSimulations\S3\entities\Cestujuci.cs" />
+    <Compile Include="UsedSimulations\S3\entities\Linka.cs" />
+    <Compile Include="UsedSimulations\S3\entities\Zastavka.cs" />
+    <Compile Include="UsedSimulations\S3\entities\ZastavkaData.cs" />
+    <Compile Include="UsedSimulations\S3\managers\ManagerAutobusov.cs" />
+    <Compile Include="UsedSimulations\S3\managers\ManagerLiniek.cs" />
+    <Compile Include="UsedSimulations\S3\managers\ManagerModelu.cs" />
+    <Compile Include="UsedSimulations\S3\managers\ManagerOkolia.cs" />
+    <Compile Include="UsedSimulations\S3\managers\ManagerZastavok.cs" />
+    <Compile Include="UsedSimulations\S3\S3.cs" />
+    <Compile Include="UsedSimulations\S3\simulation\Mc.cs" />
+    <Compile Include="UsedSimulations\S3\simulation\MyMessage.cs" />
+    <Compile Include="UsedSimulations\S3\simulation\MySimulation.cs" />
+    <Compile Include="UsedSimulations\S3\simulation\SimId.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -111,6 +140,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="UsedSimulations\S3\instantAssistants\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.3.3.2\build\Fody.targets" Condition="Exists('..\packages\Fody.3.3.2\build\Fody.targets')" />
