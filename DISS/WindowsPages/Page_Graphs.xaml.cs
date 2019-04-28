@@ -59,7 +59,7 @@ namespace DISS.WindowsPages
         {
             List<Task<ObservablePoint>> tasks = new List<Task<ObservablePoint>>();
 
-            for (int i = 10; i <= 15; i++)
+            for (int i = 10; i <= 20; i++)
             {
                 int number = i;
                 Task<ObservablePoint> task = new Task<ObservablePoint>(() => GetCooks(number));

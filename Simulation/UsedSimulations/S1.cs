@@ -48,8 +48,8 @@ namespace Simulation.Simulations
 
             var FGData = new List<DiscreetEmpiricalDistributionData>()
             {
-                new DiscreetEmpiricalDistributionData(170, 195, 0.2),
-                new DiscreetEmpiricalDistributionData(196, 280, 0.8),
+                new DiscreetEmpiricalDistributionData(170, 195, 0.2, random.Next()),
+                new DiscreetEmpiricalDistributionData(196, 280, 0.8,random.Next()),
             };
 
             FG = new DiscreetEmpiricalDistribution(FGData, random.Next());

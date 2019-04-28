@@ -14,7 +14,7 @@ namespace Simulations.Distributions
         {
             _dataList = dataList;
             CheckData();
-            _propGenerator = new Random(seed + 1);
+            _propGenerator = new Random(seed);
         }
 
         private void CheckData()
@@ -40,7 +40,7 @@ namespace Simulations.Distributions
 
                 if (prop < dataProp)
                 {
-                    return _random.Next(data.Min, data.Max + 1);
+                    return data.Random.Next(data.Min, data.Max + 1);
                 }
             }
 

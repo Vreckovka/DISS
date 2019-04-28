@@ -26,7 +26,6 @@ using LiveCharts;
 using LiveCharts.Configurations;
 using LiveCharts.Defaults;
 using LiveCharts.Wpf;
-using OxyPlot;
 using PropertyChanged;
 
 namespace DISS.WindowsPages
@@ -137,13 +136,7 @@ namespace DISS.WindowsPages
         {
             return TimeSpan.FromSeconds((a * 15)  + 39600).ToString();
         }
-        private Random GetRandom()
-        {
-            if (CheckBox_RandomSeed.IsChecked == true)
-                return new Random();
-            else
-                return new Random(ConvertToInt(TextBox_Seed.Text));
-        }
+
         private void StartSimulation_Click(object sender, MouseButtonEventArgs e)
         {
             if (Play_Button.Tag.Equals("Pause") && ConvertToInt(TextBox_NumberOfCooks.Text) != 0)
@@ -151,7 +144,7 @@ namespace DISS.WindowsPages
                 if (!Page_S2.SimulationRunning)
                 {
                     Page_S2.ResumeSimulation();
-                    Page_S2.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfWaiters.Text), ConvertToInt(TextBox_NumberOfCooks.Text), Convert.ToBoolean(CheckBox_Cooling.IsChecked));
+                    Page_S2.StartSimulation(new Random(), ConvertToInt(TextBox_NumberOfWaiters.Text), ConvertToInt(TextBox_NumberOfCooks.Text), Convert.ToBoolean(CheckBox_Cooling.IsChecked));
 
                 }
                 else
@@ -184,7 +177,7 @@ namespace DISS.WindowsPages
             {
                 Page_S2.StopSimulation();
                 Page_S2.ResumeSimulation();
-                Page_S2.StartSimulation(GetRandom(), ConvertToInt(TextBox_NumberOfWaiters.Text), ConvertToInt(TextBox_NumberOfCooks.Text), Convert.ToBoolean(CheckBox_Cooling.IsChecked));
+                Page_S2.StartSimulation(new Random(), ConvertToInt(TextBox_NumberOfWaiters.Text), ConvertToInt(TextBox_NumberOfCooks.Text), Convert.ToBoolean(CheckBox_Cooling.IsChecked));
 
                 Play_Button.Tag = "Play";
             }
