@@ -17,6 +17,7 @@ namespace Simulations.UsedSimulations.S3.entities
         public double CasKoncaGenerovania { get; set; }
 
         public Queue<Cestujuci> Cestujuci { get; set; }
+        public int PocetCestujucich { get; set; }
         public Zastavka(OSPABA.Simulation mySim) : base(mySim)
         {
             Cestujuci = new Queue<Cestujuci>();

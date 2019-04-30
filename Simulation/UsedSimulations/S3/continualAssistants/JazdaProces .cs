@@ -31,6 +31,10 @@ namespace continualAssistants
             {
                 holdTime = sprava.Autobus.Linka.Zastavky[sprava.Autobus.IndexAktualnaZastavkaVLinke - 1].Value.CasKDalsejZastavke;
             }
+            else
+            {
+                holdTime = sprava.Autobus.Linka.Zastavky[sprava.Autobus.IndexAktualnaZastavkaVLinke].Value.CasKDalsejZastavke;
+            }
 
             Hold(holdTime, sprava);
         }
@@ -49,9 +53,10 @@ namespace continualAssistants
                     sprava.Code = Mc.PrichodNaZastavku;
                     sprava.Param = message.Param;
                     sprava.Addressee = MySim.FindAgent(SimId.AgentZastavok);
+      
 
                     Notice(sprava);
-                    //Console.WriteLine($"{TimeSpan.FromMinutes(MySim.CurrentTime)} AUTOBUS PRISIEL NA ZASTAVKU");
+                    //Console.WriteLine($"{(MySim.CurrentTime)} AUTOBUS PRISIEL NA ZASTAVKU");
                     break;
 			}
 		}

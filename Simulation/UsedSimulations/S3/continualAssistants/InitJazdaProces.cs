@@ -41,23 +41,24 @@ namespace continualAssistants
             }
             else
                 Hold(Config.ZaciatokJazd, message);
-            }
+        }
 
-            //meta! userInfo="Process messages defined in code", id="0"
-            public void ProcessDefault(MessageForm message)
+        //meta! userInfo="Process messages defined in code", id="0"
+        public void ProcessDefault(MessageForm message)
+        {
+            switch (message.Code)
             {
-                switch (message.Code)
-                {
-                    case Mc.InitJazda:
-                        MyMessage sprava = (MyMessage)message;
+                case Mc.InitJazda:
+                    MyMessage sprava = (MyMessage)message.CreateCopy();
 
-                        Console.WriteLine($"{TimeSpan.FromMinutes(MySim.CurrentTime)} Zaciatok jazdy {sprava.Autobus.Id}");
-                        sprava.Addressee = MyAgent;
-                        Notice(sprava);
+                    sprava.Autobus = ((MyMessage)message).Autobus;
+                    // Console.WriteLine($"{TimeSpan.FromMinutes(MySim.CurrentTime)} Zaciatok jazdy {sprava.Autobus.Id}");
+                    sprava.Addressee = MyAgent;
+                    Notice(sprava);
 
-                        break;
-                }
+                    break;
             }
+        }
 
         //meta! userInfo="Generated code: do not modify", tag="begin"
         override public void ProcessMessage(MessageForm message)

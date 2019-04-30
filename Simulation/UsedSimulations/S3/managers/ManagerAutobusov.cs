@@ -41,6 +41,7 @@ namespace managers
             MyMessage sprava = new MyMessage(MySim);
             sprava.Addressee = MyAgent.FindAssistant(SimId.JazdaNaZastavkuProces);
             sprava.Autobus = ((MyMessage)message).Autobus;
+            sprava.Autobus.KoniecProcesu = false;
             StartContinualAssistant(sprava);
         }
 

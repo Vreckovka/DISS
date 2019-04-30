@@ -43,7 +43,7 @@ namespace continualAssistants
                     sprava.Param = ((MyMessage) message).IndexZastavky;
                     Notice(sprava);
 
-
+                   // Console.WriteLine(MySim.CurrentTime);
                     //Console.WriteLine(TimeSpan.FromMinutes(MySim.CurrentTime) + $" {MyAgent.Zastavky[((MyMessage)message).IndexZastavky].Meno} started generating ppl");
                     
                     break;

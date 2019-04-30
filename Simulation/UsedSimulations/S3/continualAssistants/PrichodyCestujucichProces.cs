@@ -54,13 +54,14 @@ namespace continualAssistants
             {
                 case Mc.PrichodCestujuceho:
 
+                    //TODO: Maximalny pocet ludi na zastavku
                     if (MySim.CurrentTime <= MyAgent.Zastavky[(int)message.Param].CasKoncaGenerovania)
                     {
                         Hold(_exp[(int)message.Param].GetNext(), message.CreateCopy());
 
                         var sprava = (MyMessage)message;
                         MyAgent.Zastavky[(int)message.Param].Cestujuci.Enqueue(new Cestujuci(cestujuciIndex++, MySim));
-
+                        MyAgent.Zastavky[(int)message.Param].PocetCestujucich++;
 
                         sprava.Code = Mc.PrichodCestujuceho;
                         sprava.Addressee = MyAgent;

@@ -16,7 +16,7 @@
 
         <TextBlock>
             <Run Text="Simulation time: "/>
-            <Run  Name="SimulationTimeRun"/>
+            <Run  Name="SimulationTimeRun" />
         </TextBlock>
 
 
@@ -31,7 +31,7 @@
                 <DataGrid Name="A" ItemsSource="{Binding AgentOkolia.Linky[0].Zastavky, Mode=OneWay}" Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Meno" Binding="{Binding Key.Meno}" />
-                        <DataGridTextColumn Header="Pocet cestujucich na zastavke" Binding="{Binding Key.Cestujuci.Count}" />
+                        <DataGridTextColumn Header="Pocet cestujucich na zastavke" Binding="{Binding Key.PocetCestujucich}" />
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>
@@ -40,7 +40,7 @@
                 <DataGrid Name="B" ItemsSource="{Binding AgentOkolia.Linky[1].Zastavky, Mode=OneWay}" Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Meno" Binding="{Binding Key.Meno}" />
-                        <DataGridTextColumn Header="Pocet cestujucich na zastavke" Binding="{Binding Key.Cestujuci.Count}" />
+                        <DataGridTextColumn Header="Pocet cestujucich na zastavke" Binding="{Binding Key.PocetCestujucich}" />
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>
@@ -49,7 +49,7 @@
                 <DataGrid Name="C" ItemsSource="{Binding AgentOkolia.Linky[2].Zastavky, Mode=OneWay}" Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Meno" Binding="{Binding Key.Meno}" />
-                        <DataGridTextColumn Header="Pocet cestujucich na zastavke" Binding="{Binding Key.Cestujuci.Count}" />
+                        <DataGridTextColumn Header="Pocet cestujucich na zastavke" Binding="{Binding Key.PocetCestujucich}" />
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>

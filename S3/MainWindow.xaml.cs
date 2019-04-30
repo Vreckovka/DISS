@@ -16,15 +16,18 @@ using System.Windows.Shapes;
 using simulation;
 using Simulations.UsedSimulations.S3;
 using Simulations.UsedSimulations.S3.entities;
+using PropertyChanged;
 
 namespace S3
 {
+    [AddINotifyPropertyChangedInterface]
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
         public MySimulation Simulation { get; set; }
+        Thread thread;
         public MainWindow()
         {
             InitializeComponent();
@@ -47,63 +50,32 @@ namespace S3
                 Console.ReadKey();
             });
 
-
-
-            //List<Zastavka> zastavkas = new List<Zastavka>();
-
-
-            //zastavkas.Add(new Zastavka(Simulation)
-            //{
-            //    Meno = "AHOJK"
-            //});
-
-            //zastavkas.Add(new Zastavka(Simulation)
-            //{
-            //    Meno = "ASD"
-            //});
-
-            //Thread thread = new Thread(() =>
-            //{
-            //    int i = 0;
-            //    while (true)
-            //    {
-            //        zastavkas[0].Meno = i.ToString();
-            //        zastavkas[1].Meno = i.ToString();
-            //        i++;
-
-            //        Thread.Sleep(100);
-            //    }
-            //});
-
-            //thread.Start();
-           
-            //Zastavky.ItemsSource = zastavkas;
-
-
-            Task.Run(() =>
+            thread = new Thread(() =>
             {
                 while (true)
                 {
-                    Thread.Sleep(250);
+                    Thread.Sleep(10);
                     Dispatcher.Invoke(() =>
                     {
-                        A.Items.Refresh();
-                        B.Items.Refresh();
-                        C.Items.Refresh();
-                        Autobusy.Items.Refresh();
                         SimulationTimeRun.Text = TimeSpan.FromMinutes(Simulation.CurrentTime).ToString();
                     });
                 }
             });
+
+            thread.IsBackground = true;
+            
+           
         }
 
 
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            thread.Start();
             Task.Run(() =>
             {
-                Simulation.Simulate(Config.PocetReplikacii, Config.PocetReplikacii); 
+                Simulation.SetSimSpeed(1/60d, 0.01);
+                Simulation.Simulate(Config.PocetReplikacii, Config.PocetReplikacii);
             });
         }
     }
