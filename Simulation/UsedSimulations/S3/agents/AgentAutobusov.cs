@@ -47,45 +47,45 @@ namespace agents
             Autobusy = new List<Autobus>();
             var agentOkolia = (AgentOkolia)MySim.FindAgent(SimId.AgentOkolia);
 
-            Autobusy.Add(new Autobus(1,MySim)
-            {
-                KapacitaOsob = 186,
-                PocetDveri = 4,
-                Linka = agentOkolia.Linky[0],
-                IndexStartZastavka = 0
-            });
+            //Autobusy.Add(new Autobus(1,MySim)
+            //{
+            //    KapacitaOsob = 186,
+            //    PocetDveri = 4,
+            //    Linka = agentOkolia.Linky[0],
+            //    IndexStartZastavka = 0
+            //});
 
-            Autobusy.Add(new Autobus(2, MySim)
-            {
-                KapacitaOsob = 186,
-                PocetDveri = 4,
-                Linka = agentOkolia.Linky[0],
-                IndexStartZastavka = 0
-            });
+            //Autobusy.Add(new Autobus(2, MySim)
+            //{
+            //    KapacitaOsob = 186,
+            //    PocetDveri = 4,
+            //    Linka = agentOkolia.Linky[0],
+            //    IndexStartZastavka = 0
+            //});
 
-            Autobusy.Add(new Autobus(3, MySim)
-            {
-                KapacitaOsob = 186,
-                PocetDveri = 4,
-                Linka = agentOkolia.Linky[1],
-                IndexStartZastavka = 0
-            });
+            //Autobusy.Add(new Autobus(3, MySim)
+            //{
+            //    KapacitaOsob = 186,
+            //    PocetDveri = 4,
+            //    Linka = agentOkolia.Linky[1],
+            //    IndexStartZastavka = 0
+            //});
 
-            Autobusy.Add(new Autobus(4, MySim)
-            {
-                KapacitaOsob = 186,
-                PocetDveri = 4,
-                Linka = agentOkolia.Linky[1],
-                IndexStartZastavka = 0
-            });
+            //Autobusy.Add(new Autobus(4, MySim)
+            //{
+            //    KapacitaOsob = 186,
+            //    PocetDveri = 4,
+            //    Linka = agentOkolia.Linky[1],
+            //    IndexStartZastavka = 0
+            //});
 
-            Autobusy.Add(new Autobus(5, MySim)
-            {
-                KapacitaOsob = 186,
-                PocetDveri = 4,
-                Linka = agentOkolia.Linky[2],
-                IndexStartZastavka = 0
-            });
+            //Autobusy.Add(new Autobus(5, MySim)
+            //{
+            //    KapacitaOsob = 186,
+            //    PocetDveri = 4,
+            //    Linka = agentOkolia.Linky[2],
+            //    IndexStartZastavka = 0
+            //});
 
             Autobusy.Add(new Autobus(6, MySim)
             {

@@ -34,13 +34,16 @@ namespace S3
             Simulation = new MySimulation();
 
             DataContext = Simulation;
-           
+            double pocet = 0;
+            double count = 0;
+
             Simulation.OnReplicationDidFinish((s)
                 =>
             {
-
-                Console.WriteLine("KONIEC REPLIKACIE");
-                Console.Clear();
+                pocet += Simulation.AgentOkolia.CelkovyPocetCestujucich;
+                count++;
+                Console.WriteLine(pocet/count);
+               // Console.Clear();
             });
 
             Simulation.OnSimulationDidFinish((s)
@@ -63,8 +66,6 @@ namespace S3
             });
 
             thread.IsBackground = true;
-            
-           
         }
 
 
@@ -74,8 +75,8 @@ namespace S3
             thread.Start();
             Task.Run(() =>
             {
-                Simulation.SetSimSpeed(1/60d, 0.01);
-                Simulation.Simulate(Config.PocetReplikacii, Config.PocetReplikacii);
+                Simulation.SetSimSpeed(1/30d, 0.01);
+                Simulation.Simulate(Config.PocetReplikacii, 115);
             });
         }
     }

@@ -12,12 +12,14 @@ namespace Simulations.UsedSimulations.S3.entities
     public class Zastavka : Entity
     {
         public string Meno { get; set; }
-        public int CelkovyPocetCestujucich { get; set; }
+        public int MaxPocetVygenerovanych { get; set; }
+        public int PocetVygenerovanych { get; set; }
         public int GlobalIndex { get; set; }
         public double CasKoncaGenerovania { get; set; }
 
         public Queue<Cestujuci> Cestujuci { get; set; }
         public int PocetCestujucich { get; set; }
+
         public Zastavka(OSPABA.Simulation mySim) : base(mySim)
         {
             Cestujuci = new Queue<Cestujuci>();

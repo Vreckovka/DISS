@@ -26,7 +26,7 @@ namespace continualAssistants
 
             for (int i = 0; i < MyAgent.Zastavky.Count; i++)
             {
-                _exp[i] = new ExponentialDistribution((1.0 / (65.0 / MyAgent.Zastavky[i].CelkovyPocetCestujucich)), ((MySimulation)MySim).Random.Next());
+                _exp[i] = new ExponentialDistribution((1.0 / (65.0 / MyAgent.Zastavky[i].MaxPocetVygenerovanych)), ((MySimulation)MySim).Random.Next());
             }
         }
 
@@ -54,14 +54,18 @@ namespace continualAssistants
             {
                 case Mc.PrichodCestujuceho:
 
-                    //TODO: Maximalny pocet ludi na zastavku
-                    if (MySim.CurrentTime <= MyAgent.Zastavky[(int)message.Param].CasKoncaGenerovania)
+                    if (MySim.CurrentTime <= MyAgent.Zastavky[(int)message.Param].CasKoncaGenerovania
+                        && MyAgent.Zastavky[(int)message.Param].PocetVygenerovanych  < 
+                        MyAgent.Zastavky[(int)message.Param].MaxPocetVygenerovanych)
                     {
                         Hold(_exp[(int)message.Param].GetNext(), message.CreateCopy());
 
                         var sprava = (MyMessage)message;
                         MyAgent.Zastavky[(int)message.Param].Cestujuci.Enqueue(new Cestujuci(cestujuciIndex++, MySim));
                         MyAgent.Zastavky[(int)message.Param].PocetCestujucich++;
+
+                        MyAgent.Zastavky[(int)message.Param].PocetVygenerovanych++;
+                        MyAgent.CelkovyPocetCestujucich++;
 
                         sprava.Code = Mc.PrichodCestujuceho;
                         sprava.Addressee = MyAgent;
@@ -78,7 +82,6 @@ namespace continualAssistants
                     break;
             }
         }
-
 
 
         //meta! userInfo="Generated code: do not modify", tag="begin"

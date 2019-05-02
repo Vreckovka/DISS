@@ -12,6 +12,6 @@ namespace Simulations.UsedSimulations.S3.entities
         public double CasKDalsejZastavke { get; set; }
         public double CasKuStadionu { get; set; }
 
-
+        public KeyValuePair<Zastavka,ZastavkaData> DalsiaZastavkaData { get; set; }
     }
 }

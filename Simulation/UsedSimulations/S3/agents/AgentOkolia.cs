@@ -15,33 +15,34 @@ namespace agents
     public class AgentOkolia : Agent
     {
         public List<Linka> Linky { get; set; }
-        public List<Zastavka> Zastavky { get; set; } 
+        public List<Zastavka> Zastavky { get; set; }
+        public int CelkovyPocetCestujucich { get; set; }
         public AgentOkolia(int id, OSPABA.Simulation mySim, Agent parent) :
-			base(id, mySim, parent)
-		{
-			Init();
-		}
+            base(id, mySim, parent)
+        {
+            Init();
+        }
 
-		override public void PrepareReplication()
-		{
-			base.PrepareReplication();
-
+        override public void PrepareReplication()
+        {
+            base.PrepareReplication();
+            CelkovyPocetCestujucich = 0;
             StartGenerovanieCestujucich();
-       
+
             // Setup component for the next replication
         }
 
-      
+
         //meta! userInfo="Generated code: do not modify", tag="begin"
         private void Init()
-		{
+        {
             //VytvorZastavky();
             //VypisZastavky();
-            
+
             new ManagerOkolia(SimId.ManagerOkolia, MySim, this);
-			new PrichodyCestujucichProces(SimId.PrichodyCestujucichProces, MySim, this);
+            new PrichodyCestujucichProces(SimId.PrichodyCestujucichProces, MySim, this);
             new PrichodyCestujucichNaZastavkuProces(SimId.PrichodyCestujucichNaZastavkuProces, MySim, this);
-           
+
             AddOwnMessage(Mc.CestujuciDovezeny);
             AddOwnMessage(Mc.PrichodCestujuceho);
             AddOwnMessage(Mc.ZacniGenerovatCestujucich);
@@ -55,7 +56,7 @@ namespace agents
                 {
                     var sprava = new MyMessage(MySim);
                     zastavka.Key.CasKoncaGenerovania =
-                        (long) (Config.ZaciatokZapasu - ((10 + zastavka.Value.CasKuStadionu)));
+                        (long)(Config.ZaciatokZapasu - ((10 + zastavka.Value.CasKuStadionu)));
 
                     sprava.Param = (long)(Config.ZaciatokZapasu - ((75 + zastavka.Value.CasKuStadionu)));
                     sprava.IndexZastavky = zastavka.Key.GlobalIndex;
@@ -70,26 +71,25 @@ namespace agents
 
         public void VytvorZastavky()
         {
-
             Zastavky = new List<Zastavka>()
             {
                 new Zastavka(MySim)
                 {
                     Meno = "K1",
-                    CelkovyPocetCestujucich = 260,
+                    MaxPocetVygenerovanych = 260,
                     GlobalIndex = 0
 
                 },
                 new Zastavka(MySim)
                 {
                     Meno = "K2",
-                    CelkovyPocetCestujucich = 210,
+                    MaxPocetVygenerovanych = 210,
                     GlobalIndex = 1
                 },
                 new Zastavka(MySim)
                 {
                     Meno = "K3",
-                    CelkovyPocetCestujucich = 220,
+                    MaxPocetVygenerovanych = 220,
                     GlobalIndex = 2
                 },
                 new Zastavka(MySim)
@@ -100,72 +100,72 @@ namespace agents
             new Zastavka(MySim)
               {
                   Meno = "AA",
-                  CelkovyPocetCestujucich = 123,
+                  MaxPocetVygenerovanych = 123,
                  GlobalIndex = 4
               },
               new Zastavka(MySim)
               {
                   Meno = "AB",
-                  CelkovyPocetCestujucich = 92,
+                  MaxPocetVygenerovanych = 92,
                   GlobalIndex = 5
               },new Zastavka(MySim)
               {
                   Meno = "AC",
-                  CelkovyPocetCestujucich = 241,
+                  MaxPocetVygenerovanych = 241,
                   GlobalIndex = 6
               }
               ,new Zastavka(MySim)
               {
                   Meno = "AD",
-                  CelkovyPocetCestujucich = 123,
+                  MaxPocetVygenerovanych = 123,
                   GlobalIndex = 7
               },
               new Zastavka(MySim)
               {
                   Meno = "AE",
-                  CelkovyPocetCestujucich = 215,
+                  MaxPocetVygenerovanych = 215,
                   GlobalIndex = 8
               },
               new Zastavka(MySim)
               {
                   Meno = "AF",
-                  CelkovyPocetCestujucich = 245,
+                  MaxPocetVygenerovanych = 245,
                   GlobalIndex = 9
               },
               new Zastavka(MySim)
               {
                   Meno = "AG",
-                  CelkovyPocetCestujucich = 137,
+                  MaxPocetVygenerovanych = 137,
                   GlobalIndex = 10
               },
               new Zastavka(MySim)
               {
                   Meno = "AH",
-                  CelkovyPocetCestujucich = 132,
+                  MaxPocetVygenerovanych = 132,
                   GlobalIndex = 11
               },
               new Zastavka(MySim)
               {
                   Meno = "AI",
-                  CelkovyPocetCestujucich = 164,
+                  MaxPocetVygenerovanych = 164,
                   GlobalIndex = 12
               },
               new Zastavka(MySim)
               {
                   Meno = "AJ",
-                  CelkovyPocetCestujucich = 124,
+                  MaxPocetVygenerovanych = 124,
                   GlobalIndex = 13
               },
               new Zastavka(MySim)
               {
                   Meno = "AK",
-                  CelkovyPocetCestujucich = 213,
+                  MaxPocetVygenerovanych = 213,
                   GlobalIndex = 14
               },
               new Zastavka(MySim)
               {
                   Meno = "AL",
-                  CelkovyPocetCestujucich = 185,
+                  MaxPocetVygenerovanych = 185,
                   GlobalIndex = 15
               },
 
@@ -173,61 +173,61 @@ namespace agents
               new Zastavka(MySim)
               {
                   Meno = "BA",
-                  CelkovyPocetCestujucich = 79,
+                  MaxPocetVygenerovanych = 79,
                   GlobalIndex = 16
               },
               new Zastavka(MySim)
               {
                   Meno = "BB",
-                  CelkovyPocetCestujucich = 69,
+                  MaxPocetVygenerovanych = 69,
                   GlobalIndex = 17
               },
               new Zastavka(MySim)
               {
                   Meno = "BC",
-                  CelkovyPocetCestujucich = 43,
+                  MaxPocetVygenerovanych = 43,
                   GlobalIndex = 18
               },
               new Zastavka(MySim)
               {
                   Meno = "BD",
-                  CelkovyPocetCestujucich = 127,
+                  MaxPocetVygenerovanych = 127,
                   GlobalIndex = 19
               },
               new Zastavka(MySim)
               {
                   Meno = "BE",
-                  CelkovyPocetCestujucich = 30,
+                  MaxPocetVygenerovanych = 30,
                   GlobalIndex = 20
               },
               new Zastavka(MySim)
               {
                   Meno = "BF",
-                  CelkovyPocetCestujucich = 69,
+                  MaxPocetVygenerovanych = 69,
                   GlobalIndex = 21
               },
               new Zastavka(MySim)
               {
                   Meno = "BG",
-                  CelkovyPocetCestujucich = 162,
+                  MaxPocetVygenerovanych = 162,
                   GlobalIndex = 22
               },
               new Zastavka(MySim)
               {
                   Meno = "BH",
-                  CelkovyPocetCestujucich = 90,
+                  MaxPocetVygenerovanych = 90,
                   GlobalIndex = 23
               },
               new Zastavka(MySim)
               {
                   Meno = "BI",
-                  CelkovyPocetCestujucich = 148,
+                  MaxPocetVygenerovanych = 148,
                   GlobalIndex = 24
               },
               new Zastavka(MySim)
               {
                   Meno = "BJ",
-                  CelkovyPocetCestujucich = 171,
+                  MaxPocetVygenerovanych = 171,
                   GlobalIndex = 25
               },
 
@@ -238,43 +238,43 @@ namespace agents
               new Zastavka(MySim)
               {
                   Meno = "CA",
-                  CelkovyPocetCestujucich = 240,
+                  MaxPocetVygenerovanych = 240,
                   GlobalIndex = 26
               },
               new Zastavka(MySim)
               {
                   Meno = "CB",
-                  CelkovyPocetCestujucich = 310,
+                  MaxPocetVygenerovanych = 310,
                   GlobalIndex = 27
               },
               new Zastavka(MySim)
               {
                   Meno = "CC",
-                  CelkovyPocetCestujucich = 131,
+                  MaxPocetVygenerovanych = 131,
                   GlobalIndex = 28
               },
               new Zastavka(MySim)
               {
                   Meno = "CD",
-                  CelkovyPocetCestujucich = 190,
+                  MaxPocetVygenerovanych = 190,
                   GlobalIndex = 29
               },
               new Zastavka(MySim)
               {
                   Meno = "CE",
-                  CelkovyPocetCestujucich = 132,
+                  MaxPocetVygenerovanych = 132,
                   GlobalIndex = 30
               },
               new Zastavka(MySim)
               {
                   Meno = "CF",
-                  CelkovyPocetCestujucich = 128,
+                  MaxPocetVygenerovanych = 128,
                   GlobalIndex = 31
               },
               new Zastavka(MySim)
               {
                   Meno = "CG",
-                  CelkovyPocetCestujucich = 70,
+                  MaxPocetVygenerovanych = 70,
                   GlobalIndex = 32
               },
             };
@@ -585,9 +585,24 @@ namespace agents
                             CasKDalsejZastavke = 7.2
                         }
                     ),
+                    new KeyValuePair<Zastavka, ZastavkaData>(
+                        Zastavky[3],
+                        new ZastavkaData()
+                        {
+                            DalsiaZastavka = Zastavky[0],
+                            CasKDalsejZastavke = 30
+                        }
+                    )
                    }
                 },
             };
+
+
+
+            foreach (var zastavky in Linky[2].Zastavky)
+            {
+
+            }
 
             foreach (var linka in Linky)
             {
@@ -619,13 +634,13 @@ namespace agents
             {
                 foreach (var Zastavka in linka.Zastavky)
                 {
-                    Console.WriteLine($"{Zastavka.Key.Meno} {Zastavka.Value.CasKDalsejZastavke} {Zastavka.Key.CelkovyPocetCestujucich} {Zastavka.Value.CasKuStadionu} ({Zastavka.Value.DalsiaZastavka.Meno})");
+                    Console.WriteLine($"{Zastavka.Key.Meno} {Zastavka.Value.CasKDalsejZastavke} {Zastavka.Key.MaxPocetVygenerovanych} {Zastavka.Value.CasKuStadionu} ({Zastavka.Value.DalsiaZastavka.Meno})");
                 }
 
                 Console.WriteLine();
                 Console.WriteLine();
             }
-          
+
         }
 
         public void VypisCestujucich()
