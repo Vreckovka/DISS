@@ -11,7 +11,7 @@ namespace continualAssistants
     //meta! id="66"
     public class PrichodyCestujucichProces : Process
     {
-        private ExponentialDistribution[] _exp;
+
         private int cestujuciIndex;
         public PrichodyCestujucichProces(int id, OSPABA.Simulation mySim, CommonAgent myAgent) :
             base(id, mySim, myAgent)
@@ -21,30 +21,30 @@ namespace continualAssistants
 
         public void VytvorGeneratori()
         {
-          
-            _exp = new ExponentialDistribution[MyAgent.Zastavky.Count + 3];
+            //_exp = new ExponentialDistribution[MyAgent.Zastavky.Count + 3];
 
-            for (int i = 0; i < MyAgent.Zastavky.Count; i++)
-            {
-                _exp[i] = new ExponentialDistribution((1.0 / (65.0 / MyAgent.Zastavky[i].MaxPocetVygenerovanych)), ((MySimulation)MySim).Random.Next());
-            }
+            //for (int i = 0; i < MyAgent.Zastavky.Count; i++)
+            //{
+            //    _exp[i] = ;
+            //}
         }
 
 
         override public void PrepareReplication()
         {
             base.PrepareReplication();
-            MyAgent.VytvorZastavky();
-            VytvorGeneratori();
+            // VytvorGeneratori();
             // Setup component for the next replication
         }
 
         //meta! sender="AgentOkolia", id="67", type="Start"
         public void ProcessStart(MessageForm message)
         {
-            message.Code = Mc.PrichodCestujuceho;
-            Hold(_exp[message.Param].GetNext(), message);
+            var sprava = (MyMessage)message.CreateCopy();
+            sprava.Code = Mc.PrichodCestujuceho;
+            sprava.ZastavkaData = ((MyMessage)message).ZastavkaData;
 
+            Hold(sprava.ZastavkaData.Generator.GetNext(), sprava);
         }
 
         //meta! userInfo="Process messages defined in code", id="0"
@@ -53,32 +53,38 @@ namespace continualAssistants
             switch (message.Code)
             {
                 case Mc.PrichodCestujuceho:
+                    var sprava = (MyMessage)message;
 
-                    if (MySim.CurrentTime <= MyAgent.Zastavky[(int)message.Param].CasKoncaGenerovania
-                        && MyAgent.Zastavky[(int)message.Param].PocetVygenerovanych  < 
-                        MyAgent.Zastavky[(int)message.Param].MaxPocetVygenerovanych)
+                    if (MySim.CurrentTime <= sprava.ZastavkaData.CasKoncaGenerovania
+                        && sprava.ZastavkaData.Zastavka.PocetVygenerovanych <
+                        sprava.ZastavkaData.Zastavka.MaxPocetVygenerovanych)
                     {
-                        Hold(_exp[(int)message.Param].GetNext(), message.CreateCopy());
-
-                        var sprava = (MyMessage)message;
-                        MyAgent.Zastavky[(int)message.Param].Cestujuci.Enqueue(new Cestujuci(cestujuciIndex++, MySim));
-                        MyAgent.Zastavky[(int)message.Param].PocetCestujucich++;
-
-                        MyAgent.Zastavky[(int)message.Param].PocetVygenerovanych++;
                         MyAgent.CelkovyPocetCestujucich++;
 
-                        sprava.Code = Mc.PrichodCestujuceho;
-                        sprava.Addressee = MyAgent;
-                        Notice(sprava);
 
-                       
+                        var novaSprava = (MyMessage)message.CreateCopy();
+
+                        novaSprava.ZastavkaData = sprava.ZastavkaData;
+                        
+
+                        novaSprava.ZastavkaData.Zastavka.Cestujuci.Enqueue(new Cestujuci(cestujuciIndex++, MySim));
+                        novaSprava.ZastavkaData.Zastavka.PocetCestujucich++;
+
+                        novaSprava.ZastavkaData.Zastavka.PocetVygenerovanych++;
+
+                        
+                        //novaSprava.Code = Mc.PrichodCestujuceho;
+                        //novaSprava.Addressee = MyAgent;
+
+                       // Notice(novaSprava);
+                        Hold(novaSprava.ZastavkaData.Generator.GetNext(), novaSprava);
                         //Console.WriteLine($"Cestujuci prisiel na zastavku {MyAgent.Zastavky[(int)message.Param].Meno}");
                     }
                     else
                     {
                         AssistantFinished(message);
                     }
-                   
+
                     break;
             }
         }

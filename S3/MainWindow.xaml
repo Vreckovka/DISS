@@ -28,10 +28,11 @@
             </Grid.ColumnDefinitions>
 
             <GroupBox Header="LINKA A">
-                <DataGrid Name="A" ItemsSource="{Binding AgentOkolia.Linky[0].Zastavky, Mode=OneWay}" Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True">
+                <DataGrid Name="A" 
+                          ItemsSource="{Binding AgentOkolia.Linky[0].Zastavky, Mode=OneWay}" Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Meno" Binding="{Binding Key.Meno}" />
-                        <DataGridTextColumn Header="Pocet cestujucich na zastavke" Binding="{Binding Key.PocetCestujucich}" />
+                        <DataGridTextColumn Header="Meno" Binding="{Binding Zastavka.Meno}" />
+                        <DataGridTextColumn Header="Pocet cestujucich na zastavke" Binding="{Binding Zastavka.PocetCestujucich}" />
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>
@@ -39,8 +40,8 @@
             <GroupBox Header="LINKA B" Grid.Column="1">
                 <DataGrid Name="B" ItemsSource="{Binding AgentOkolia.Linky[1].Zastavky, Mode=OneWay}" Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Meno" Binding="{Binding Key.Meno}" />
-                        <DataGridTextColumn Header="Pocet cestujucich na zastavke" Binding="{Binding Key.PocetCestujucich}" />
+                        <DataGridTextColumn Header="Meno" Binding="{Binding Zastavka.Meno}" />
+                        <DataGridTextColumn Header="Pocet cestujucich na zastavke" Binding="{Binding Zastavka.PocetCestujucich}" />
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>
@@ -48,8 +49,8 @@
             <GroupBox Header="LINKA C" Grid.Column="2">
                 <DataGrid Name="C" ItemsSource="{Binding AgentOkolia.Linky[2].Zastavky, Mode=OneWay}" Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Meno" Binding="{Binding Key.Meno}" />
-                        <DataGridTextColumn Header="Pocet cestujucich na zastavke" Binding="{Binding Key.PocetCestujucich}" />
+                        <DataGridTextColumn Header="Meno" Binding="{Binding Zastavka.Meno}" />
+                        <DataGridTextColumn Header="Pocet cestujucich na zastavke" Binding="{Binding Zastavka.PocetCestujucich}" />
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>
@@ -61,7 +62,7 @@
                 <DataGrid ItemsSource="{Binding AgentAutobusov.Autobusy}" AutoGenerateColumns="False" Name="Autobusy">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ID" Binding="{Binding Id}"/>
-                        <DataGridTextColumn Header="Actualna zastavka" Binding="{Binding AktualnaZastavka.Meno}"/>
+                        <DataGridTextColumn Header="Actualna zastavka" Binding="{Binding AktualnaZastavka.Zastavka.Meno}"/>
                         <DataGridTextColumn Header="Aktualny pocet cestujucich" Binding="{Binding AktualnyPocetPrevezenych}"/>
                         <DataGridTextColumn Header="Celkovy pocet cestujucich" Binding="{Binding CelkovyPocetPrevezenych}"/>
                         <DataGridTextColumn Header="Stoji na zastavke" Binding="{Binding StojiNaZastavke}"/>

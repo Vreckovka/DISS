@@ -18,10 +18,15 @@ namespace Simulations.UsedSimulations.S3.entities
         public bool KoniecProcesu { get; set; }
         public List<Cestujuci> Cestujuci { get; set; }
         public Linka Linka { get; set; }
-        public int IndexStartZastavka { get; set; }
-        public Zastavka AktualnaZastavka { get; set; }
+        public ZastavkaData AktualnaZastavka { get; set; }
+        public ZastavkaData ZaciatocnaZastavka { get; set; }
         public int CelkovyPocetPrevezenych { get; set; }
         public int AktualnyPocetPrevezenych { get; set; }
+
+        public double JazdaStart { get; set; }
+        public double JazdaEnd { get; set; }
+        public double DobaJazdy { get; set; }
+        public double PocetKoliecok { get; set; }
         public Autobus(OSPABA.Simulation mySim) : base(mySim)
         {
             Cestujuci = new List<Cestujuci>();
@@ -37,7 +42,7 @@ namespace Simulations.UsedSimulations.S3.entities
             AktualnyPocetPrevezenych = 0;
             KoniecProcesu = false;
             Cestujuci.Clear();
-            IndexAktualnaZastavkaVLinke = IndexStartZastavka;
+            AktualnaZastavka = ZaciatocnaZastavka;
         }
     }
 }

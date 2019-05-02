@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using OSPABA;
 using simulation;
 using managers;
 using continualAssistants;
 using PropertyChanged;
+using Simulations.Distributions;
 using Simulations.UsedSimulations.S3;
 using Simulations.UsedSimulations.S3.entities;
 
@@ -26,6 +28,8 @@ namespace agents
         override public void PrepareReplication()
         {
             base.PrepareReplication();
+
+            VytvorZastavky();
             CelkovyPocetCestujucich = 0;
             StartGenerovanieCestujucich();
 
@@ -46,6 +50,8 @@ namespace agents
             AddOwnMessage(Mc.CestujuciDovezeny);
             AddOwnMessage(Mc.PrichodCestujuceho);
             AddOwnMessage(Mc.ZacniGenerovatCestujucich);
+
+           
         }
 
         public void StartGenerovanieCestujucich()
@@ -55,16 +61,13 @@ namespace agents
                 foreach (var zastavka in linka.Zastavky)
                 {
                     var sprava = new MyMessage(MySim);
-                    zastavka.Key.CasKoncaGenerovania =
-                        (long)(Config.ZaciatokZapasu - ((10 + zastavka.Value.CasKuStadionu)));
-
-                    sprava.Param = (long)(Config.ZaciatokZapasu - ((75 + zastavka.Value.CasKuStadionu)));
-                    sprava.IndexZastavky = zastavka.Key.GlobalIndex;
+                    zastavka.CasKoncaGenerovania = (long)(Config.ZaciatokZapasu - ((10 + zastavka.CasKuStadionu)));
+                    sprava.ZastavkaData = zastavka;
+                    sprava.Param = (long)(Config.ZaciatokZapasu - ((75 + zastavka.CasKuStadionu)));
                     sprava.Addressee = FindAssistant(SimId.PrichodyCestujucichNaZastavkuProces);
                     MyManager.StartContinualAssistant(sprava);
                 }
             }
-
         }
 
         //meta! tag="end"
@@ -286,224 +289,207 @@ namespace agents
                 {
 
                 Meno = "A",
-                Zastavky = new List<KeyValuePair<Zastavka, ZastavkaData>>()
+                Zastavky = new List<ZastavkaData>()
                 {
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[4],
                     new ZastavkaData()
                     {
-                        DalsiaZastavka = Zastavky[5],
+                        Zastavka = Zastavky[4],
                         CasKDalsejZastavke = 3.2,
                     }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[5],
+                    ,
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[6],
+                            Zastavka = Zastavky[5],
                             CasKDalsejZastavke = 2.3
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[6],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[7],
+                            Zastavka = Zastavky[6],
                             CasKDalsejZastavke = 2.1
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[7],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[0],
+                            Zastavka = Zastavky[7],
                             CasKDalsejZastavke = 1.2
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[0],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[8],
+                            Zastavka = Zastavky[0],
                             CasKDalsejZastavke = 5.4
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[8],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[9],
+                            Zastavka = Zastavky[8],
                             CasKDalsejZastavke = 2.9
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[9],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[10],
+                            Zastavka = Zastavky[9],
                             CasKDalsejZastavke = 3.4
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[10],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[2],
+                            Zastavka = Zastavky[10],
                             CasKDalsejZastavke = 1.8
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[2],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[11],
+                            Zastavka = Zastavky[2],
                             CasKDalsejZastavke = 4.0
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[11],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[12],
+                            Zastavka = Zastavky[11],
                             CasKDalsejZastavke = 1.6
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[12],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[13],
+                            Zastavka = Zastavky[12],
                             CasKDalsejZastavke = 4.6
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[13],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[14],
+                            Zastavka = Zastavky[13],
                             CasKDalsejZastavke = 3.4
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[14],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[15],
+                            Zastavka = Zastavky[14],
                             CasKDalsejZastavke = 1.2
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[15],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[3],
+                            Zastavka = Zastavky[15],
                             CasKDalsejZastavke = 0.9
                         }
-                    ),
+                    ,
+                    new ZastavkaData()
+                    {
+                        Zastavka = Zastavky[3],
+                        CasKDalsejZastavke = 25,
+                        Konecna = true
+                    }
                 }
                 },
                  new Linka(MySim)
                 {
 
                 Meno = "B",
-                Zastavky = new List<KeyValuePair<Zastavka, ZastavkaData>>()
+                Zastavky = new List<ZastavkaData>()
                 {
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[16],
                     new ZastavkaData()
                     {
-                        DalsiaZastavka = Zastavky[17],
+                        Zastavka = Zastavky[16],
                         CasKDalsejZastavke = 1.2,
                     }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[17],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[18],
+                            Zastavka = Zastavky[17],
                             CasKDalsejZastavke = 2.3
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[18],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[19],
+                            Zastavka = Zastavky[18],
                             CasKDalsejZastavke = 3.2
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[19],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[1],
+                            Zastavka = Zastavky[19],
                             CasKDalsejZastavke = 4.3
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[1],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[20],
+                            Zastavka = Zastavky[1],
                             CasKDalsejZastavke = 1.2
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[20],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[21],
+                            Zastavka = Zastavky[20],
                             CasKDalsejZastavke = 2.7
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[21],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[2],
+                            Zastavka = Zastavky[21],
                             CasKDalsejZastavke = 3
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[2],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[22],
+                            Zastavka = Zastavky[2],
                             CasKDalsejZastavke = 6
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[22],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[23],
+                            Zastavka = Zastavky[22],
                             CasKDalsejZastavke = 4.3
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[23],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[24],
+                            Zastavka = Zastavky[23],
                             CasKDalsejZastavke = 0.5
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[24],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[25],
+                            Zastavka = Zastavky[24],
                             CasKDalsejZastavke = 2.7
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[25],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[3],
+                            Zastavka = Zastavky[25],
                             CasKDalsejZastavke = 1.3
+                        },
+                        new ZastavkaData()
+                        {
+                            Zastavka = Zastavky[3],
+                            CasKDalsejZastavke = 10,
+                            Konecna = true
                         }
-                    )
+
                 }
                 },
 
@@ -511,118 +497,121 @@ namespace agents
                 {
 
                 Meno = "C",
-                Zastavky = new List<KeyValuePair<Zastavka, ZastavkaData>>()
+                Zastavky = new List<ZastavkaData>()
                 {
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[26],
                     new ZastavkaData()
                     {
-                        DalsiaZastavka = Zastavky[27],
+                        Zastavka = Zastavky[26],
                         CasKDalsejZastavke = 0.6,
-                    }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[27],
-                        new ZastavkaData()
-                        {
-                            DalsiaZastavka = Zastavky[0],
-                            CasKDalsejZastavke = 2.3
-                        }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[0],
-                        new ZastavkaData()
-                        {
-                            DalsiaZastavka = Zastavky[1],
+                    },
+                    new ZastavkaData()
+                    {
+                         Zastavka = Zastavky[27],
+                         CasKDalsejZastavke = 2.3
+                    },
+                    new ZastavkaData()
+                    {
+                            Zastavka = Zastavky[0],
                             CasKDalsejZastavke = 4.1
-                        }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[1],
+                    }
+                    ,
+                    new ZastavkaData()
+                     {
+                        Zastavka = Zastavky[1],
+                         CasKDalsejZastavke = 6
+                     },
+
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[28],
-                            CasKDalsejZastavke = 6
-                        }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[28],
-                        new ZastavkaData()
-                        {
-                            DalsiaZastavka = Zastavky[29],
+                            Zastavka = Zastavky[28],
                             CasKDalsejZastavke = 2.3
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[29],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[30],
+                            Zastavka = Zastavky[29],
                             CasKDalsejZastavke = 7.1
-                        }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[30],
+                        },
+
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[31],
+                            Zastavka = Zastavky[30],
                             CasKDalsejZastavke = 4.8
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[31],
+                    ,
+
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[32],
+                            Zastavka = Zastavky[31],
                             CasKDalsejZastavke = 3.7
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[32],
+                    ,
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[3],
+                            Zastavka = Zastavky[32],
                             CasKDalsejZastavke = 7.2
                         }
-                    ),
-                    new KeyValuePair<Zastavka, ZastavkaData>(
-                        Zastavky[3],
+                    ,
                         new ZastavkaData()
                         {
-                            DalsiaZastavka = Zastavky[0],
-                            CasKDalsejZastavke = 30
-                        }
-                    )
+                            Zastavka = Zastavky[3],
+                            CasKDalsejZastavke = 30,
+                            Konecna = true
+                        },
                    }
                 },
             };
 
 
-
-            foreach (var zastavky in Linky[2].Zastavky)
+            foreach (var linka in Linky)
             {
+                for (int i = 0; i < linka.Zastavky.Count; i++)
+                {
+                    if (i != linka.Zastavky.Count - 1)
+                    {
+                        linka.Zastavky[i].DalsiaZastavka = linka.Zastavky[i + 1];
+                    }
+                    else
+                    {
+                        linka.Zastavky[i].DalsiaZastavka = linka.Zastavky[0];
+                    }
 
+                    linka.Zastavky[i].Generator = new ExponentialDistribution((1.0 / (65.0 /
+                                                            linka.Zastavky[i].Zastavka.MaxPocetVygenerovanych)),
+                            ((MySimulation)MySim).Random.Next());
+                }
             }
+           
 
+            int index = 1;
             foreach (var linka in Linky)
             {
                 double casKuStadionu = 0;
                 foreach (var zastavka in linka.Zastavky)
                 {
-                    casKuStadionu += zastavka.Value.CasKDalsejZastavke;
+                    if (zastavka.Zastavka != Zastavky[3] && index != linka.Zastavky.Count)
+                        casKuStadionu += zastavka.CasKDalsejZastavke;
+
+                    index++;
                 }
 
                 for (int i = 0; i < linka.Zastavky.Count; i++)
                 {
                     if (i == 0)
                     {
-                        linka.Zastavky[i].Value.CasKuStadionu = casKuStadionu;
+                        linka.Zastavky[i].CasKuStadionu = casKuStadionu;
+                    }
+                    else if (linka.Zastavky[i].Zastavka != Zastavky[3] && i != linka.Zastavky.Count - 1)
+                    {
+                        casKuStadionu -= linka.Zastavky[i - 1].CasKDalsejZastavke;
+                        linka.Zastavky[i].CasKuStadionu = casKuStadionu;
                     }
                     else
                     {
-                        casKuStadionu -= linka.Zastavky[i - 1].Value.CasKDalsejZastavke;
-                        linka.Zastavky[i].Value.CasKuStadionu = casKuStadionu;
-
+                        linka.Zastavky[i].CasKuStadionu = -1;
                     }
                 }
             }
@@ -632,9 +621,13 @@ namespace agents
         {
             foreach (var linka in Linky)
             {
-                foreach (var Zastavka in linka.Zastavky)
+                foreach (var zastavkaData in linka.Zastavky)
                 {
-                    Console.WriteLine($"{Zastavka.Key.Meno} {Zastavka.Value.CasKDalsejZastavke} {Zastavka.Key.MaxPocetVygenerovanych} {Zastavka.Value.CasKuStadionu} ({Zastavka.Value.DalsiaZastavka.Meno})");
+                    Console.WriteLine($"{zastavkaData.Zastavka.Meno} " +
+                                      $"{zastavkaData.CasKDalsejZastavke} " +
+                                      $"{zastavkaData.Zastavka.MaxPocetVygenerovanych} " +
+                                      $"{zastavkaData.CasKuStadionu} " +
+                                      $"({zastavkaData.DalsiaZastavka.Zastavka.Meno})");
                 }
 
                 Console.WriteLine();

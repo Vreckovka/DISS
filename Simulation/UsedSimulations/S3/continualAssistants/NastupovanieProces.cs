@@ -26,7 +26,6 @@ namespace continualAssistants
         //meta! sender="AgentAutobusov", id="71", type="Start"
         public void ProcessStart(MessageForm message)
         {
-            
             if (((MyMessage)message).Autobus.KoniecProcesu)
             {
                 AssistantFinished(message);
@@ -38,9 +37,9 @@ namespace continualAssistants
                 ((MyMessage)message).Autobus.StojiNaZastavke = true;
 
 
-                ((MyMessage)message).Autobus.AktualnaZastavka =
-                    ((MyMessage)message).Autobus.Linka
-                    .Zastavky[((MyMessage)message).Autobus.IndexAktualnaZastavkaVLinke].Key;
+                //((MyMessage)message).Autobus.AktualnaZastavka =
+                //    ((MyMessage)message).Autobus.Linka
+                //    .Zastavky[((MyMessage)message).Autobus.IndexAktualnaZastavkaVLinke].Key;
 
 
                 if (((MyMessage)message).Autobus.KapacitaOsob == ((MyMessage)message).Autobus.Cestujuci.Count &&
@@ -49,7 +48,8 @@ namespace continualAssistants
                     UkonciNastupovanie(message);
 
                 }
-                else if (((MyMessage)message).Autobus.AktualnaZastavka.Cestujuci.Count == 0 && !((MyMessage)message).Autobus.KoniecProcesu)
+                else if (((MyMessage)message).Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count 
+                         == 0 && !((MyMessage)message).Autobus.KoniecProcesu)
                 {
                     UkonciNastupovanie(message);
                 }
@@ -94,20 +94,18 @@ namespace continualAssistants
                         }
                         else
                         {
-                            var acutulnaZastavka =
-                                sprava.Autobus.Linka.Zastavky[sprava.Autobus.IndexAktualnaZastavkaVLinke];
 
                             if (sprava.Autobus.KapacitaOsob > sprava.Autobus.Cestujuci.Count)
                             {
-                                if (acutulnaZastavka.Key.Cestujuci.Count != 0)
+                                if (sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count != 0)
                                 {
                                     Hold(triangularDistribution.GetNext(), newMessage);
-                                    var cestujuci = acutulnaZastavka.Key.Cestujuci.Dequeue();
+                                    var cestujuci = sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Dequeue();
 
                                     sprava.Autobus.Cestujuci.Add(cestujuci);
                                     sprava.Autobus.CelkovyPocetPrevezenych++;
                                     sprava.Autobus.AktualnyPocetPrevezenych++;
-                                    acutulnaZastavka.Key.PocetCestujucich--;
+                                    sprava.Autobus.AktualnaZastavka.Zastavka.PocetCestujucich--;
                                     //Console.WriteLine(
                                     //    $"{TimeSpan.FromMinutes(MySim.CurrentTime)} CESTUJUCI NASTUPIL {cestujuci.Id} cez dvere {message.Param}");
                                 }

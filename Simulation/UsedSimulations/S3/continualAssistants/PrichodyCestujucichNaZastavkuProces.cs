@@ -25,8 +25,10 @@ namespace continualAssistants
         //meta! sender="AgentZastavok", id="69", type="Start"
         public void ProcessStart(MessageForm message)
         {
-            message.Code = Mc.ZacniGenerovatCestujucich;
-            Hold(message.Param, message);
+            var sprava = (MyMessage)message.CreateCopy();
+            sprava.Code = Mc.ZacniGenerovatCestujucich;
+            sprava.ZastavkaData = ((MyMessage) message).ZastavkaData;
+            Hold(message.Param, sprava);
         }
 
         //meta! userInfo="Process messages defined in code", id="0"
@@ -36,11 +38,11 @@ namespace continualAssistants
             {
                 case Mc.ZacniGenerovatCestujucich:
 
-                    MyMessage sprava = (MyMessage) message;
+                    MyMessage sprava = (MyMessage)message.CreateCopy();
 
                     sprava.Addressee = MyAgent;
                     sprava.Code = Mc.ZacniGenerovatCestujucich;
-                    sprava.Param = ((MyMessage) message).IndexZastavky;
+                    sprava.ZastavkaData = ((MyMessage) message).ZastavkaData;
                     Notice(sprava);
 
                    // Console.WriteLine(MySim.CurrentTime);

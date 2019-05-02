@@ -5,7 +5,7 @@ namespace simulation
 {
 	public class MyMessage : MessageForm
 	{
-        public int IndexZastavky { get; set; }
+        public ZastavkaData ZastavkaData { get; set; }
         public Autobus Autobus { get; set; }
 		public MyMessage(OSPABA.Simulation sim) :
 			base(sim)

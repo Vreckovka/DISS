@@ -42,8 +42,8 @@ namespace S3
             {
                 pocet += Simulation.AgentOkolia.CelkovyPocetCestujucich;
                 count++;
-                Console.WriteLine(pocet/count);
-               // Console.Clear();
+                Console.WriteLine(pocet / count);
+                // Console.Clear();
             });
 
             Simulation.OnSimulationDidFinish((s)
@@ -60,7 +60,9 @@ namespace S3
                     Thread.Sleep(10);
                     Dispatcher.Invoke(() =>
                     {
-                        SimulationTimeRun.Text = TimeSpan.FromMinutes(Simulation.CurrentTime).ToString();
+                        if (!double.IsInfinity(Simulation.CurrentTime))
+                            SimulationTimeRun.Text = TimeSpan.FromMinutes(Simulation.CurrentTime).ToString();
+
                     });
                 }
             });
@@ -76,7 +78,7 @@ namespace S3
             Task.Run(() =>
             {
                 Simulation.SetSimSpeed(1/30d, 0.01);
-                Simulation.Simulate(Config.PocetReplikacii, 115);
+                Simulation.Simulate(Config.PocetReplikacii,115);
             });
         }
     }

@@ -37,17 +37,15 @@ namespace managers
         public void ProcessCestujuciVygenerovany(MessageForm message)
         {
             // Console.WriteLine($"{TimeSpan.FromMinutes(MySim.CurrentTime)} Agent {((MyMessage)message).Cestujuci.Id} prisiel na zastavku {MyAgent.Zastavky[(int)message.Param].Meno}");
-
-            
             //Thread.Sleep(10);
         }
 
         //meta! sender="AgentModelu", id="41", type="Notice"
         public void ProcessZacniGenerovatCestujucich(MessageForm message)
         {
-            var sprava = new MyMessage(MySim);
+            var sprava = (MyMessage)message.CreateCopy();
             sprava.Addressee = MyAgent.FindAssistant(SimId.PrichodyCestujucichProces);
-            sprava.Param = message.Param;
+            sprava.ZastavkaData = ((MyMessage)message).ZastavkaData;
             StartContinualAssistant(sprava);
         }
 

@@ -33,7 +33,6 @@ namespace managers
                 MyMessage sprava = new MyMessage(MySim);
                 sprava.Addressee = MyAgent.FindAssistant(SimId.NastupovanieProces);
                 sprava.Autobus = ((MyMessage)message).Autobus;
-                sprava.Param = i;
                 StartContinualAssistant(sprava);
             }
         }

@@ -52,6 +52,7 @@ namespace continualAssistants
                     MyMessage sprava = (MyMessage)message.CreateCopy();
 
                     sprava.Autobus = ((MyMessage)message).Autobus;
+                    sprava.Autobus.JazdaStart = MySim.CurrentTime;
                     // Console.WriteLine($"{TimeSpan.FromMinutes(MySim.CurrentTime)} Zaciatok jazdy {sprava.Autobus.Id}");
                     sprava.Addressee = MyAgent;
                     Notice(sprava);

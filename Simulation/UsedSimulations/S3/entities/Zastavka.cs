@@ -15,7 +15,7 @@ namespace Simulations.UsedSimulations.S3.entities
         public int MaxPocetVygenerovanych { get; set; }
         public int PocetVygenerovanych { get; set; }
         public int GlobalIndex { get; set; }
-        public double CasKoncaGenerovania { get; set; }
+      
 
         public Queue<Cestujuci> Cestujuci { get; set; }
         public int PocetCestujucich { get; set; }
@@ -27,6 +27,10 @@ namespace Simulations.UsedSimulations.S3.entities
 
         public Zastavka(int id, OSPABA.Simulation mySim) : base(id, mySim)
         {
+        }
+        public override string ToString()
+        {
+            return Meno;
         }
     }
 }

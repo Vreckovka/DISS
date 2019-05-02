@@ -12,7 +12,7 @@ namespace Simulations.UsedSimulations.S3.entities
     public class Linka : Entity
     {
         public string Meno { get; set; }
-        public List<KeyValuePair<Zastavka, ZastavkaData>> Zastavky { get; set; }
+        public List<ZastavkaData> Zastavky { get; set; }
 
         public Linka(OSPABA.Simulation mySim) : base(mySim)
         {
