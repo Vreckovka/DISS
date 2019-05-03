@@ -35,10 +35,12 @@ namespace agents
             new ManagerAutobusov(SimId.ManagerAutobusov, MySim, this);
             new InitJazdaProces(SimId.InitJazdaProces, MySim, this);
             new JazdaNaZastavkuProces(SimId.JazdaNaZastavkuProces, MySim, this);
+            new VystupovanieProces(SimId.VystupovanieProces, MySim, this);
 
             AddOwnMessage(Mc.InitJazda);
             AddOwnMessage(Mc.JazdaNaZastavku);
             AddOwnMessage(Mc.KoniecJazdy);
+            AddOwnMessage(Mc.CestujuciVystupil);
         }
         //meta! tag="end"
 
@@ -46,6 +48,24 @@ namespace agents
         {
             Autobusy = new List<Autobus>();
             var agentOkolia = (AgentOkolia)MySim.FindAgent(SimId.AgentOkolia);
+
+            Autobusy.Add(new Autobus(MySim)
+            {
+                KapacitaOsob = 186,
+                PocetDveri = 4,
+                Linka = agentOkolia.Linky[0],
+                ZaciatocnaZastavka = agentOkolia.Linky[0].Zastavky[0],
+                AktualnaZastavka = agentOkolia.Linky[0].Zastavky[0]
+            });
+
+            Autobusy.Add(new Autobus(MySim)
+            {
+                KapacitaOsob = 186,
+                PocetDveri = 4,
+                Linka = agentOkolia.Linky[0],
+                ZaciatocnaZastavka = agentOkolia.Linky[0].Zastavky[0],
+                AktualnaZastavka = agentOkolia.Linky[0].Zastavky[0]
+            });
 
             Autobusy.Add(new Autobus(MySim)
             {

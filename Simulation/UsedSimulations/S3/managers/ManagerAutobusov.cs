@@ -28,7 +28,7 @@ namespace managers
         //meta! sender="AgentLiniek", id="40", type="Request"
         public void ProcessInitJazda(MessageForm message)
         {
-           
+
             message.Code = Mc.JazdaNaZastavku;
             message.Param = message.Param;
             message.Addressee = MySim.FindAgent(SimId.AgentAutobusov);
@@ -39,23 +39,37 @@ namespace managers
         public void ProcessJazdaNaZastavku(MessageForm message)
         {
             MyMessage sprava = new MyMessage(MySim);
-            sprava.Addressee = MyAgent.FindAssistant(SimId.JazdaNaZastavkuProces);
             sprava.Autobus = ((MyMessage)message).Autobus;
             sprava.Autobus.KoniecProcesu = false;
-            StartContinualAssistant(sprava);
+
+            if (sprava.Autobus.AktualnaZastavka.Konecna)
+            {
+                var autobus = ((MyMessage)message).Autobus;
+                autobus.KoniecProcesu = false;
+                autobus.StojiNaZastavke = true;
+
+                for (int i = 0; i < ((MyMessage)message).Autobus.PocetDveri; i++)
+                {
+                    sprava = (MyMessage)message.CreateCopy();
+                    sprava.Autobus = autobus;
+                    sprava.Addressee = MyAgent.FindAssistant(SimId.VystupovanieProces);
+                    StartContinualAssistant(sprava);
+                }
+            }
+            else
+            {
+                sprava.Addressee = MyAgent.FindAssistant(SimId.JazdaNaZastavkuProces);
+                StartContinualAssistant(sprava);
+            }
         }
 
         public void ProcessKoniecJazdy(MessageForm message)
         {
-
             var sprava = new MyMessage(MySim);
-            sprava.Param = 100;
-            sprava.Addressee = MyAgent.FindAssistant(SimId.InitJazdaProces);
-            sprava.Autobus = ((MyMessage) message).Autobus;
-            ((MyMessage)message).Autobus.Reset();
+            sprava.Addressee = MyAgent.FindAssistant(SimId.JazdaNaZastavkuProces);
+            sprava.Autobus = ((MyMessage)message).Autobus;
 
             StartContinualAssistant(sprava);
-
         }
 
         //meta! sender="NastupovanieProces", id="71", type="Finish"

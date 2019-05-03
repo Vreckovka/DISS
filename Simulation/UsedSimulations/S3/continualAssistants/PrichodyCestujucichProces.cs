@@ -65,18 +65,18 @@ namespace continualAssistants
                         var novaSprava = (MyMessage)message.CreateCopy();
 
                         novaSprava.ZastavkaData = sprava.ZastavkaData;
-                        
-
                         novaSprava.ZastavkaData.Zastavka.Cestujuci.Enqueue(new Cestujuci(cestujuciIndex++, MySim));
                         novaSprava.ZastavkaData.Zastavka.PocetCestujucich++;
+                        sprava.ZastavkaData.Zastavka.PocetVygenerovanych++;
 
-                        novaSprava.ZastavkaData.Zastavka.PocetVygenerovanych++;
 
-                        
+                        novaSprava.ZastavkaData.Zastavka.PocetCestujucich = novaSprava.ZastavkaData.Zastavka.Cestujuci.Count;
+
+
                         //novaSprava.Code = Mc.PrichodCestujuceho;
                         //novaSprava.Addressee = MyAgent;
 
-                       // Notice(novaSprava);
+                        // Notice(novaSprava);
                         Hold(novaSprava.ZastavkaData.Generator.GetNext(), novaSprava);
                         //Console.WriteLine($"Cestujuci prisiel na zastavku {MyAgent.Zastavky[(int)message.Param].Meno}");
                     }

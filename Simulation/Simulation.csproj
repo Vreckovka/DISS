@@ -111,6 +111,7 @@
     <Compile Include="UsedSimulations\S3\Config.cs" />
     <Compile Include="UsedSimulations\S3\continualAssistants\JazdaProces .cs" />
     <Compile Include="UsedSimulations\S3\continualAssistants\InitJazdaProces.cs" />
+    <Compile Include="UsedSimulations\S3\continualAssistants\VystupovanieProces.cs" />
     <Compile Include="UsedSimulations\S3\continualAssistants\NastupovanieProces.cs" />
     <Compile Include="UsedSimulations\S3\continualAssistants\PrichodyCestujucichNaZastavkuProces.cs" />
     <Compile Include="UsedSimulations\S3\continualAssistants\PrichodyCestujucichProces.cs" />

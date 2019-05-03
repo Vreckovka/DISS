@@ -13,6 +13,7 @@ namespace simulation
         public const int CestujuciNastupil = 1021;
         public const int JazdaNaZastavku = 1022;
         public const int KoniecJazdy = 1023;
+        public const int CestujuciVystupil = 1024;
         //meta! tag="end"
 
         // 1..1000 range reserved for user

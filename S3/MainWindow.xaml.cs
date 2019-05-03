@@ -61,7 +61,7 @@ namespace S3
                     Dispatcher.Invoke(() =>
                     {
                         if (!double.IsInfinity(Simulation.CurrentTime))
-                            SimulationTimeRun.Text = TimeSpan.FromMinutes(Simulation.CurrentTime).ToString();
+                            SimulationTimeRun.Text = TimeSpan.FromMinutes(Simulation.CurrentTime).ToString("hh\\:mm\\:ss");
 
                     });
                 }
@@ -77,8 +77,8 @@ namespace S3
             thread.Start();
             Task.Run(() =>
             {
-                Simulation.SetSimSpeed(1/30d, 0.01);
-                Simulation.Simulate(Config.PocetReplikacii,115);
+                Simulation.SetSimSpeed(1/3d, 0.01);
+                Simulation.Simulate(Config.PocetReplikacii,700);
             });
         }
     }

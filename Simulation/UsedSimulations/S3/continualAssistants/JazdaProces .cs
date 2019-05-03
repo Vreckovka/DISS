@@ -51,6 +51,12 @@ namespace continualAssistants
                     sprava.Addressee = MySim.FindAgent(SimId.AgentZastavok);
                     sprava.Autobus.AktualnaZastavka = sprava.Autobus.AktualnaZastavka.DalsiaZastavka;
 
+                    if (sprava.Autobus.NovaJazda)
+                    {
+                        sprava.Autobus.KoniecProcesu = false;
+                        sprava.Autobus.NovaJazda = false;
+                    }
+
                     if (sprava.Autobus.AktualnaZastavka.Konecna)
                     {
                         sprava.Autobus.JazdaEnd = MySim.CurrentTime;

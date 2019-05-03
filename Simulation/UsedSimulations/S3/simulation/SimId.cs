@@ -19,6 +19,7 @@ namespace simulation
 		public const int PrichodyCestujucichNaZastavkuProces = 1005;
 		public const int NastupovanieProces = 1006;
         public const int JazdaNaZastavkuProces = 1007;
+        public const int VystupovanieProces = 1008;
         //meta! tag="end"
     }
 }
