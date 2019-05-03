@@ -109,7 +109,7 @@
     <Compile Include="UsedSimulations\S3\agents\AgentOkolia.cs" />
     <Compile Include="UsedSimulations\S3\agents\AgentZastavok.cs" />
     <Compile Include="UsedSimulations\S3\Config.cs" />
-    <Compile Include="UsedSimulations\S3\continualAssistants\JazdaProces .cs" />
+    <Compile Include="UsedSimulations\S3\continualAssistants\JazdaNaZastavkuProces .cs" />
     <Compile Include="UsedSimulations\S3\continualAssistants\InitJazdaProces.cs" />
     <Compile Include="UsedSimulations\S3\continualAssistants\VystupovanieProces.cs" />
     <Compile Include="UsedSimulations\S3\continualAssistants\NastupovanieProces.cs" />

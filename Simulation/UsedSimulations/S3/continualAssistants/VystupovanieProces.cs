@@ -1,15 +1,19 @@
 using System;
+using System.Linq;
 using System.Threading;
 using OSPABA;
 using simulation;
 using agents;
 using Simulations.Distributions;
+using Simulations.UsedSimulations.S3;
+using Simulations.UsedSimulations.S3.entities;
 
 namespace continualAssistants
 {
     //meta! id="70"
     public class VystupovanieProces : Process
     {
+        private int pocetUkoncenychAutobusov;
         private TriangularDistribution triangularDistribution;
         public VystupovanieProces(int id, OSPABA.Simulation mySim, CommonAgent myAgent) :
             base(id, mySim, myAgent)
@@ -19,6 +23,7 @@ namespace continualAssistants
 
         override public void PrepareReplication()
         {
+            pocetUkoncenychAutobusov = 0;
             base.PrepareReplication();
             // Setup component for the next replication
         }
@@ -32,7 +37,39 @@ namespace continualAssistants
             // sprava.Autobus.StojiNaZastavke = true;
 
             if (sprava.Autobus.Cestujuci.Count > 0)
-                Hold(triangularDistribution.GetNext(), sprava);
+            {
+                double holdTime = 0;
+                switch (sprava.Autobus.Typ)
+                {
+                    case AutobusyTyp.Autobus:
+                        holdTime = triangularDistribution.GetNext();
+                        break;
+                    case AutobusyTyp.Microbus:
+                        holdTime = 4.0 / 60;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+
+                }
+
+                Hold(holdTime, sprava);
+            }
+            else if (MySim.CurrentTime >= Config.ZaciatokZapasu && sprava.Autobus.Cestujuci.Count == 0 && !sprava.Autobus.KoniecJazd)
+            {
+                sprava.Autobus.KoniecJazd = true;
+                AssistantFinished(sprava);
+                pocetUkoncenychAutobusov++;
+
+                if (pocetUkoncenychAutobusov == ((MySimulation)MySim).AgentAutobusov.Autobusy.Count)
+                {
+                    ((MySimulation) MySim).LastFinishTime = MySim.CurrentTime;
+                    MySim.StopReplication();
+                }
+            }
+            else if (sprava.Autobus.KoniecJazd)
+            {
+                AssistantFinished(sprava);
+            }
             else
                 UkonciVystupovanie(sprava);
         }
@@ -42,7 +79,6 @@ namespace continualAssistants
         {
             switch (message.Code)
             {
-                //TODO: NEJAKY CESTUJUCI SU TAM
                 case Mc.CestujuciVystupil:
 
                     var newMessage = new MyMessage(MySim);
@@ -55,13 +91,24 @@ namespace continualAssistants
                     if (!sprava.Autobus.KoniecProcesu && sprava.Autobus.Cestujuci.Count > 0)
                     {
                         sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Enqueue(sprava.Autobus.Cestujuci.Dequeue());
-                        sprava.Autobus.AktualnyPocetPrevezenych--;
+                        sprava.Autobus.AktualnyPocetPrevezenych = sprava.Autobus.Cestujuci.Count;
+                        sprava.Autobus.AktualnaZastavka.Zastavka.PocetCestujucich = sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count;
 
-                        sprava.Autobus.AktualnaZastavka.Zastavka.PocetCestujucich =
-                            sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count;
+                        double holdTime = 0;
+                        switch (sprava.Autobus.Typ)
+                        {
+                            case AutobusyTyp.Autobus:
+                                holdTime = triangularDistribution.GetNext();
+                                break;
+                            case AutobusyTyp.Microbus:
+                                holdTime = 4.0 / 60;
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
 
+                        }
 
-                        Hold(triangularDistribution.GetNext(), newMessage);
+                        Hold(holdTime, sprava);
                     }
                     else
                     {

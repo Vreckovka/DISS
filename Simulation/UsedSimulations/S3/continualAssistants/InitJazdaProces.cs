@@ -23,24 +23,11 @@ namespace continualAssistants
         //meta! sender="AgentAutobusov", id="50", type="Start"
         public void ProcessStart(MessageForm message)
         {
-            message.Code = Mc.InitJazda;
-            if (message.Param != -1)
-            {
-                switch (((MyMessage)message).Autobus.Linka.Meno)
-                {
-                    case "A":
-                        Hold(25, message);
-                        break;
-                    case "B":
-                        Hold(10, message);
-                        break;
-                    case "C":
-                        Hold(30, message);
-                        break;
-                }
-            }
-            else
-                Hold(Config.ZaciatokJazd, message);
+            var sprava = (MyMessage) message.CreateCopy();
+            sprava.Code = Mc.InitJazda;
+            sprava.Autobus = ((MyMessage) message).Autobus;
+
+            Hold(sprava.Autobus.ZacitokJazdyCas, sprava);
         }
 
         //meta! userInfo="Process messages defined in code", id="0"
@@ -53,7 +40,7 @@ namespace continualAssistants
 
                     sprava.Autobus = ((MyMessage)message).Autobus;
                     sprava.Autobus.JazdaStart = MySim.CurrentTime;
-                    // Console.WriteLine($"{TimeSpan.FromMinutes(MySim.CurrentTime)} Zaciatok jazdy {sprava.Autobus.Id}");
+                    //Console.WriteLine($"{TimeSpan.FromMinutes(MySim.CurrentTime)} Zaciatok jazdy {sprava.Autobus.Id}");
                     sprava.Addressee = MyAgent;
                     Notice(sprava);
 

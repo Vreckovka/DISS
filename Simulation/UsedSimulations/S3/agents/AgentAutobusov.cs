@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using OSPABA;
 using simulation;
@@ -6,6 +7,7 @@ using continualAssistants;
 using PropertyChanged;
 using Simulations.UsedSimulations.S3;
 using Simulations.UsedSimulations.S3.entities;
+using System.Linq;
 
 namespace agents
 {
@@ -25,6 +27,7 @@ namespace agents
             base.PrepareReplication();
 
             VytvorAutobusy();
+            PriradAutobusy();
             ZacniJazdy();
             // Setup component for the next replication
         }
@@ -49,77 +52,47 @@ namespace agents
             Autobusy = new List<Autobus>();
             var agentOkolia = (AgentOkolia)MySim.FindAgent(SimId.AgentOkolia);
 
+            
             Autobusy.Add(new Autobus(MySim)
             {
                 KapacitaOsob = 186,
                 PocetDveri = 4,
                 Linka = agentOkolia.Linky[0],
-                ZaciatocnaZastavka = agentOkolia.Linky[0].Zastavky[0],
-                AktualnaZastavka = agentOkolia.Linky[0].Zastavky[0]
+                AktualnaZastavka = agentOkolia.Linky[0].Zastavky.Last(),
+                ZacitokJazdyCas = new TimeSpan(11,00,0).TotalMinutes,
+                Typ = AutobusyTyp.Autobus
             });
 
-            Autobusy.Add(new Autobus(MySim)
-            {
-                KapacitaOsob = 186,
-                PocetDveri = 4,
-                Linka = agentOkolia.Linky[0],
-                ZaciatocnaZastavka = agentOkolia.Linky[0].Zastavky[0],
-                AktualnaZastavka = agentOkolia.Linky[0].Zastavky[0]
-            });
+            //Autobusy.Add(new Autobus(MySim)
+            //{
+            //    KapacitaOsob = 107,
+            //    PocetDveri = 3,
+            //    Linka = agentOkolia.Linky[1],
+            //    AktualnaZastavka = agentOkolia.Linky[1].Zastavky[0],
+            //    ZacitokJazdyCas = new TimeSpan(11, 00, 0).TotalMinutes,
+            //    Typ = AutobusyTyp.Autobus
+            //});
 
-            Autobusy.Add(new Autobus(MySim)
-            {
-                KapacitaOsob = 186,
-                PocetDveri = 4,
-                Linka = agentOkolia.Linky[0],
-                ZaciatocnaZastavka = agentOkolia.Linky[0].Zastavky[0],
-                AktualnaZastavka = agentOkolia.Linky[0].Zastavky[0]
-            });
+            //Autobusy.Add(new Autobus(MySim)
+            //{
+            //    KapacitaOsob = 186,
+            //    PocetDveri = 4,
+            //    Linka = agentOkolia.Linky[2],
+            //    AktualnaZastavka = agentOkolia.Linky[2].Zastavky[0],
+            //    ZacitokJazdyCas = new TimeSpan(9, 40, 0).TotalMinutes,
+            //    Typ = AutobusyTyp.Autobus
+            //});
 
-            Autobusy.Add(new Autobus(MySim)
-            {
-                KapacitaOsob = 186,
-                PocetDveri = 4,
-                Linka = agentOkolia.Linky[0],
-                ZaciatocnaZastavka = agentOkolia.Linky[0].Zastavky[0],
-                AktualnaZastavka = agentOkolia.Linky[0].Zastavky[0]
-            });
 
-            Autobusy.Add(new Autobus(MySim)
-            {
-                KapacitaOsob = 186,
-                PocetDveri = 4,
-                Linka = agentOkolia.Linky[1],
-                ZaciatocnaZastavka = agentOkolia.Linky[1].Zastavky[0],
-                AktualnaZastavka = agentOkolia.Linky[1].Zastavky[0]
-            });
+        }
 
-            Autobusy.Add(new Autobus(MySim)
-            {
-                KapacitaOsob = 186,
-                PocetDveri = 4,
-                Linka = agentOkolia.Linky[1],
-                ZaciatocnaZastavka = agentOkolia.Linky[1].Zastavky[0],
-                AktualnaZastavka = agentOkolia.Linky[1].Zastavky[0]
-            });
+        public void PriradAutobusy()
+        {
+            var agentOkolia = (AgentOkolia)MySim.FindAgent(SimId.AgentOkolia);
 
-            Autobusy.Add(new Autobus(MySim)
-            {
-                KapacitaOsob = 186,
-                PocetDveri = 4,
-                Linka = agentOkolia.Linky[2],
-                ZaciatocnaZastavka = agentOkolia.Linky[2].Zastavky[0],
-                AktualnaZastavka = agentOkolia.Linky[2].Zastavky[0]
-            });
-
-            Autobusy.Add(new Autobus(MySim)
-            {
-                KapacitaOsob = 186,
-                PocetDveri = 4,
-                Linka = agentOkolia.Linky[2],
-                ZaciatocnaZastavka = agentOkolia.Linky[2].Zastavky[0],
-                AktualnaZastavka = agentOkolia.Linky[2].Zastavky[0]
-            });
+            agentOkolia.Linky[0].Autobusy = (from x in Autobusy where x.Linka.Meno == "A" select x).ToList();
+            agentOkolia.Linky[1].Autobusy = (from x in Autobusy where x.Linka.Meno == "B" select x).ToList();
+            agentOkolia.Linky[2].Autobusy = (from x in Autobusy where x.Linka.Meno == "C" select x).ToList();
         }
 
         public void ZacniJazdy()

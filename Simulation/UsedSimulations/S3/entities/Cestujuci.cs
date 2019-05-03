@@ -9,6 +9,8 @@ namespace Simulations.UsedSimulations.S3.entities
 {
     public class Cestujuci : Entity
     {
+        public double CasZacatiaCakania { get; set; }
+        public double CasCakania { get; set; }
         public Cestujuci(OSPABA.Simulation mySim) : base(mySim)
         {
         }

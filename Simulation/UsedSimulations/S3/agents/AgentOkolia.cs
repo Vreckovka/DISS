@@ -31,7 +31,7 @@ namespace agents
 
             VytvorZastavky();
             CelkovyPocetCestujucich = 0;
-            StartGenerovanieCestujucich();
+           // StartGenerovanieCestujucich();
 
             // Setup component for the next replication
         }
@@ -579,8 +579,7 @@ namespace agents
                         linka.Zastavky[i].DalsiaZastavka = linka.Zastavky[0];
                     }
 
-                    linka.Zastavky[i].Generator = new ExponentialDistribution((1.0 / (65.0 /
-                                                            linka.Zastavky[i].Zastavka.MaxPocetVygenerovanych)),
+                    linka.Zastavky[i].Generator = new ExponentialDistribution((1.0 / (65.0 / linka.Zastavky[i].Zastavka.MaxPocetVygenerovanych)),
                             ((MySimulation)MySim).Random.Next());
                 }
             }
@@ -615,6 +614,7 @@ namespace agents
                     }
                 }
             }
+
         }
 
         public void VypisZastavky()

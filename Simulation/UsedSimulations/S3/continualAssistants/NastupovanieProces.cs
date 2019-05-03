@@ -1,9 +1,11 @@
 using System;
+using System.Linq;
 using System.Threading;
 using OSPABA;
 using simulation;
 using agents;
 using Simulations.Distributions;
+using Simulations.UsedSimulations.S3.entities;
 
 namespace continualAssistants
 {
@@ -11,10 +13,12 @@ namespace continualAssistants
     public class NastupovanieProces : Process
     {
         private TriangularDistribution triangularDistribution;
+        private UniformContinuousDistribution uniformContinuous;
         public NastupovanieProces(int id, OSPABA.Simulation mySim, CommonAgent myAgent) :
             base(id, mySim, myAgent)
         {
             triangularDistribution = new TriangularDistribution(((MySimulation)MySim).Random.Next(), 0.6 / 60, 4.2 / 60, 1.2 / 60);
+            uniformContinuous = new UniformContinuousDistribution(6.0 / 60, 10.0 / 60, ((MySimulation)MySim).Random.Next());
         }
 
         override public void PrepareReplication()
@@ -26,6 +30,10 @@ namespace continualAssistants
         //meta! sender="AgentAutobusov", id="71", type="Start"
         public void ProcessStart(MessageForm message)
         {
+            var messagePom = message;
+            message = message.CreateCopy();
+            ((MyMessage)message).Autobus = ((MyMessage)messagePom).Autobus;
+
             if (((MyMessage)message).Autobus.KoniecProcesu)
             {
                 AssistantFinished(message);
@@ -48,8 +56,34 @@ namespace continualAssistants
                 }
                 else
                 {
-                    var next = triangularDistribution.GetNext();
-                    Hold(next, message);
+                    double holdTime = 0;
+                    bool nastupiNiekto = true;
+
+
+                    switch (((MyMessage)message).Autobus.Typ)
+                    {
+                        case AutobusyTyp.Autobus:
+                            holdTime = triangularDistribution.GetNext();
+                            break;
+                        case AutobusyTyp.Microbus:
+                            holdTime = uniformContinuous.GetNext();
+
+                            var jeTam = (from x in ((MyMessage)message).Autobus.AktualnaZastavka.Zastavka.Cestujuci
+                                         where MySim.CurrentTime - x.CasZacatiaCakania > 6
+                                         select x).FirstOrDefault();
+
+                            if (jeTam == null)
+                                nastupiNiekto = false;
+
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+
+                    if (nastupiNiekto)
+                        Hold(holdTime, message);
+                    else
+                        UkonciNastupovanie(message);
                 }
             }
         }
@@ -68,6 +102,8 @@ namespace continualAssistants
                     newMessage.Autobus = sprava.Autobus;
                     newMessage.Code = sprava.Code;
 
+                    bool nastupiNiekto = true;
+
                     if (sprava.Autobus.StojiNaZastavke)
                     {
                         if (sprava.Autobus.KapacitaOsob > sprava.Autobus.Cestujuci.Count)
@@ -75,14 +111,45 @@ namespace continualAssistants
                             if (sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count != 0
                                  && !sprava.Autobus.AktualnaZastavka.Konecna)
                             {
-                                Hold(triangularDistribution.GetNext(), newMessage);
-                                var cestujuci = sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Dequeue();
+                                double holdTime = 0;
 
-                                sprava.Autobus.Cestujuci.Enqueue(cestujuci);
-                                sprava.Autobus.CelkovyPocetPrevezenych++;
-                                sprava.Autobus.AktualnyPocetPrevezenych++;
-                                sprava.Autobus.AktualnaZastavka.Zastavka.PocetCestujucich = 
-                                    sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count;
+                                switch (((MyMessage)message).Autobus.Typ)
+                                {
+                                    case AutobusyTyp.Autobus:
+                                        holdTime = triangularDistribution.GetNext();
+                                        break;
+                                    case AutobusyTyp.Microbus:
+                                        holdTime = uniformContinuous.GetNext();
+
+                                        if (MySim.CurrentTime - sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci
+                                                .Peek().CasZacatiaCakania < 6)
+                                        {
+                                            nastupiNiekto = false;
+                                        }
+
+                                        break;
+                                    default:
+                                        throw new ArgumentOutOfRangeException();
+                                }
+
+                                if (nastupiNiekto)
+                                {
+
+                                    var cestujuci = sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Dequeue();
+
+                                    cestujuci.CasCakania = MySim.CurrentTime - cestujuci.CasZacatiaCakania;
+
+                                    sprava.Autobus.Cestujuci.Enqueue(cestujuci);
+                                    sprava.Autobus.CelkovyPocetPrevezenych++;
+                                    sprava.Autobus.AktualnyPocetPrevezenych++;
+                                    sprava.Autobus.AktualnaZastavka.Zastavka.PocetCestujucich =
+                                        sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count;
+                                    
+                                    Hold(holdTime, message);
+                                }
+                                else
+                                    UkonciNastupovanie(message);
+
 
                                 //Console.WriteLine(
                                 //    $"{TimeSpan.FromMinutes(MySim.CurrentTime)} CESTUJUCI NASTUPIL {cestujuci.Id} cez dvere {message.Param}");

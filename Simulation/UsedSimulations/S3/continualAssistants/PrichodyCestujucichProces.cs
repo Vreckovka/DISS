@@ -19,17 +19,6 @@ namespace continualAssistants
 
         }
 
-        public void VytvorGeneratori()
-        {
-            //_exp = new ExponentialDistribution[MyAgent.Zastavky.Count + 3];
-
-            //for (int i = 0; i < MyAgent.Zastavky.Count; i++)
-            //{
-            //    _exp[i] = ;
-            //}
-        }
-
-
         override public void PrepareReplication()
         {
             base.PrepareReplication();
@@ -56,7 +45,7 @@ namespace continualAssistants
                     var sprava = (MyMessage)message;
 
                     if (MySim.CurrentTime <= sprava.ZastavkaData.CasKoncaGenerovania
-                        && sprava.ZastavkaData.Zastavka.PocetVygenerovanych <
+                        && sprava.ZastavkaData.Zastavka.PocetVygenerovanych  <
                         sprava.ZastavkaData.Zastavka.MaxPocetVygenerovanych)
                     {
                         MyAgent.CelkovyPocetCestujucich++;
@@ -64,21 +53,20 @@ namespace continualAssistants
 
                         var novaSprava = (MyMessage)message.CreateCopy();
 
-                        novaSprava.ZastavkaData = sprava.ZastavkaData;
-                        novaSprava.ZastavkaData.Zastavka.Cestujuci.Enqueue(new Cestujuci(cestujuciIndex++, MySim));
-                        novaSprava.ZastavkaData.Zastavka.PocetCestujucich++;
-                        sprava.ZastavkaData.Zastavka.PocetVygenerovanych++;
+                        var cestujuci = new Cestujuci(cestujuciIndex++, MySim);
 
+                        cestujuci.CasZacatiaCakania = MySim.CurrentTime;
+
+                       
+                        novaSprava.ZastavkaData = sprava.ZastavkaData;
+                        novaSprava.ZastavkaData.Zastavka.Cestujuci.Enqueue(cestujuci);
+                        novaSprava.ZastavkaData.Zastavka.PocetCestujucich++;
+                        novaSprava.ZastavkaData.Zastavka.PocetVygenerovanych++;
 
                         novaSprava.ZastavkaData.Zastavka.PocetCestujucich = novaSprava.ZastavkaData.Zastavka.Cestujuci.Count;
 
-
-                        //novaSprava.Code = Mc.PrichodCestujuceho;
-                        //novaSprava.Addressee = MyAgent;
-
-                        // Notice(novaSprava);
                         Hold(novaSprava.ZastavkaData.Generator.GetNext(), novaSprava);
-                        //Console.WriteLine($"Cestujuci prisiel na zastavku {MyAgent.Zastavky[(int)message.Param].Meno}");
+
                     }
                     else
                     {

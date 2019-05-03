@@ -13,6 +13,7 @@ namespace Simulations.UsedSimulations.S3.entities
     {
         public string Meno { get; set; }
         public List<ZastavkaData> Zastavky { get; set; }
+        public List<Autobus> Autobusy { get; set; }
 
         public Linka(OSPABA.Simulation mySim) : base(mySim)
         {

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define Live
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +20,9 @@ using Simulations.UsedSimulations.S3;
 using Simulations.UsedSimulations.S3.entities;
 using PropertyChanged;
 
+
+
+
 namespace S3
 {
     [AddINotifyPropertyChangedInterface]
@@ -26,59 +31,74 @@ namespace S3
     /// </summary>
     public partial class MainWindow : Window
     {
+        public Action<OSPABA.Simulation> Action { get; set; }
         public MySimulation Simulation { get; set; }
-        Thread thread;
         public MainWindow()
         {
             InitializeComponent();
             Simulation = new MySimulation();
-
+#if Live
             DataContext = Simulation;
+#endif
             double pocet = 0;
             double count = 0;
 
+
+            double pocetHodin = 0;
             Simulation.OnReplicationDidFinish((s)
                 =>
             {
-                pocet += Simulation.AgentOkolia.CelkovyPocetCestujucich;
-                count++;
-                Console.WriteLine(pocet / count);
-                // Console.Clear();
+                Console.Clear();
+                Console.WriteLine("Replikacia: " + (s.CurrentReplication + 1));
+                Console.WriteLine($"Cas ukoncenia: {(int)TimeSpan.FromMinutes(((MySimulation)s).AvrageFinishedTime).TotalHours}:" +
+                                  $"{TimeSpan.FromMinutes(((MySimulation)s).AvrageFinishedTime):mm}:" +
+                                  $"{TimeSpan.FromMinutes(((MySimulation)s).AvrageFinishedTime):ss}");
+                Console.WriteLine("Pocet ludi: " +((MySimulation) s).AvragePocetLudi);
+                Console.WriteLine("Cas cakania ludi: " + ((MySimulation)s).AvrageCakania);
             });
 
             Simulation.OnSimulationDidFinish((s)
                 =>
             {
-                Console.WriteLine("Koniec.");
+                Console.WriteLine(pocet / count);
+                //Console.WriteLine("Koniec.");
                 Console.ReadKey();
             });
 
-            thread = new Thread(() =>
-            {
-                while (true)
-                {
-                    Thread.Sleep(10);
-                    Dispatcher.Invoke(() =>
-                    {
-                        if (!double.IsInfinity(Simulation.CurrentTime))
-                            SimulationTimeRun.Text = TimeSpan.FromMinutes(Simulation.CurrentTime).ToString("hh\\:mm\\:ss");
-
-                    });
-                }
-            });
-
-            thread.IsBackground = true;
+            Action = RefreshGui;
         }
 
+        public void RefreshGui(OSPABA.Simulation simulation)
+        {
+            var sim = ((MySimulation)simulation);
+            Dispatcher.InvokeAsync(() =>
+            {
+                SimulationTimeRun.Text = TimeSpan.FromMinutes(Simulation.CurrentTime).ToString("hh\\:mm\\:ss");
+            });
 
+
+            foreach (var autobus in sim.AgentAutobusov.Autobusy)
+            {
+                if (!double.IsPositiveInfinity(autobus.ZaciatokJazdyCas) && !autobus.KoniecJazd)
+                {
+                    var prejdenyCas = sim.CurrentTime - autobus.ZaciatokJazdyCas;
+                    var prec = (prejdenyCas * 100 / autobus.AktualnaZastavka.CasKDalsejZastavke);
+                    autobus.PrejdenyCas = prec;
+                }
+            }
+        }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            thread.Start();
+
             Task.Run(() =>
             {
-                Simulation.SetSimSpeed(1/3d, 0.01);
-                Simulation.Simulate(Config.PocetReplikacii,700);
+#if Live
+                Simulation.SetSimSpeed(1 / 60d, 0.001);
+                Simulation.OnRefreshUI(Action);
+#endif
+
+                Simulation.Simulate(1000);
             });
         }
     }

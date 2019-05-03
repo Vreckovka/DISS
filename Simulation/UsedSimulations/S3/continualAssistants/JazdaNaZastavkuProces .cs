@@ -28,11 +28,13 @@ namespace continualAssistants
             sprava.Autobus = ((MyMessage)message).Autobus;
             sprava.Code = Mc.JazdaNaZastavku;
 
-            if (sprava.Autobus.AktualnaZastavka == sprava.Autobus.ZaciatocnaZastavka)
+            if (sprava.Autobus.AktualnaZastavka == sprava.Autobus.Linka.Zastavky[0])
             {
                 sprava.Autobus.JazdaStart = MySim.CurrentTime;
             }
 
+            sprava.Autobus.ZaciatokJazdyCas = MySim.CurrentTime;
+         
             Hold(sprava.Autobus.AktualnaZastavka.CasKDalsejZastavke, sprava);
         }
 

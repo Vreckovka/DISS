@@ -8,6 +8,12 @@ using PropertyChanged;
 
 namespace Simulations.UsedSimulations.S3.entities
 {
+    public enum AutobusyTyp
+    {
+        Autobus,
+        Microbus
+    }
+   
     [AddINotifyPropertyChangedInterface]
     public class Autobus : Entity
     {
@@ -20,11 +26,19 @@ namespace Simulations.UsedSimulations.S3.entities
         public bool StojiNaZastavke { get; set; }
         public bool KoniecProcesu { get; set; }
         public ZastavkaData AktualnaZastavka { get; set; }
-        public ZastavkaData ZaciatocnaZastavka { get; set; }
         public bool NovaJazda { get; set; }
+        public double ZacitokJazdyCas { get; set; }
+        public AutobusyTyp Typ { get; set; }
+        public bool KoniecJazd { get; set; }
+
+        public double ZaciatokJazdyCas { get; set; } = double.MaxValue;
+        public double PrejdenyCas { get; set; }
+
+
 
         public int CelkovyPocetPrevezenych { get; set; }
         public int AktualnyPocetPrevezenych { get; set; }
+      
 
         public double JazdaStart { get; set; }
         public double JazdaEnd { get; set; }

@@ -8,6 +8,7 @@ namespace agents
 	//meta! id="25"
 	public class AgentLiniek : Agent
 	{
+        
 		public AgentLiniek(int id, OSPABA.Simulation mySim, Agent parent) :
 			base(id, mySim, parent)
 		{

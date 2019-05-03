@@ -8,9 +8,8 @@ namespace Simulations.UsedSimulations.S3
 {
     public static class Config
     {
-        public const int PocetReplikacii = 10000;
-        public const double ZaciatokZapasu = 113;
-        public const double ZaciatokJazd = 0;
+        public const int PocetReplikacii = 1;
+        public const double ZaciatokZapasu = 780;
         public const int PocetAutobusov = 3;
     }
 }

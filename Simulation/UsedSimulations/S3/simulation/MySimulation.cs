@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using OSPABA;
 using agents;
 using PropertyChanged;
@@ -9,7 +10,17 @@ namespace simulation
     public class MySimulation : OSPABA.Simulation
     {
         public Random Random { get; set; }
-  
+
+
+        public double FinishedCasCakania { get; set; }
+        public double AvrageCakania { get; set; }
+
+        public double FinishedPocetLudi { get; set; }
+        public double AvragePocetLudi { get; set; }
+
+        public double FinishedTimes { get; set; }
+        public double LastFinishTime { get; set; }
+        public double AvrageFinishedTime { get; set; }
         public MySimulation()
         {
             Random = new Random();
@@ -31,11 +42,22 @@ namespace simulation
         protected override void ReplicationFinished()
         {
             // Collect local statistics into global, update UI, etc...
+            FinishedTimes += LastFinishTime;
+            FinishedPocetLudi += AgentOkolia.CelkovyPocetCestujucich;
+
+            if (AgentOkolia.Zastavky[3].Cestujuci.Count != 0)
+                FinishedCasCakania += (from x in AgentOkolia.Zastavky[3].Cestujuci select x.CasCakania).Average();
+
+            AvragePocetLudi = FinishedPocetLudi / (CurrentReplication + 1);
+            AvrageFinishedTime = FinishedTimes / (CurrentReplication + 1);
+            AvrageCakania = FinishedCasCakania / (CurrentReplication + 1);
+
             base.ReplicationFinished();
         }
 
         protected override void SimulationFinished()
         {
+            ;
             // Dysplay simulation results
             base.SimulationFinished();
         }
