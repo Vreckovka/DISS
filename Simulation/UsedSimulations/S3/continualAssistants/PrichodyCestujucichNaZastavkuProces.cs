@@ -28,7 +28,7 @@ namespace continualAssistants
             var sprava = (MyMessage)message.CreateCopy();
             sprava.Code = Mc.ZacniGenerovatCestujucich;
             sprava.ZastavkaData = ((MyMessage) message).ZastavkaData;
-            Hold(message.Param, sprava);
+            Hold(sprava.ZastavkaData.CasZaciatkuGenerovania, sprava);
         }
 
         //meta! userInfo="Process messages defined in code", id="0"

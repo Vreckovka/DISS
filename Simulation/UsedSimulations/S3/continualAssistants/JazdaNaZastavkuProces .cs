@@ -51,8 +51,12 @@ namespace continualAssistants
                     sprava.Autobus = ((MyMessage)message).Autobus;
                     sprava.Code = Mc.PrichodNaZastavku;
                     sprava.Addressee = MySim.FindAgent(SimId.AgentZastavok);
+
+
                     sprava.Autobus.AktualnaZastavka = sprava.Autobus.AktualnaZastavka.DalsiaZastavka;
 
+
+                    //Console.WriteLine(MySim.CurrentTime + " " + sprava.Autobus.AktualnaZastavka.Zastavka + " " + sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count);
                     if (sprava.Autobus.NovaJazda)
                     {
                         sprava.Autobus.KoniecProcesu = false;
@@ -67,8 +71,6 @@ namespace continualAssistants
                     }
 
                     Notice(sprava);
-
-                    //Console.WriteLine($"{(MySim.CurrentTime)} AUTOBUS PRISIEL NA ZASTAVKU");
                     break;
             }
         }

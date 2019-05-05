@@ -13,6 +13,7 @@ namespace continualAssistants
     //meta! id="70"
     public class VystupovanieProces : Process
     {
+        public double Fixne { get; set; } = 3.0 / 60;
         private int pocetUkoncenychAutobusov;
         private TriangularDistribution triangularDistribution;
         public VystupovanieProces(int id, OSPABA.Simulation mySim, CommonAgent myAgent) :
@@ -34,24 +35,28 @@ namespace continualAssistants
             var sprava = (MyMessage)message.CreateCopy();
             sprava.Autobus = ((MyMessage)message).Autobus;
             sprava.Code = Mc.CestujuciVystupil;
-            // sprava.Autobus.StojiNaZastavke = true;
+            sprava.Autobus.StojiNaZastavke = true;
 
             if (sprava.Autobus.Cestujuci.Count > 0)
             {
-                double holdTime = 0;
+                double holdTime = -1;
                 switch (sprava.Autobus.Typ)
                 {
                     case AutobusyTyp.Autobus:
                         holdTime = triangularDistribution.GetNext();
+                       
                         break;
                     case AutobusyTyp.Microbus:
                         holdTime = 4.0 / 60;
+                      
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
-
                 }
 
+
+
+                holdTime = Fixne;
                 Hold(holdTime, sprava);
             }
             else if (MySim.CurrentTime >= Config.ZaciatokZapasu && sprava.Autobus.Cestujuci.Count == 0 && !sprava.Autobus.KoniecJazd)
@@ -62,7 +67,7 @@ namespace continualAssistants
 
                 if (pocetUkoncenychAutobusov == ((MySimulation)MySim).AgentAutobusov.Autobusy.Count)
                 {
-                    ((MySimulation) MySim).LastFinishTime = MySim.CurrentTime;
+                    ((MySimulation)MySim).LastFinishTime = MySim.CurrentTime;
                     MySim.StopReplication();
                 }
             }
@@ -88,31 +93,43 @@ namespace continualAssistants
                     newMessage.Autobus = sprava.Autobus;
                     newMessage.Code = sprava.Code;
 
-                    if (!sprava.Autobus.KoniecProcesu && sprava.Autobus.Cestujuci.Count > 0)
+                    if (!newMessage.Autobus.KoniecProcesu)
                     {
-                        sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Enqueue(sprava.Autobus.Cestujuci.Dequeue());
-                        sprava.Autobus.AktualnyPocetPrevezenych = sprava.Autobus.Cestujuci.Count;
-                        sprava.Autobus.AktualnaZastavka.Zastavka.PocetCestujucich = sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count;
+                        newMessage.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Enqueue(newMessage.Autobus.Cestujuci.Dequeue());
+                        newMessage.Autobus.AktualnyPocetPrevezenych = newMessage.Autobus.Cestujuci.Count;
+                        newMessage.Autobus.AktualnaZastavka.Zastavka.PocetCestujucich =
+                            newMessage.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count;
 
                         double holdTime = 0;
-                        switch (sprava.Autobus.Typ)
+                        switch (newMessage.Autobus.Typ)
                         {
                             case AutobusyTyp.Autobus:
                                 holdTime = triangularDistribution.GetNext();
                                 break;
                             case AutobusyTyp.Microbus:
                                 holdTime = 4.0 / 60;
+                                
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException();
 
                         }
 
-                        Hold(holdTime, sprava);
+                       // Console.WriteLine(MySim.CurrentTime + " " +  newMessage.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count);
+
+                        if (newMessage.Autobus.Cestujuci.Count > 0)
+                        {
+                            holdTime = Fixne;
+                            Hold(holdTime, newMessage);
+                        }
+                        else
+                        {
+                            UkonciVystupovanie(newMessage);
+                        }
                     }
                     else
                     {
-                        UkonciVystupovanie(message);
+                        UkonciVystupovanie(newMessage);
                     }
 
                     break;
@@ -137,6 +154,8 @@ namespace continualAssistants
                 newMessage.Code = Mc.KoniecJazdy;
                 newMessage.Addressee = MySim.FindAgent(SimId.AgentAutobusov);
                 Notice(newMessage);
+
+                //Console.WriteLine(MySim.CurrentTime +  " Koniec vystupovania");
             }
         }
 

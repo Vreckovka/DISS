@@ -1,4 +1,4 @@
-﻿#define Live
+﻿#define Live1
 
 using System;
 using System.Collections.Generic;
@@ -47,41 +47,48 @@ namespace S3
             double pocetHodin = 0;
             Simulation.OnReplicationDidFinish((s)
                 =>
-            {
+            {              
                 Console.Clear();
-                Console.WriteLine("Replikacia: " + (s.CurrentReplication + 1));
-                Console.WriteLine($"Cas ukoncenia: {(int)TimeSpan.FromMinutes(((MySimulation)s).AvrageFinishedTime).TotalHours}:" +
-                                  $"{TimeSpan.FromMinutes(((MySimulation)s).AvrageFinishedTime):mm}:" +
-                                  $"{TimeSpan.FromMinutes(((MySimulation)s).AvrageFinishedTime):ss}");
-                Console.WriteLine("Pocet ludi: " +((MySimulation) s).AvragePocetLudi);
-                Console.WriteLine("Cas cakania ludi: " + ((MySimulation)s).AvrageCakania);
+                Console.WriteLine("Replikacia: " + s.CurrentReplication);
             });
 
             Simulation.OnSimulationDidFinish((s)
                 =>
             {
-                Console.WriteLine(pocet / count);
-                //Console.WriteLine("Koniec.");
-                Console.ReadKey();
+                Vypis(s);
             });
 
             Action = RefreshGui;
         }
 
+        public void Vypis(OSPABA.Simulation s)
+        {
+            Console.Clear();
+            Console.WriteLine("Replikacia: " + (s.CurrentReplication + 1));
+            Console.WriteLine($"Cas ukoncenia: {(int)TimeSpan.FromMinutes(((MySimulation)s).AvrageFinishedTime).TotalHours}:" +
+                              $"{TimeSpan.FromMinutes(((MySimulation)s).AvrageFinishedTime):mm}:" +
+                              $"{TimeSpan.FromMinutes(((MySimulation)s).AvrageFinishedTime):ss}");
+            Console.WriteLine("Pocet ludi: " + ((MySimulation)s).AvragePocetLudi);
+
+            Console.WriteLine("Cas cakania ludi: " + ((MySimulation)s).AvrageCakania);
+
+        }
+
+
         public void RefreshGui(OSPABA.Simulation simulation)
         {
-            var sim = ((MySimulation)simulation);
+            var s = ((MySimulation)simulation);
+
             Dispatcher.InvokeAsync(() =>
             {
                 SimulationTimeRun.Text = TimeSpan.FromMinutes(Simulation.CurrentTime).ToString("hh\\:mm\\:ss");
             });
 
-
-            foreach (var autobus in sim.AgentAutobusov.Autobusy)
+            foreach (var autobus in s.AgentAutobusov.Autobusy)
             {
                 if (!double.IsPositiveInfinity(autobus.ZaciatokJazdyCas) && !autobus.KoniecJazd)
                 {
-                    var prejdenyCas = sim.CurrentTime - autobus.ZaciatokJazdyCas;
+                    var prejdenyCas = s.CurrentTime - autobus.ZaciatokJazdyCas;
                     var prec = (prejdenyCas * 100 / autobus.AktualnaZastavka.CasKDalsejZastavke);
                     autobus.PrejdenyCas = prec;
                 }
@@ -98,7 +105,7 @@ namespace S3
                 Simulation.OnRefreshUI(Action);
 #endif
 
-                Simulation.Simulate(1000);
+                Simulation.Simulate(10);
             });
         }
     }

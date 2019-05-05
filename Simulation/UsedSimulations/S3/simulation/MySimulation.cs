@@ -45,8 +45,8 @@ namespace simulation
             FinishedTimes += LastFinishTime;
             FinishedPocetLudi += AgentOkolia.CelkovyPocetCestujucich;
 
-            if (AgentOkolia.Zastavky[3].Cestujuci.Count != 0)
-                FinishedCasCakania += (from x in AgentOkolia.Zastavky[3].Cestujuci select x.CasCakania).Average();
+            //Na stadione
+            FinishedCasCakania += (from x in AgentOkolia.Zastavky[3].Cestujuci select x.CasCakania).Average();
 
             AvragePocetLudi = FinishedPocetLudi / (CurrentReplication + 1);
             AvrageFinishedTime = FinishedTimes / (CurrentReplication + 1);

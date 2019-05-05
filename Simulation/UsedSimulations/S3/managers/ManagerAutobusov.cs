@@ -28,12 +28,24 @@ namespace managers
         //meta! sender="AgentLiniek", id="40", type="Request"
         public void ProcessInitJazda(MessageForm message)
         {
+            if (((MyMessage) message).Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count == 0)
+            {
+                message.Code = Mc.JazdaNaZastavku;
+                message.Param = message.Param;
+                message.Addressee = MySim.FindAgent(SimId.AgentAutobusov);
 
-            message.Code = Mc.JazdaNaZastavku;
-            message.Param = message.Param;
-            message.Addressee = MySim.FindAgent(SimId.AgentAutobusov);
+                Notice(message);
+            }
+            else
+            {
+                var sprava = new MyMessage((MyMessage)message);
 
-            Notice(message);
+                sprava.Autobus = ((MyMessage)message).Autobus;
+                sprava.Code = Mc.PrichodNaZastavku;
+                sprava.Addressee = MySim.FindAgent(SimId.AgentZastavok);
+
+                Notice(sprava);
+            }
         }
 
         public void ProcessJazdaNaZastavku(MessageForm message)

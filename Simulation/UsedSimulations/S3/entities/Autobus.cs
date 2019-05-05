@@ -23,6 +23,7 @@ namespace Simulations.UsedSimulations.S3.entities
         public Linka Linka { get; set; }
 
 
+        public bool CakalNavyse { get; set; }
         public bool StojiNaZastavke { get; set; }
         public bool KoniecProcesu { get; set; }
         public ZastavkaData AktualnaZastavka { get; set; }
@@ -57,8 +58,6 @@ namespace Simulations.UsedSimulations.S3.entities
         public void Reset()
         {
             AktualnyPocetPrevezenych = 0;
-            KoniecProcesu = false;
-            Cestujuci.Clear();
         }
     }
 }

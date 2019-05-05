@@ -14,8 +14,7 @@ namespace Simulations.UsedSimulations.S3.entities
         public string Meno { get; set; }
         public int MaxPocetVygenerovanych { get; set; }
         public int PocetVygenerovanych { get; set; }
-        public int GlobalIndex { get; set; }
-      
+
 
         public Queue<Cestujuci> Cestujuci { get; set; }
         public int PocetCestujucich { get; set; }
@@ -31,6 +30,12 @@ namespace Simulations.UsedSimulations.S3.entities
         public override string ToString()
         {
             return Meno;
+        }
+
+        public void Reset()
+        {
+            Cestujuci.Clear();
+            PocetVygenerovanych = 0;
         }
     }
 }
