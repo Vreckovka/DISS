@@ -89,6 +89,23 @@ namespace S3.Pages
     public class MyLinka
     {
         public ObservableCollection<Autobus> Autobusy { get; set; } = new ObservableCollection<Autobus>();
+
+        public MyLinka()
+        {
+            Autobusy.CollectionChanged += Autobusy_CollectionChanged;
+        }
+
+        private void Autobusy_CollectionChanged(object sender,
+            System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.OldItems != null)
+            {
+                foreach (Autobus item in e.OldItems)
+                {
+                    MyConfiguration.Configuration.Autobusy.Remove(item);
+                }
+            }
+        }
     }
 
     public static class MyConfiguration

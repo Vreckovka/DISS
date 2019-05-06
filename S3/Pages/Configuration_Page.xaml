@@ -17,7 +17,9 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="DataGrid">
                         <DataGrid ItemsSource="{TemplateBinding ItemsSource}"
-                                  AutoGenerateColumns="False" >
+                                  AutoGenerateColumns="False" 
+                                  SelectionMode="Single"
+                                  >
                             <DataGrid.Columns>
                                 <DataGridTemplateColumn Header="Id">
                                     <DataGridTemplateColumn.CellTemplate>
