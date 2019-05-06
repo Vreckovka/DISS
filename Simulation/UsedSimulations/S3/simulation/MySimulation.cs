@@ -3,6 +3,7 @@ using System.Linq;
 using OSPABA;
 using agents;
 using PropertyChanged;
+using Simulations.UsedSimulations.S3;
 
 namespace simulation
 {
@@ -10,7 +11,7 @@ namespace simulation
     public class MySimulation : OSPABA.Simulation
     {
         public Random Random { get; set; }
-
+        public Configuration Configration { get; set; }
 
         public double FinishedCasCakania { get; set; }
         public double AvrageCakania { get; set; }
@@ -21,9 +22,10 @@ namespace simulation
         public double FinishedTimes { get; set; }
         public double LastFinishTime { get; set; }
         public double AvrageFinishedTime { get; set; }
-        public MySimulation()
+        public MySimulation(Configuration configration)
         {
             Random = new Random();
+            Configration = configration;
             Init();
         }
 
@@ -41,16 +43,20 @@ namespace simulation
 
         protected override void ReplicationFinished()
         {
-            // Collect local statistics into global, update UI, etc...
-            FinishedTimes += LastFinishTime;
-            FinishedPocetLudi += AgentOkolia.CelkovyPocetCestujucich;
+            if (AgentOkolia.Zastavky[3].Cestujuci.Count > 0)
+            {
+                // Collect local statistics into global, update UI, etc...
+                FinishedTimes += LastFinishTime;
+                FinishedPocetLudi += AgentOkolia.CelkovyPocetCestujucich;
 
-            //Na stadione
-            FinishedCasCakania += (from x in AgentOkolia.Zastavky[3].Cestujuci select x.CasCakania).Average();
+                //Na stadione
 
-            AvragePocetLudi = FinishedPocetLudi / (CurrentReplication + 1);
-            AvrageFinishedTime = FinishedTimes / (CurrentReplication + 1);
-            AvrageCakania = FinishedCasCakania / (CurrentReplication + 1);
+                FinishedCasCakania += (from x in AgentOkolia.Zastavky[3].Cestujuci select x.CasCakania).Average();
+
+                AvragePocetLudi = FinishedPocetLudi / (CurrentReplication + 1);
+                AvrageFinishedTime = FinishedTimes / (CurrentReplication + 1);
+                AvrageCakania = FinishedCasCakania / (CurrentReplication + 1);
+            }
 
             base.ReplicationFinished();
         }
@@ -60,6 +66,19 @@ namespace simulation
             ;
             // Dysplay simulation results
             base.SimulationFinished();
+        }
+
+        public void Reset()
+        {
+            foreach (var zastavka in AgentOkolia.Zastavky)
+            {
+                zastavka.Reset();
+            }
+
+            foreach (var autobus in AgentAutobusov.Autobusy)
+            {
+                autobus.HardReset();
+            }
         }
 
         //meta! userInfo="Generated code: do not modify", tag="begin"

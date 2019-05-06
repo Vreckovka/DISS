@@ -17,8 +17,12 @@ namespace Simulations.UsedSimulations.S3.entities
         public double CasKoncaGenerovania { get; set; }
         public double CasZaciatkuGenerovania { get; set; }
 
-        public double Generator { get; set; } = 15.0 / 60;
-        //public ExponentialDistribution Generator { get; set; }
+        public ExponentialDistribution Generator { get; set; }
         public bool Konecna { get; set; }
+
+        public override string ToString()
+        {
+            return Zastavka.Meno;
+        }
     }
 }

@@ -1,0 +1,121 @@
+﻿<Page x:Class="S3.Pages.Configuration_Page"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:S3.Pages"
+      xmlns:converters="clr-namespace:S3.Converters"
+      xmlns:entities="clr-namespace:Simulations.UsedSimulations.S3.entities;assembly=Simulations"
+      mc:Ignorable="d" 
+      xmlns:extended="http://schemas.xceed.com/wpf/xaml/toolkit"
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Configuration_Page">
+
+    <Page.Resources>
+        <Style x:Key="DatagridTemplate" TargetType="DataGrid">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGrid">
+                        <DataGrid ItemsSource="{TemplateBinding ItemsSource}"
+                                  AutoGenerateColumns="False" >
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="Id">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Id}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTemplateColumn Header="Typ">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox ItemsSource="{Binding Source={converters:EnumBidingExtention {x:Type entities:VelkostAutobusu}}}" 
+                                                      SelectedValue="{Binding VelkostAutobusu,
+                                                UpdateSourceTrigger=PropertyChanged}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTemplateColumn Header="Zaciatocna zastavka">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox ItemsSource="{Binding Linka.Zastavky}"  
+                                                      SelectedValue="{Binding AktualnaZastavka,
+                                                      UpdateSourceTrigger=PropertyChanged}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTemplateColumn Header="Cas zaciatku">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <extended:TimePicker Value="{Binding CasZaciatkuJazdy, Mode=TwoWay, 
+                                                UpdateSourceTrigger=PropertyChanged,
+                                                Converter={converters:DateTimeConverter}}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <!--<DataGridTemplateColumn Header="Cas zaciatku">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding CasZaciatkuJazdy, Mode=OneWay}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>-->
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <GroupBox Header="Linka A">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Content="Pridaj" Height="25" VerticalAlignment="Top" Margin="5" Click="PridajA"/>
+                <DataGrid ItemsSource="{Binding Linky[0].Autobusy}" Style="{StaticResource DatagridTemplate}" 
+                          Grid.Column="1"/>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="Linka B" Grid.Column="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Content="Pridaj" Height="25" VerticalAlignment="Top" Margin="5" Click="PridajB"/>
+                <DataGrid ItemsSource="{Binding Linky[1].Autobusy}" Style="{StaticResource DatagridTemplate}" 
+                          Grid.Column="1"/>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="Linka C" Grid.Column="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Content="Pridaj" Height="25" VerticalAlignment="Top" Margin="5" Click="PridajC"/>
+                <DataGrid ItemsSource="{Binding Linky[2].Autobusy}" Style="{StaticResource DatagridTemplate}" 
+                          Grid.Column="1"/>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</Page>

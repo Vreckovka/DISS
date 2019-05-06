@@ -34,7 +34,7 @@ namespace agents
             {
                 zastavka.Reset();
             }
-           
+
             CelkovyPocetCestujucich = 0;
             StartGenerovanieCestujucich();
 
@@ -63,15 +63,13 @@ namespace agents
             {
                 foreach (var zastavka in linka.Zastavky)
                 {
-                    if (zastavka.Zastavka.Meno != "K1" && zastavka.Zastavka.Meno != "K2" && zastavka.Zastavka.Meno != "K3")
-                    {
-                        var sprava = new MyMessage(MySim);
-                        zastavka.CasKoncaGenerovania = (Config.ZaciatokZapasu - ((10 + zastavka.CasKuStadionu)));
-                        sprava.ZastavkaData = zastavka;
-                        sprava.ZastavkaData.CasZaciatkuGenerovania = (Config.ZaciatokZapasu - ((75 + zastavka.CasKuStadionu)));
-                        sprava.Addressee = FindAssistant(SimId.PrichodyCestujucichNaZastavkuProces);
-                        MyManager.StartContinualAssistant(sprava);
-                    }
+
+                    var sprava = new MyMessage(MySim);
+                    zastavka.CasKoncaGenerovania = (((MySimulation)MySim).Configration.ZaciatokZapasu - ((10 + zastavka.CasKuStadionu)));
+                    sprava.ZastavkaData = zastavka;
+                    sprava.ZastavkaData.CasZaciatkuGenerovania = (((MySimulation)MySim).Configration.ZaciatokZapasu - ((75 + zastavka.CasKuStadionu)));
+                    sprava.Addressee = FindAssistant(SimId.PrichodyCestujucichNaZastavkuProces);
+                    MyManager.StartContinualAssistant(sprava);
                 }
             }
         }
@@ -550,8 +548,8 @@ namespace agents
                         linka.Zastavky[i].DalsiaZastavka = linka.Zastavky[0];
                     }
 
-                    //linka.Zastavky[i].Generator = new ExponentialDistribution((1.0 / (65.0 / linka.Zastavky[i].Zastavka.MaxPocetVygenerovanych)),
-                    //        ((MySimulation)MySim).Random.Next());
+                    linka.Zastavky[i].Generator = new ExponentialDistribution((1.0 / (65.0 / linka.Zastavky[i].Zastavka.MaxPocetVygenerovanych)),
+                            ((MySimulation)MySim).Random.Next());
                 }
             }
 

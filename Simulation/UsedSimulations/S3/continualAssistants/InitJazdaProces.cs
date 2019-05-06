@@ -27,7 +27,7 @@ namespace continualAssistants
             sprava.Code = Mc.InitJazda;
             sprava.Autobus = ((MyMessage) message).Autobus;
 
-            Hold(sprava.Autobus.ZacitokJazdyCas, sprava);
+            Hold(sprava.Autobus.CasZaciatkuJazdy, sprava);
         }
 
         //meta! userInfo="Process messages defined in code", id="0"

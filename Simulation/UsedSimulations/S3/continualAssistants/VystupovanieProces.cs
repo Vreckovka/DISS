@@ -13,7 +13,7 @@ namespace continualAssistants
     //meta! id="70"
     public class VystupovanieProces : Process
     {
-        public double Fixne { get; set; } = 3.0 / 60;
+       
         private int pocetUkoncenychAutobusov;
         private TriangularDistribution triangularDistribution;
         public VystupovanieProces(int id, OSPABA.Simulation mySim, CommonAgent myAgent) :
@@ -56,10 +56,9 @@ namespace continualAssistants
 
 
 
-                holdTime = Fixne;
                 Hold(holdTime, sprava);
             }
-            else if (MySim.CurrentTime >= Config.ZaciatokZapasu && sprava.Autobus.Cestujuci.Count == 0 && !sprava.Autobus.KoniecJazd)
+            else if (MySim.CurrentTime >= ((MySimulation)MySim).Configration.ZaciatokZapasu && sprava.Autobus.Cestujuci.Count == 0 && !sprava.Autobus.KoniecJazd)
             {
                 sprava.Autobus.KoniecJazd = true;
                 AssistantFinished(sprava);
@@ -119,7 +118,6 @@ namespace continualAssistants
 
                         if (newMessage.Autobus.Cestujuci.Count > 0)
                         {
-                            holdTime = Fixne;
                             Hold(holdTime, newMessage);
                         }
                         else

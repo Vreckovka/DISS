@@ -33,7 +33,7 @@ namespace continualAssistants
             sprava.Code = Mc.PrichodCestujuceho;
             sprava.ZastavkaData = ((MyMessage)message).ZastavkaData;
 
-            Hold(sprava.ZastavkaData.Generator, sprava);
+            Hold(sprava.ZastavkaData.Generator.GetNext(), sprava);
         }
 
         //meta! userInfo="Process messages defined in code", id="0"
@@ -65,7 +65,7 @@ namespace continualAssistants
 
                         novaSprava.ZastavkaData.Zastavka.PocetCestujucich = novaSprava.ZastavkaData.Zastavka.Cestujuci.Count;
 
-                        Hold(novaSprava.ZastavkaData.Generator, novaSprava);
+                        Hold(novaSprava.ZastavkaData.Generator.GetNext(), novaSprava);
                     }
                     else
                     {

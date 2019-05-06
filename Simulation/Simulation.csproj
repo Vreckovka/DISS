@@ -108,7 +108,7 @@
     <Compile Include="UsedSimulations\S3\agents\AgentModelu.cs" />
     <Compile Include="UsedSimulations\S3\agents\AgentOkolia.cs" />
     <Compile Include="UsedSimulations\S3\agents\AgentZastavok.cs" />
-    <Compile Include="UsedSimulations\S3\Config.cs" />
+    <Compile Include="UsedSimulations\S3\Configuration.cs" />
     <Compile Include="UsedSimulations\S3\continualAssistants\JazdaNaZastavkuProces .cs" />
     <Compile Include="UsedSimulations\S3\continualAssistants\InitJazdaProces.cs" />
     <Compile Include="UsedSimulations\S3\continualAssistants\VystupovanieProces.cs" />
@@ -117,6 +117,7 @@
     <Compile Include="UsedSimulations\S3\continualAssistants\PrichodyCestujucichProces.cs" />
     <Compile Include="UsedSimulations\S3\entities\Autobus.cs" />
     <Compile Include="UsedSimulations\S3\entities\Cestujuci.cs" />
+    <Compile Include="UsedSimulations\S3\entities\EnumDescriptionTypeConverter.cs" />
     <Compile Include="UsedSimulations\S3\entities\Linka.cs" />
     <Compile Include="UsedSimulations\S3\entities\Zastavka.cs" />
     <Compile Include="UsedSimulations\S3\entities\ZastavkaData.cs" />

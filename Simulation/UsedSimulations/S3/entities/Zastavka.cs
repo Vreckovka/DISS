@@ -36,6 +36,7 @@ namespace Simulations.UsedSimulations.S3.entities
         {
             Cestujuci.Clear();
             PocetVygenerovanych = 0;
+            PocetCestujucich = 0;
         }
     }
 }

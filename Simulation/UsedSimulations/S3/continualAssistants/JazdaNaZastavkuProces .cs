@@ -33,7 +33,7 @@ namespace continualAssistants
                 sprava.Autobus.JazdaStart = MySim.CurrentTime;
             }
 
-            sprava.Autobus.ZaciatokJazdyCas = MySim.CurrentTime;
+            sprava.Autobus.StatZaciatokJazdyCas = MySim.CurrentTime;
          
             Hold(sprava.Autobus.AktualnaZastavka.CasKDalsejZastavke, sprava);
         }

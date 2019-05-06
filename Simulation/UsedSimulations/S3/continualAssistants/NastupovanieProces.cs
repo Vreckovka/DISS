@@ -13,7 +13,6 @@ namespace continualAssistants
     //meta! id="70"
     public class NastupovanieProces : Process
     {
-        public double Fixne { get; set; } = 3.0 / 60;
         private TriangularDistribution triangularDistribution;
         private UniformContinuousDistribution uniformContinuous;
         public NastupovanieProces(int id, OSPABA.Simulation mySim, CommonAgent myAgent) :
@@ -65,11 +64,9 @@ namespace continualAssistants
                     {
                         case AutobusyTyp.Autobus:
                             holdTime = triangularDistribution.GetNext();
-                            holdTime = Fixne;
                             break;
                         case AutobusyTyp.Microbus:
                             holdTime = uniformContinuous.GetNext();
-                            holdTime = Fixne;
 
                             if (MySim.CurrentTime - ((MyMessage)message).Autobus.AktualnaZastavka.Zastavka.Cestujuci.Peek().CasZacatiaCakania < 6)
                             {
@@ -81,7 +78,7 @@ namespace continualAssistants
                             throw new ArgumentOutOfRangeException();
                     }
 
-                    if (nastupiNiekto && !((MyMessage) message).Autobus.AktualnaZastavka.Konecna) 
+                    if (nastupiNiekto && !((MyMessage)message).Autobus.AktualnaZastavka.Konecna)
                     {
                         //Console.WriteLine(MySim.CurrentTime + " Na zastavke " + ((MyMessage)message).Autobus.AktualnaZastavka.Zastavka + " je " + ((MyMessage)message).Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count);
                         Hold(holdTime, message);
@@ -114,11 +111,9 @@ namespace continualAssistants
                         {
                             case AutobusyTyp.Autobus:
                                 holdTime = triangularDistribution.GetNext();
-                                holdTime = Fixne;
                                 break;
                             case AutobusyTyp.Microbus:
                                 holdTime = uniformContinuous.GetNext();
-                                holdTime = Fixne;
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException();
@@ -138,7 +133,7 @@ namespace continualAssistants
                                 sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count;
                         }
 
-                        
+
 
                         //Console.WriteLine(MySim.CurrentTime + " Nastupil " + sprava.Autobus.Typ + " " + sprava.Autobus.AktualnaZastavka.Zastavka);
 
@@ -155,7 +150,7 @@ namespace continualAssistants
                                     Hold(holdTime, message);
                                 }
                             }
-                            else if(Config.Cakanie && sprava.Autobus.Typ == AutobusyTyp.Autobus && !sprava.Autobus.CakalNavyse)
+                            else if (((MySimulation)MySim).Configration.Cakanie && sprava.Autobus.Typ == AutobusyTyp.Autobus && !sprava.Autobus.CakalNavyse)
                             {
                                 Hold(1.5, message);
                                 sprava.Autobus.CakalNavyse = true;
