@@ -3,11 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DISS", "DISS\DISS.csproj", "{9C985B06-2939-4D55-9FE5-D34F2F2B0DE7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simulation", "Simulation\Simulation.csproj", "{2EBC1015-7C7A-4B00-9B6D-300DC6040DEB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "S2", "S2\S2.csproj", "{A17FF8A1-8CAA-4B60-BCB4-9428E9C5F4B2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "S3", "S3\S3.csproj", "{C04FA46B-F20D-4C84-A585-390C5EE9D840}"
 EndProject

@@ -33,21 +33,48 @@ namespace S3.Pages
             {
                 pocet = Convert.ToInt32(PocetRep.Text);
 
-                if (!SimWrapper.SimulationModel.Simulation.IsRunning())
-                {
-                    SimWrapper.SimulationModel.Simulation.OnRefreshUI(null);
-                    MainWindow._live_Page.DataContext = null;
-                    MainWindow._rep_Page.DataContext = SimWrapper.SimulationModel;
+                
+                SimWrapper.SimulationModel.Simulation.SetSimSpeed(1 / 60d, 0.0001);
+                SimWrapper.SimulationModel.Simulation.OnRefreshUI(SimWrapper.SimulationModel.RefreshGui);
+                MainWindow._live_Page.DataContext = null;
+                MainWindow._rep_Page.DataContext = SimWrapper.SimulationModel;
 
-                    Task.Run(() => { SimWrapper.SimulationModel.Simulation.Simulate(pocet); });
-                }
-                else
-                    MessageBox.Show("Simulacia uz prebieha");
+                Task.Run(() =>
+                {
+                    if (!SimWrapper.SimulationModel.Simulation.IsRunning())
+                    {
+                        Task.Run(() =>
+                        {
+                            SimWrapper.SimulationModel.Simulation.Simulate(pocet);
+
+                        });
+                    }
+                    else if (SimWrapper.SimulationModel.Simulation.IsPaused())
+                    {
+                        SimWrapper.SimulationModel.Simulation.ResumeSimulation();
+                    }
+                    else
+                        MessageBox.Show("Simulacia uz prebieha");
+                });
+
+              
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void PauseClick(object sender, RoutedEventArgs e)
+        {
+            SimWrapper.SimulationModel.Simulation.PauseSimulation();
+        }
+
+        private void StopClick(object sender, RoutedEventArgs e)
+        {
+            SimWrapper.SimulationModel.Simulation.StopSimulation();
+            SimWrapper.SimulationModel.Simulation.Reset();
+            SimWrapper.SimulationModel.SimTime = "0";
         }
     }
 }

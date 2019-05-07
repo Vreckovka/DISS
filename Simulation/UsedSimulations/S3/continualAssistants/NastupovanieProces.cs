@@ -94,6 +94,7 @@ namespace continualAssistants
                             ((MyMessage)message).Autobus.Cestujuci.Enqueue(cestujuci);
                             ((MyMessage)message).Autobus.AktualnaZastavka.Zastavka.PocetCestujucich--;
                             ((MyMessage)message).Autobus.PocetDveriObsadene++;
+                            cestujuci.Linka = ((MyMessage)message).Autobus.Linka;
                             Hold(holdTime, message);
                         }
                     }
@@ -154,11 +155,13 @@ namespace continualAssistants
 
                                     //Console.WriteLine((MySim.CurrentTime * 60) + "NASTUPUJE, CAKAL " + cestujuci.CasCakania + " " + ((MyMessage)message).Autobus.AktualnaZastavka.Zastavka);
 
+                                    cestujuci.Linka = ((MyMessage)message).Autobus.Linka;
                                     sprava.Autobus.Cestujuci.Enqueue(cestujuci);
                                     sprava.Autobus.CelkovyPocetPrevezenych++;
                                     sprava.Autobus.AktualnyPocetPrevezenych++;
                                     sprava.Autobus.AktualnaZastavka.Zastavka.PocetCestujucich--;
                                     ((MyMessage)message).Autobus.PocetDveriObsadene++;
+
 
                                     //holdTime = Cas;
                                     Hold(holdTime, message);

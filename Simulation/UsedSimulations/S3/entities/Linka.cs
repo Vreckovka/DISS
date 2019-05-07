@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace Simulations.UsedSimulations.S3.entities
     {
         public string Meno { get; set; }
         public List<ZastavkaData> Zastavky { get; set; }
-        public List<Autobus> Autobusy { get; set; }
+        public ObservableCollection<Autobus> Autobusy { get; set; } = new ObservableCollection<Autobus>();
 
         public Linka(OSPABA.Simulation mySim) : base(mySim)
         {

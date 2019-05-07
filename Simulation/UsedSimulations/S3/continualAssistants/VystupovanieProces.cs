@@ -76,7 +76,6 @@ namespace continualAssistants
 
                 if (pocetUkoncenychAutobusov == ((MySimulation)MySim).AgentAutobusov.Autobusy.Count)
                 {
-                    ((MySimulation)MySim).LastFinishTime = MySim.CurrentTime;
                     MySim.StopReplication();
                 }
             }

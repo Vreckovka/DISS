@@ -56,7 +56,7 @@ namespace continualAssistants
                         var cestujuci = new Cestujuci(cestujuciIndex++, MySim);
 
                         cestujuci.CasZacatiaCakania = MySim.CurrentTime;
-
+                        
 
 
                         novaSprava.ZastavkaData = sprava.ZastavkaData;
@@ -84,6 +84,7 @@ namespace continualAssistants
 
                             var cestujuciNastupuje = nastupovanieSprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Dequeue();
                             cestujuciNastupuje.CasCakania = (MySim.CurrentTime * 60) - (cestujuciNastupuje.CasZacatiaCakania * 60);
+                            cestujuciNastupuje.Linka = nastupovanieSprava.Autobus.Linka;
 
                             nastupovanieSprava.Autobus.Cestujuci.Enqueue(cestujuciNastupuje);
                             nastupovanieSprava.Autobus.CelkovyPocetPrevezenych++;

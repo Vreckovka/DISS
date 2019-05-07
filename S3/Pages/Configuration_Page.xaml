@@ -101,7 +101,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Button Content="Pridaj" Height="25" VerticalAlignment="Top" Margin="5" Click="PridajA"/>
-                    <DataGrid ItemsSource="{Binding Linky[0].Autobusy}" Style="{StaticResource DatagridTemplate}" 
+                    <DataGrid ItemsSource="{Binding AgentOkolia.Linky[0].Autobusy}" Style="{StaticResource DatagridTemplate}" 
                           Grid.Column="1"/>
                 </Grid>
             </GroupBox>
@@ -114,7 +114,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Button Content="Pridaj" Height="25" VerticalAlignment="Top" Margin="5" Click="PridajB"/>
-                    <DataGrid ItemsSource="{Binding Linky[1].Autobusy}" Style="{StaticResource DatagridTemplate}" 
+                    <DataGrid ItemsSource="{Binding  AgentOkolia.Linky[1].Autobusy}" Style="{StaticResource DatagridTemplate}" 
                           Grid.Column="1"/>
                 </Grid>
             </GroupBox>
@@ -127,7 +127,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Button Content="Pridaj" Height="25" VerticalAlignment="Top" Margin="5" Click="PridajC"/>
-                    <DataGrid ItemsSource="{Binding Linky[2].Autobusy}" Style="{StaticResource DatagridTemplate}" 
+                    <DataGrid ItemsSource="{Binding  AgentOkolia.Linky[2].Autobusy}" Style="{StaticResource DatagridTemplate}" 
                           Grid.Column="1"/>
                 </Grid>
             </GroupBox>

@@ -8,6 +8,7 @@ using PropertyChanged;
 using Simulations.UsedSimulations.S3;
 using Simulations.UsedSimulations.S3.entities;
 using System.Linq;
+using System.Collections.ObjectModel;
 
 namespace agents
 {
@@ -27,7 +28,6 @@ namespace agents
             base.PrepareReplication();
 
             VytvorAutobusy();
-            PriradAutobusy();
             ZacniJazdy();
             // Setup component for the next replication
         }
@@ -49,21 +49,21 @@ namespace agents
 
         public void VytvorAutobusy()
         {
-            Autobusy = ((MySimulation) MySim).Configration.Autobusy;
-            foreach (var autobus in Autobusy)
+            var agent = (AgentOkolia)MySim.FindAgent(SimId.AgentOkolia);
+            var linky = (from x in agent.Linky select x.Autobusy).ToList();
+
+            Autobusy = new List<Autobus>();
+
+            foreach (ObservableCollection<Autobus> linka in linky)
             {
-                autobus.HardReset();
+                foreach (var autobus in linka)
+                {
+                    autobus.HardReset();
+                    Autobusy.Add(autobus);
+                }
             }
         }
 
-        public void PriradAutobusy()
-        {
-            var agentOkolia = (AgentOkolia)MySim.FindAgent(SimId.AgentOkolia);
-
-            agentOkolia.Linky[0].Autobusy = (from x in Autobusy where x.Linka.Meno == "A" select x).ToList();
-            agentOkolia.Linky[1].Autobusy = (from x in Autobusy where x.Linka.Meno == "B" select x).ToList();
-            agentOkolia.Linky[2].Autobusy = (from x in Autobusy where x.Linka.Meno == "C" select x).ToList();
-        }
 
         public void ZacniJazdy()
         {

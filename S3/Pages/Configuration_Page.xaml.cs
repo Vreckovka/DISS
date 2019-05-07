@@ -26,19 +26,11 @@ namespace S3.Pages
     [AddINotifyPropertyChangedInterface]
     public partial class Configuration_Page : Page
     {
-        public List<MyLinka> Linky { get; set; }
-     
         public Configuration_Page()
         {
             InitializeComponent();
-            DataContext = this;
+            DataContext = SimWrapper.SimulationModel.Simulation;
 
-            Linky = new List<MyLinka>()
-            {
-                new MyLinka(),
-                new MyLinka(),
-                new MyLinka()
-            };
 
 
             var autobus = new Autobus(SimWrapper.SimulationModel.Simulation, VelkostAutobusu.K186D4,
@@ -47,9 +39,8 @@ namespace S3.Pages
                 CasZaciatkuJazdy = 0
             };
 
-            Linky[0].Autobusy.Add(autobus);
 
-            MyConfiguration.Configuration.Autobusy.Add(autobus);
+            SimWrapper.SimulationModel.Simulation.AgentOkolia.Linky[0].Autobusy.Add(autobus);
 
         }
 
@@ -58,9 +49,7 @@ namespace S3.Pages
             var autobus = new Autobus(SimWrapper.SimulationModel.Simulation, VelkostAutobusu.K186D4,
                 SimWrapper.SimulationModel.Simulation.AgentOkolia.Linky[0]);
 
-            Linky[0].Autobusy.Add(autobus);
-
-            MyConfiguration.Configuration.Autobusy.Add(autobus);
+            SimWrapper.SimulationModel.Simulation.AgentOkolia.Linky[0].Autobusy.Add(autobus);
         }
 
 
@@ -69,9 +58,7 @@ namespace S3.Pages
             var autobus = new Autobus(SimWrapper.SimulationModel.Simulation, VelkostAutobusu.K186D4,
                 SimWrapper.SimulationModel.Simulation.AgentOkolia.Linky[1]);
 
-            Linky[1].Autobusy.Add(autobus);
-
-            MyConfiguration.Configuration.Autobusy.Add(autobus);
+            SimWrapper.SimulationModel.Simulation.AgentOkolia.Linky[1].Autobusy.Add(autobus);
         }
 
         private void PridajC(object sender, RoutedEventArgs e)
@@ -79,9 +66,7 @@ namespace S3.Pages
             var autobus = new Autobus(SimWrapper.SimulationModel.Simulation, VelkostAutobusu.K186D4,
                 SimWrapper.SimulationModel.Simulation.AgentOkolia.Linky[2]);
 
-            Linky[2].Autobusy.Add(autobus);
-
-            MyConfiguration.Configuration.Autobusy.Add(autobus);
+            SimWrapper.SimulationModel.Simulation.AgentOkolia.Linky[2].Autobusy.Add(autobus);
         }
 
         private void Unchecked(object sender, RoutedEventArgs e)
@@ -94,31 +79,8 @@ namespace S3.Pages
             MyConfiguration.Configuration.Cakanie = true;
         }
     }
-
-
-    [AddINotifyPropertyChangedInterface]
-    public class MyLinka
-    {
-        public ObservableCollection<Autobus> Autobusy { get; set; } = new ObservableCollection<Autobus>();
-
-        public MyLinka()
-        {
-            Autobusy.CollectionChanged += Autobusy_CollectionChanged;
-        }
-
-        private void Autobusy_CollectionChanged(object sender,
-            System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            if (e.OldItems != null)
-            {
-                foreach (Autobus item in e.OldItems)
-                {
-                    MyConfiguration.Configuration.Autobusy.Remove(item);
-                }
-            }
-        }
-    }
-
+    
+    
     public static class MyConfiguration
     {
         public static Configuration Configuration { get; set; } = new Configuration(113.1, true);

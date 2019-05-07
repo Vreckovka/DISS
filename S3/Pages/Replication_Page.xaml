@@ -17,28 +17,87 @@
         <TextBlock Margin="5">
             <Run Text="Replikacia: "/>
             <Run Text="{Binding Replication}"/>
+         
         </TextBlock>
 
         <TextBlock Margin="5">
             <Run Text="Celkovy pocet ludi: "/>
-            <Run Text="{Binding Simulation.AvragePocetLudi}"/>
+            <Run Text="{Binding Simulation.AvragePocetLudi, StringFormat=N3}"/>
+               <Run Text="&lt; "/>
+            <Run Text="{Binding Simulation.StatAvragePocetLudiInterval[0], StringFormat=N3}"/>
+            <Run Text=","/>
+             <Run Text="{Binding Simulation.StatAvragePocetLudiInterval[1], StringFormat=N3}"/>
+            <Run Text=" &gt;"/>
         </TextBlock>
 
         <TextBlock Margin="5">
-            <Run Text="Ludi co neprislo na cas: "/>
-            <Run Text="{Binding  Simulation.AvrageFinishedNaPo}"/>
+            <Run Text="Ludi co prislo neskoro: "/>
+            <Run Text="{Binding Simulation.AvrageFinishedNaPo, StringFormat=N3}"/>
+               <Run Text="&lt; "/>
+            <Run Text="{Binding Simulation.StatAvrageNeprisloInterval[0], StringFormat=N3}"/>
+            <Run Text=","/>
+             <Run Text="{Binding Simulation.StatAvrageNeprisloInterval[1], StringFormat=N3}"/>
+            <Run Text=" &gt;"/>
         </TextBlock>
 
         <TextBlock Margin="5">
             <Run Text="Cas cakania: "/>
-            <Run Text="{Binding Simulation.AvrageCakania}"/>
+            <Run Text="{Binding Simulation.AvrageCakania, StringFormat=N3}"/>
+               <Run Text="&lt; "/>
+            <Run Text="{Binding Simulation.StatAvrageCakanieInterval[0], StringFormat=N3}"/>
+            <Run Text=","/>
+             <Run Text="{Binding Simulation.StatAvrageCakanieInterval[1], StringFormat=N3}"/>
+            <Run Text=" &gt;"/>
         </TextBlock>
 
         <TextBlock Margin="5">
-            <Run Text="Prevezeny microbusom: "/>
-            <Run Text="{Binding Simulation.AvrageMicro}"/>
+            <Run Text="Prislo microbusom: "/>
+            <Run Text="{Binding Simulation.AvrageMicro, StringFormat=N3}"/>
+               <Run Text="&lt; "/>
+            <Run Text="{Binding Simulation.StatAvrageMicroInterval[0], StringFormat=N3}"/>
+            <Run Text=","/>
+             <Run Text="{Binding Simulation.StatAvrageMicroInterval[1], StringFormat=N3}"/>
+            <Run Text=" &gt;"/>
         </TextBlock>
 
-        <Button Content="Start" Click="StartClick"/>
+        <TextBlock Margin="5">
+            <Run Text="Cas cakania A: "/>
+            <Run Text="{Binding Simulation.AvrageCakanieA, StringFormat=N3}"/>
+               <Run Text="&lt; "/>
+            <Run Text="{Binding Simulation.StatAvrageMicroInterval[0], StringFormat=N3}"/>
+            <Run Text=","/>
+             <Run Text="{Binding Simulation.StatAvrageMicroInterval[1], StringFormat=N3}"/>
+            <Run Text=" &gt;"/>
+        </TextBlock>
+
+
+        <TextBlock Margin="5">
+            <Run Text="Cas cakania B: "/>
+            <Run Text="{Binding Simulation.AvrageCakanieB, StringFormat=N3}"/>
+               <Run Text="&lt; "/>
+            <Run Text="{Binding Simulation.StatAvrageMicroInterval[0], StringFormat=N3}"/>
+            <Run Text=","/>
+             <Run Text="{Binding Simulation.StatAvrageMicroInterval[1], StringFormat=N3}"/>
+            <Run Text=" &gt;"/>
+        </TextBlock>
+
+
+        <TextBlock Margin="5">
+            <Run Text="Cas cakania C: "/>
+            <Run Text="{Binding Simulation.AvrageCakanieC, StringFormat=N3}"/>
+               <Run Text="&lt; "/>
+            <Run Text="{Binding Simulation.StatAvrageMicroInterval[0], StringFormat=N3}"/>
+            <Run Text=","/>
+             <Run Text="{Binding Simulation.StatAvrageMicroInterval[1], StringFormat=N3}"/>
+            <Run Text=" &gt;"/>
+        </TextBlock>
+
+
+
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Start" Margin="10" Click="StartClick" Width="150"/>
+            <Button Content="Pauza" Margin="10" Click="PauseClick" Width="150"/>
+            <Button Content="Stop" Margin="10" Click="StopClick" Width="150"/>
+        </StackPanel>
     </StackPanel>
 </Page>
