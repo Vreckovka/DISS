@@ -582,8 +582,25 @@ namespace agents
                         linka.Zastavky[i].DalsiaZastavka = linka.Zastavky[0];
                     }
 
-                    linka.Zastavky[i].Generator = new ExponentialDistribution((1.0 / (65.0 / linka.Zastavky[i].Zastavka.MaxPocetVygenerovanych)),
-                            ((MySimulation)MySim).Random.Next());
+                    if (linka.Zastavky[i].Zastavka.Meno == "K1")
+                    {
+                        linka.Zastavky[i].Generator = new ExponentialDistribution((1.0 / (71.0 / linka.Zastavky[i].Zastavka.MaxPocetVygenerovanych)),
+                           ((MySimulation)MySim).Random.Next());
+                    }
+                    else if (linka.Zastavky[i].Zastavka.Meno == "K2")
+                    {
+                        linka.Zastavky[i].Generator = new ExponentialDistribution((1.0 / (74.4 / linka.Zastavky[i].Zastavka.MaxPocetVygenerovanych)),
+                           ((MySimulation)MySim).Random.Next());
+                    }
+                    else if (linka.Zastavky[i].Zastavka.Meno == "K3")
+                    {
+                        linka.Zastavky[i].Generator = new ExponentialDistribution((1.0 / (65.9 / linka.Zastavky[i].Zastavka.MaxPocetVygenerovanych)),
+                           ((MySimulation)MySim).Random.Next());
+                    }
+                    else
+                        linka.Zastavky[i].Generator = new ExponentialDistribution((1.0 / (65.0 / linka.Zastavky[i].Zastavka.MaxPocetVygenerovanych)),
+                         ((MySimulation)MySim).Random.Next());
+
                 }
             }
 

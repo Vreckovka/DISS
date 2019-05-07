@@ -11,6 +11,7 @@ namespace Simulations.UsedSimulations.S3.entities
     {
         public double CasZacatiaCakania { get; set; }
         public double CasCakania { get; set; }
+        public bool PrisielNaCas { get; set; }
         public Cestujuci(OSPABA.Simulation mySim) : base(mySim)
         {
         }

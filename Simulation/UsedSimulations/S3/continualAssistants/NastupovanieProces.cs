@@ -92,7 +92,7 @@ namespace continualAssistants
                             cestujuci.CasCakania = (MySim.CurrentTime * 60) - (cestujuci.CasZacatiaCakania * 60);
                            // Console.WriteLine((MySim.CurrentTime * 60) + "NASTUPUJE, CAKAL " + cestujuci.CasCakania + " " + ((MyMessage)message).Autobus.AktualnaZastavka.Zastavka);
                             ((MyMessage)message).Autobus.Cestujuci.Enqueue(cestujuci);
-
+                            ((MyMessage)message).Autobus.AktualnaZastavka.Zastavka.PocetCestujucich--;
                             ((MyMessage)message).Autobus.PocetDveriObsadene++;
                             Hold(holdTime, message);
                         }
@@ -157,9 +157,7 @@ namespace continualAssistants
                                     sprava.Autobus.Cestujuci.Enqueue(cestujuci);
                                     sprava.Autobus.CelkovyPocetPrevezenych++;
                                     sprava.Autobus.AktualnyPocetPrevezenych++;
-                                    sprava.Autobus.AktualnaZastavka.Zastavka.PocetCestujucich =
-                                        sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count;
-
+                                    sprava.Autobus.AktualnaZastavka.Zastavka.PocetCestujucich--;
                                     ((MyMessage)message).Autobus.PocetDveriObsadene++;
 
                                     //holdTime = Cas;

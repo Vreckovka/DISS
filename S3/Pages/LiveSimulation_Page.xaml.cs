@@ -36,15 +36,13 @@ namespace S3.Pages
         private void StartClick(object sender, RoutedEventArgs e)
         {
 
-            SimWrapper.SimulationModel.Simulation.SetSimSpeed(1 / 60d, 0.001);
+            SimWrapper.SimulationModel.Simulation.SetSimSpeed(1 / 60d, 0.0001);
             SimWrapper.SimulationModel.Simulation.OnRefreshUI(SimWrapper.SimulationModel.RefreshGui);
             MainWindow._rep_Page.DataContext = null;
             MainWindow._live_Page.DataContext = SimWrapper.SimulationModel;
 
             Task.Run(() =>
                     {
-                      
-
                         if (!SimWrapper.SimulationModel.Simulation.IsRunning())
                         {
                             Task.Run(() =>

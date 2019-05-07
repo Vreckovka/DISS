@@ -15,17 +15,15 @@ namespace S3
     {
         public MySimulation Simulation { get; set; }
         public string SimTime { get; set; }
-
-
         public int Replication { get; set; }
-        public double CasCakania { get; set; }
-        public double CelkovyPocetLudi { get; set; }
+
         public SimulationModel()
         {
             Simulation = new MySimulation(MyConfiguration.Configuration);
            
             Simulation.OnReplicationDidFinish(Vypis);
             Simulation.OnSimulationDidFinish(Vypis);
+           
         }
 
         private void Vypis(OSPABA.Simulation s)
@@ -37,10 +35,7 @@ namespace S3
             //                  $"{TimeSpan.FromMinutes(((MySimulation)s).AvrageFinishedTime):ss}");
             //Console.WriteLine("Pocet ludi: " + ((MySimulation)s).AvragePocetLudi);
 
-            CelkovyPocetLudi = ((MySimulation) s).AvragePocetLudi;
             Replication = s.CurrentReplication + 1;
-            CasCakania = ((MySimulation)s).AvrageCakania;
-           
         }
 
         public void RefreshGui(OSPABA.Simulation simulation)

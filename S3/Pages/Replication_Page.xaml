@@ -21,12 +21,22 @@
 
         <TextBlock Margin="5">
             <Run Text="Celkovy pocet ludi: "/>
-            <Run Text="{Binding CelkovyPocetLudi}"/>
+            <Run Text="{Binding Simulation.AvragePocetLudi}"/>
+        </TextBlock>
+
+        <TextBlock Margin="5">
+            <Run Text="Ludi co neprislo na cas: "/>
+            <Run Text="{Binding  Simulation.AvrageFinishedNaPo}"/>
         </TextBlock>
 
         <TextBlock Margin="5">
             <Run Text="Cas cakania: "/>
-            <Run Text="{Binding CasCakania}"/>
+            <Run Text="{Binding Simulation.AvrageCakania}"/>
+        </TextBlock>
+
+        <TextBlock Margin="5">
+            <Run Text="Prevezeny microbusom: "/>
+            <Run Text="{Binding Simulation.AvrageMicro}"/>
         </TextBlock>
 
         <Button Content="Start" Click="StartClick"/>

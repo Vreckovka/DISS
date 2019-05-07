@@ -19,6 +19,14 @@ namespace simulation
         public double FinishedPocetLudi { get; set; }
         public double AvragePocetLudi { get; set; }
 
+
+        public double FinishedNaPo { get; set; }
+        public double AvrageFinishedNaPo { get; set; }
+
+        public double FinishedMicro { get; set; }
+        public double AvrageMicro { get; set; }
+
+
         public double FinishedTimes { get; set; }
         public double LastFinishTime { get; set; }
         public double AvrageFinishedTime { get; set; }
@@ -34,9 +42,14 @@ namespace simulation
             AvragePocetLudi = 0;
             AvrageFinishedTime = 0;
             AvrageCakania = 0;
+            AvrageMicro = 0;
+
+            FinishedMicro = 0;
             FinishedCasCakania = 0;
             FinishedTimes = 0;
             FinishedPocetLudi = 0;
+            FinishedNaPo = 0;
+            AvrageFinishedNaPo = 0;
 
             base.PrepareSimulation();
             // Create global statistcis
@@ -50,30 +63,28 @@ namespace simulation
 
         protected override void ReplicationFinished()
         {
-            //if (AgentOkolia.Zastavky[3].Cestujuci.Count > 0)
-            {
-                // Collect local statistics into global, update UI, etc...
-                FinishedTimes += LastFinishTime;
-                FinishedPocetLudi += AgentOkolia.CelkovyPocetCestujucich;
 
-                //Na stadione
-
-                FinishedCasCakania += (from x in AgentOkolia.Zastavky[3].Cestujuci select x.CasCakania).Average();
+            FinishedTimes += LastFinishTime;
+            FinishedPocetLudi += AgentOkolia.CelkovyPocetCestujucich;
+            FinishedNaPo += (1 - (  (double)(from x in AgentOkolia.Zastavky[3].Cestujuci where x.PrisielNaCas select x).Count() / AgentOkolia.Zastavky[3].Cestujuci.Count)) * 100;
+            FinishedCasCakania += ((from x in AgentOkolia.Zastavky[3].Cestujuci select x.CasCakania).Average() ) / 60;
+            FinishedMicro += (from x in AgentAutobusov.Autobusy where x.Typ == Simulations.UsedSimulations.S3.entities.AutobusyTyp.Microbus select x.CelkovyPocetPrevezenych).Sum();
 
 
-                AvragePocetLudi = FinishedPocetLudi / (CurrentReplication + 1);
-                AvrageFinishedTime = FinishedTimes / (CurrentReplication + 1);
-                AvrageCakania = FinishedCasCakania / (CurrentReplication + 1);
-            }
+            AvrageMicro = FinishedMicro / (CurrentReplication + 1);
+            AvrageFinishedNaPo = FinishedNaPo / (CurrentReplication + 1);
+            AvragePocetLudi = FinishedPocetLudi / (CurrentReplication + 1);
+            AvrageFinishedTime = FinishedTimes / (CurrentReplication + 1);
+            AvrageCakania = FinishedCasCakania / (CurrentReplication + 1);
 
             base.ReplicationFinished();
         }
 
         protected override void SimulationFinished()
         {
-            
+
             // Dysplay simulation results
-           
+
 
 
             base.SimulationFinished();

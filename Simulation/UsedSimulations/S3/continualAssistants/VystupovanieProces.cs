@@ -7,6 +7,7 @@ using agents;
 using Simulations.Distributions;
 using Simulations.UsedSimulations.S3;
 using Simulations.UsedSimulations.S3.entities;
+using System.Linq;
 
 namespace continualAssistants
 {
@@ -45,20 +46,29 @@ namespace continualAssistants
                 {
                     case AutobusyTyp.Autobus:
                         holdTime = triangularDistribution.GetNext();
-                       
+
                         break;
                     case AutobusyTyp.Microbus:
                         holdTime = 4.0 / 60;
-                      
+
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
 
+
+                if (MySim.CurrentTime <= ((MySimulation)MySim).Configration.ZaciatokZapasu)
+                    foreach (var cestujuci in sprava.Autobus.Cestujuci)
+                    {
+                        cestujuci.PrisielNaCas = true;
+                    }
+
+
                 //holdTime = Cislo;
                 Hold(holdTime, sprava);
             }
-            else if (MySim.CurrentTime >= ((MySimulation)MySim).Configration.ZaciatokZapasu && sprava.Autobus.Cestujuci.Count == 0 && !sprava.Autobus.KoniecJazd)
+            else if (MySim.CurrentTime >= ((MySimulation)MySim).Configration.ZaciatokZapasu && 
+                sprava.Autobus.Cestujuci.Count == 0 && !sprava.Autobus.KoniecJazd)
             {
                 sprava.Autobus.KoniecJazd = true;
                 AssistantFinished(sprava);
@@ -77,7 +87,7 @@ namespace continualAssistants
             else
                 UkonciVystupovanie(sprava);
 
-            
+
         }
 
         //meta! userInfo="Process messages defined in code", id="0"
@@ -109,14 +119,14 @@ namespace continualAssistants
                                 break;
                             case AutobusyTyp.Microbus:
                                 holdTime = 4.0 / 60;
-                                
+
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException();
 
                         }
 
-                       // Console.WriteLine(MySim.CurrentTime + " " +  newMessage.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count);
+                        // Console.WriteLine(MySim.CurrentTime + " " +  newMessage.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count);
 
                         if (newMessage.Autobus.Cestujuci.Count > 0)
                         {
