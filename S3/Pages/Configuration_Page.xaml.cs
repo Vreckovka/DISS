@@ -27,6 +27,7 @@ namespace S3.Pages
     public partial class Configuration_Page : Page
     {
         public List<MyLinka> Linky { get; set; }
+     
         public Configuration_Page()
         {
             InitializeComponent();
@@ -82,6 +83,16 @@ namespace S3.Pages
 
             MyConfiguration.Configuration.Autobusy.Add(autobus);
         }
+
+        private void Unchecked(object sender, RoutedEventArgs e)
+        {
+            MyConfiguration.Configuration.Cakanie = false;
+        }
+
+        private void Checked(object sender, RoutedEventArgs e)
+        {
+            MyConfiguration.Configuration.Cakanie = true;
+        }
     }
 
 
@@ -110,6 +121,6 @@ namespace S3.Pages
 
     public static class MyConfiguration
     {
-        public static Configuration Configuration { get; set; } = new Configuration(113.1, false);
+        public static Configuration Configuration { get; set; } = new Configuration(113.1, true);
     }
 }

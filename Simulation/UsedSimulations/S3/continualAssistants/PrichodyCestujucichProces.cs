@@ -69,8 +69,10 @@ namespace continualAssistants
                         //  if (novaSprava.ZastavkaData.Zastavka.Meno == "AB")
                         //      Console.WriteLine((MySim.CurrentTime * 60) + " " + novaSprava.ZastavkaData.Zastavka);
 
-                        if (novaSprava.ZastavkaData.Zastavka.CakajuciAutobus != null && novaSprava.ZastavkaData.Zastavka.CakajuciAutobus.CakalNavyse)
+                        if (novaSprava.ZastavkaData.Zastavka.CakajuciAutobus != null &&
+                            novaSprava.ZastavkaData.Zastavka.CakajuciAutobus.CakalNavyse)
                         {
+
                             var nastupovanieSprava = new MyMessage(MySim);
                             nastupovanieSprava.Autobus = novaSprava.ZastavkaData.Zastavka.CakajuciAutobus;
                             nastupovanieSprava.Addressee = this;
@@ -78,6 +80,18 @@ namespace continualAssistants
 
                             var agentAuto = MySim.FindAgent(SimId.AgentZastavok);
                             var asd = (NastupovanieProces)agentAuto.FindAssistant(SimId.NastupovanieProces);
+
+
+                            var cestujuciNastupuje = nastupovanieSprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Dequeue();
+                            cestujuciNastupuje.CasCakania = (MySim.CurrentTime * 60) - (cestujuciNastupuje.CasZacatiaCakania * 60);
+
+                            nastupovanieSprava.Autobus.Cestujuci.Enqueue(cestujuciNastupuje);
+                            nastupovanieSprava.Autobus.CelkovyPocetPrevezenych++;
+                            nastupovanieSprava.Autobus.AktualnyPocetPrevezenych++;
+                            nastupovanieSprava.Autobus.AktualnaZastavka.Zastavka.PocetCestujucich =
+                                nastupovanieSprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count;
+
+                            nastupovanieSprava.Autobus.PocetDveriObsadene++;
 
                             //TODO: Generator
                             Hold(asd.triangularDistribution.GetNext(), nastupovanieSprava);
@@ -100,17 +114,6 @@ namespace continualAssistants
 
                         ((MyMessage)message).Addressee = asd;
                         ((MyMessage)message).Code = Mc.CestujuciNastupil;
-
-                        var spravas = ((MyMessage)message);
-                        var cestujuci = ((MyMessage)message).Autobus.AktualnaZastavka.Zastavka.Cestujuci.Dequeue();
-                        cestujuci.CasCakania = (MySim.CurrentTime * 60) - (cestujuci.CasZacatiaCakania * 60);
-                        spravas.Autobus.Cestujuci.Enqueue(cestujuci);
-                        spravas.Autobus.CelkovyPocetPrevezenych++;
-                        spravas.Autobus.AktualnyPocetPrevezenych++;
-                        spravas.Autobus.AktualnaZastavka.Zastavka.PocetCestujucich =
-                            spravas.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count;
-
-                        ((MyMessage)message).Autobus.PocetDveriObsadene++;
 
                         Notice(((MyMessage)message));
                     }

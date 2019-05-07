@@ -75,49 +75,62 @@
     </Page.Resources>
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <GroupBox Header="Linka A">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <TextBlock Text="S cakanim"/>
+                <CheckBox IsChecked="{Binding Checked}" Unchecked="Unchecked" Checked="Checked"/>
+            </StackPanel>
+        </StackPanel>
 
-                <Button Content="Pridaj" Height="25" VerticalAlignment="Top" Margin="5" Click="PridajA"/>
-                <DataGrid ItemsSource="{Binding Linky[0].Autobusy}" Style="{StaticResource DatagridTemplate}" 
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="Linka A">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Content="Pridaj" Height="25" VerticalAlignment="Top" Margin="5" Click="PridajA"/>
+                    <DataGrid ItemsSource="{Binding Linky[0].Autobusy}" Style="{StaticResource DatagridTemplate}" 
                           Grid.Column="1"/>
-            </Grid>
-        </GroupBox>
+                </Grid>
+            </GroupBox>
 
-        <GroupBox Header="Linka B" Grid.Column="1">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+            <GroupBox Header="Linka B" Grid.Column="1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <Button Content="Pridaj" Height="25" VerticalAlignment="Top" Margin="5" Click="PridajB"/>
-                <DataGrid ItemsSource="{Binding Linky[1].Autobusy}" Style="{StaticResource DatagridTemplate}" 
+                    <Button Content="Pridaj" Height="25" VerticalAlignment="Top" Margin="5" Click="PridajB"/>
+                    <DataGrid ItemsSource="{Binding Linky[1].Autobusy}" Style="{StaticResource DatagridTemplate}" 
                           Grid.Column="1"/>
-            </Grid>
-        </GroupBox>
+                </Grid>
+            </GroupBox>
 
-        <GroupBox Header="Linka C" Grid.Column="2">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+            <GroupBox Header="Linka C" Grid.Column="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <Button Content="Pridaj" Height="25" VerticalAlignment="Top" Margin="5" Click="PridajC"/>
-                <DataGrid ItemsSource="{Binding Linky[2].Autobusy}" Style="{StaticResource DatagridTemplate}" 
+                    <Button Content="Pridaj" Height="25" VerticalAlignment="Top" Margin="5" Click="PridajC"/>
+                    <DataGrid ItemsSource="{Binding Linky[2].Autobusy}" Style="{StaticResource DatagridTemplate}" 
                           Grid.Column="1"/>
-            </Grid>
-        </GroupBox>
+                </Grid>
+            </GroupBox>
+        </Grid>
     </Grid>
 </Page>
