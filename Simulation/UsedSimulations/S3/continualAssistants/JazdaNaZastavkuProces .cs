@@ -34,7 +34,10 @@ namespace continualAssistants
             }
 
             sprava.Autobus.StatZaciatokJazdyCas = MySim.CurrentTime;
-         
+
+
+           
+
             Hold(sprava.Autobus.AktualnaZastavka.CasKDalsejZastavke, sprava);
         }
 
@@ -54,9 +57,9 @@ namespace continualAssistants
 
 
                     sprava.Autobus.AktualnaZastavka = sprava.Autobus.AktualnaZastavka.DalsiaZastavka;
+                    sprava.Autobus.AktualnaZastavka.Zastavka.CakajuciAutobus = sprava.Autobus;
 
-
-                    //Console.WriteLine(MySim.CurrentTime + " " + sprava.Autobus.AktualnaZastavka.Zastavka + " " + sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count);
+                    //Console.WriteLine((MySim.CurrentTime * 60) + " prichod na zastavku " + sprava.Autobus.AktualnaZastavka.Zastavka + " " + sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count);
                     if (sprava.Autobus.NovaJazda)
                     {
                         sprava.Autobus.KoniecProcesu = false;

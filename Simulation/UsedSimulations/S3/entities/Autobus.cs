@@ -34,7 +34,7 @@ namespace Simulations.UsedSimulations.S3.entities
         public int KapacitaOsob { get; private set; }
         public Queue<Cestujuci> Cestujuci { get; set; }
         public Linka Linka { get; set; }
-
+        public int PocetDveriObsadene { get; set; }
 
         public bool CakalNavyse { get; set; }
         public bool StojiNaZastavke { get; set; }

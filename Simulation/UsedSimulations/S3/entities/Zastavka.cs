@@ -14,6 +14,8 @@ namespace Simulations.UsedSimulations.S3.entities
         public string Meno { get; set; }
         public int MaxPocetVygenerovanych { get; set; }
         public int PocetVygenerovanych { get; set; }
+        public bool Vygenerovana { get; set; }
+        public Autobus CakajuciAutobus { get; set; }
 
 
         public Queue<Cestujuci> Cestujuci { get; set; }
@@ -37,6 +39,7 @@ namespace Simulations.UsedSimulations.S3.entities
             Cestujuci.Clear();
             PocetVygenerovanych = 0;
             PocetCestujucich = 0;
+            Vygenerovana = false;
         }
     }
 }

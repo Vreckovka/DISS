@@ -13,7 +13,7 @@ namespace Simulations.UsedSimulations.S3
         public bool Cakanie { get; set; }
         public List<Autobus> Autobusy { get; set; } = new List<Autobus>();
 
-        public Configuration(int zaciatokZapasu, bool cakanie)
+        public Configuration(double zaciatokZapasu, bool cakanie)
         {
             ZaciatokZapasu = zaciatokZapasu;
             Cakanie = cakanie;

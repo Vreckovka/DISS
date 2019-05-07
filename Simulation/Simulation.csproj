@@ -126,7 +126,6 @@
     <Compile Include="UsedSimulations\S3\managers\ManagerModelu.cs" />
     <Compile Include="UsedSimulations\S3\managers\ManagerOkolia.cs" />
     <Compile Include="UsedSimulations\S3\managers\ManagerZastavok.cs" />
-    <Compile Include="UsedSimulations\S3\S3.cs" />
     <Compile Include="UsedSimulations\S3\simulation\Mc.cs" />
     <Compile Include="UsedSimulations\S3\simulation\MyMessage.cs" />
     <Compile Include="UsedSimulations\S3\simulation\MySimulation.cs" />

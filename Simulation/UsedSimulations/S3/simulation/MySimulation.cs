@@ -31,6 +31,13 @@ namespace simulation
 
         protected override void PrepareSimulation()
         {
+            AvragePocetLudi = 0;
+            AvrageFinishedTime = 0;
+            AvrageCakania = 0;
+            FinishedCasCakania = 0;
+            FinishedTimes = 0;
+            FinishedPocetLudi = 0;
+
             base.PrepareSimulation();
             // Create global statistcis
         }
@@ -43,7 +50,7 @@ namespace simulation
 
         protected override void ReplicationFinished()
         {
-            if (AgentOkolia.Zastavky[3].Cestujuci.Count > 0)
+            //if (AgentOkolia.Zastavky[3].Cestujuci.Count > 0)
             {
                 // Collect local statistics into global, update UI, etc...
                 FinishedTimes += LastFinishTime;
@@ -52,6 +59,7 @@ namespace simulation
                 //Na stadione
 
                 FinishedCasCakania += (from x in AgentOkolia.Zastavky[3].Cestujuci select x.CasCakania).Average();
+
 
                 AvragePocetLudi = FinishedPocetLudi / (CurrentReplication + 1);
                 AvrageFinishedTime = FinishedTimes / (CurrentReplication + 1);
@@ -63,8 +71,11 @@ namespace simulation
 
         protected override void SimulationFinished()
         {
-            ;
+            
             // Dysplay simulation results
+           
+
+
             base.SimulationFinished();
         }
 
@@ -74,6 +85,8 @@ namespace simulation
             {
                 zastavka.Reset();
             }
+
+
 
             foreach (var autobus in AgentAutobusov.Autobusy)
             {

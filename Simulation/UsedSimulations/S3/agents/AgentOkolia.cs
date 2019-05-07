@@ -9,6 +9,7 @@ using PropertyChanged;
 using Simulations.Distributions;
 using Simulations.UsedSimulations.S3;
 using Simulations.UsedSimulations.S3.entities;
+using System.Linq;
 
 namespace agents
 {
@@ -55,6 +56,7 @@ namespace agents
             AddOwnMessage(Mc.CestujuciDovezeny);
             AddOwnMessage(Mc.PrichodCestujuceho);
             AddOwnMessage(Mc.ZacniGenerovatCestujucich);
+            AddOwnMessage(Mc.CestujuciNastupil);
         }
 
         public void StartGenerovanieCestujucich()
@@ -63,13 +65,45 @@ namespace agents
             {
                 foreach (var zastavka in linka.Zastavky)
                 {
-
+                    //if (zastavka.Zastavka.Meno != "K1" && zastavka.Zastavka.Meno != "K2" && zastavka.Zastavka.Meno != "K3")
+                    //{
                     var sprava = new MyMessage(MySim);
                     zastavka.CasKoncaGenerovania = (((MySimulation)MySim).Configration.ZaciatokZapasu - ((10 + zastavka.CasKuStadionu)));
                     sprava.ZastavkaData = zastavka;
                     sprava.ZastavkaData.CasZaciatkuGenerovania = (((MySimulation)MySim).Configration.ZaciatokZapasu - ((75 + zastavka.CasKuStadionu)));
+
+                    if ((zastavka.Zastavka.Meno == "K1" || zastavka.Zastavka.Meno == "K2" || zastavka.Zastavka.Meno == "K3"))
+                    {
+                        var druha = (from y in Linky select (from x in y.Zastavky where x.Zastavka.Meno == zastavka.Zastavka.Meno select x).SingleOrDefault()).ToList().Where(x => x != null).ToList();
+                        druha = druha.OrderBy(x => x.CasKuStadionu).ToList();
+
+
+                        druha[0].CasKoncaGenerovania = (((MySimulation)MySim).Configration.ZaciatokZapasu - ((10 + druha[0].CasKuStadionu)));
+                        druha[0].CasZaciatkuGenerovania = (((MySimulation)MySim).Configration.ZaciatokZapasu - ((75 + druha[1].CasKuStadionu)));
+
+                        druha[1].CasKoncaGenerovania = (((MySimulation)MySim).Configration.ZaciatokZapasu - ((10 + druha[0].CasKuStadionu)));
+                        druha[1].CasZaciatkuGenerovania = (((MySimulation)MySim).Configration.ZaciatokZapasu - ((75 + druha[1].CasKuStadionu)));
+
+                        if (!druha[0].Zastavka.Vygenerovana)
+                        {
+                            druha[0].Zastavka.Vygenerovana = true;
+                            druha[1].Zastavka.Vygenerovana = true;
+                            sprava.ZastavkaData = druha[0];
+                            sprava.Addressee = FindAssistant(SimId.PrichodyCestujucichNaZastavkuProces);
+                            MyManager.StartContinualAssistant(sprava);
+                        }
+                    }
+                    
+
                     sprava.Addressee = FindAssistant(SimId.PrichodyCestujucichNaZastavkuProces);
-                    MyManager.StartContinualAssistant(sprava);
+
+                    if (!zastavka.Zastavka.Vygenerovana)
+                    {
+                        MyManager.StartContinualAssistant(sprava);
+                    }
+
+
+                    // }
                 }
             }
         }

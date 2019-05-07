@@ -7,7 +7,8 @@ namespace simulation
 	{
         public ZastavkaData ZastavkaData { get; set; }
         public Autobus Autobus { get; set; }
-		public MyMessage(OSPABA.Simulation sim) :
+        public Cestujuci Cestujuci { get; set; }
+        public MyMessage(OSPABA.Simulation sim) :
 			base(sim)
 		{
 		}
@@ -27,7 +28,8 @@ namespace simulation
 		{
 			base.Copy(message);
 			MyMessage original = (MyMessage)message;
-			// Copy attributes
+            Cestujuci = original.Cestujuci;
+            Autobus = original.Autobus;
 		}
 	}
 }

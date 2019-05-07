@@ -43,7 +43,7 @@ namespace S3.Pages
             var autobus = new Autobus(SimWrapper.SimulationModel.Simulation, VelkostAutobusu.K186D4,
                 SimWrapper.SimulationModel.Simulation.AgentOkolia.Linky[0])
             {
-                CasZaciatkuJazdy = 700
+                CasZaciatkuJazdy = 0
             };
 
             Linky[0].Autobusy.Add(autobus);
@@ -110,6 +110,6 @@ namespace S3.Pages
 
     public static class MyConfiguration
     {
-        public static Configuration Configuration { get; set; } = new Configuration(760, false);
+        public static Configuration Configuration { get; set; } = new Configuration(113.1, false);
     }
 }

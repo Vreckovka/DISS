@@ -45,7 +45,7 @@ namespace continualAssistants
                     var sprava = (MyMessage)message;
 
                     if (MySim.CurrentTime <= sprava.ZastavkaData.CasKoncaGenerovania
-                        && sprava.ZastavkaData.Zastavka.PocetVygenerovanych  <
+                        && sprava.ZastavkaData.Zastavka.PocetVygenerovanych <
                         sprava.ZastavkaData.Zastavka.MaxPocetVygenerovanych)
                     {
                         MyAgent.CelkovyPocetCestujucich++;
@@ -57,7 +57,8 @@ namespace continualAssistants
 
                         cestujuci.CasZacatiaCakania = MySim.CurrentTime;
 
-                       
+
+
                         novaSprava.ZastavkaData = sprava.ZastavkaData;
                         novaSprava.ZastavkaData.Zastavka.Cestujuci.Enqueue(cestujuci);
                         novaSprava.ZastavkaData.Zastavka.PocetCestujucich++;
@@ -65,11 +66,53 @@ namespace continualAssistants
 
                         novaSprava.ZastavkaData.Zastavka.PocetCestujucich = novaSprava.ZastavkaData.Zastavka.Cestujuci.Count;
 
+                        //  if (novaSprava.ZastavkaData.Zastavka.Meno == "AB")
+                        //      Console.WriteLine((MySim.CurrentTime * 60) + " " + novaSprava.ZastavkaData.Zastavka);
+
+                        if (novaSprava.ZastavkaData.Zastavka.CakajuciAutobus != null && novaSprava.ZastavkaData.Zastavka.CakajuciAutobus.CakalNavyse)
+                        {
+                            var nastupovanieSprava = new MyMessage(MySim);
+                            nastupovanieSprava.Autobus = novaSprava.ZastavkaData.Zastavka.CakajuciAutobus;
+                            nastupovanieSprava.Addressee = this;
+                            nastupovanieSprava.Code = Mc.CestujuciNastupil;
+
+                            var agentAuto = MySim.FindAgent(SimId.AgentZastavok);
+                            var asd = (NastupovanieProces)agentAuto.FindAssistant(SimId.NastupovanieProces);
+
+                            //TODO: Generator
+                            Hold(asd.triangularDistribution.GetNext(), nastupovanieSprava);
+                        }
+
+
                         Hold(novaSprava.ZastavkaData.Generator.GetNext(), novaSprava);
                     }
                     else
                     {
                         AssistantFinished(message);
+                    }
+
+                    break;
+
+                case Mc.CestujuciNastupil:
+                    {
+                        var agentAuto = MySim.FindAgent(SimId.AgentZastavok);
+                        var asd = agentAuto.FindAssistant(SimId.NastupovanieProces);
+
+                        ((MyMessage)message).Addressee = asd;
+                        ((MyMessage)message).Code = Mc.CestujuciNastupil;
+
+                        var spravas = ((MyMessage)message);
+                        var cestujuci = ((MyMessage)message).Autobus.AktualnaZastavka.Zastavka.Cestujuci.Dequeue();
+                        cestujuci.CasCakania = (MySim.CurrentTime * 60) - (cestujuci.CasZacatiaCakania * 60);
+                        spravas.Autobus.Cestujuci.Enqueue(cestujuci);
+                        spravas.Autobus.CelkovyPocetPrevezenych++;
+                        spravas.Autobus.AktualnyPocetPrevezenych++;
+                        spravas.Autobus.AktualnaZastavka.Zastavka.PocetCestujucich =
+                            spravas.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count;
+
+                        ((MyMessage)message).Autobus.PocetDveriObsadene++;
+
+                        Notice(((MyMessage)message));
                     }
 
                     break;

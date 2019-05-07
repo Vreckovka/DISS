@@ -11,7 +11,7 @@
     <StackPanel>
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Pocet replikacii: " Margin="5"/>
-            <TextBox Width="150" Margin="5" Text="1000"  Name="PocetRep"/>
+            <TextBox Width="150" Margin="5" Text="1"  Name="PocetRep"/>
         </StackPanel>
 
         <TextBlock Margin="5">

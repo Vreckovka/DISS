@@ -40,10 +40,7 @@ namespace agents
             AddOwnMessage(Mc.PrichodNaZastavku);
             AddOwnMessage(Mc.CestujuciNastupil);
         }
-
        
         //meta! tag="end"
-
-     
     }
 }

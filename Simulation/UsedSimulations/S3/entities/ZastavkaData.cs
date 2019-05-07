@@ -17,6 +17,8 @@ namespace Simulations.UsedSimulations.S3.entities
         public double CasKoncaGenerovania { get; set; }
         public double CasZaciatkuGenerovania { get; set; }
 
+
+        //public int Cislo { get; set; } = 5;
         public ExponentialDistribution Generator { get; set; }
         public bool Konecna { get; set; }
 

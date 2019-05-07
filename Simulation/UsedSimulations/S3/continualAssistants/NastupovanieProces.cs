@@ -13,8 +13,10 @@ namespace continualAssistants
     //meta! id="70"
     public class NastupovanieProces : Process
     {
-        private TriangularDistribution triangularDistribution;
+        public TriangularDistribution triangularDistribution;
         private UniformContinuousDistribution uniformContinuous;
+
+        public double Cas { get; set; } = 3.1 / 60.0;
         public NastupovanieProces(int id, OSPABA.Simulation mySim, CommonAgent myAgent) :
             base(id, mySim, myAgent)
         {
@@ -35,6 +37,7 @@ namespace continualAssistants
             message = message.CreateCopy();
             ((MyMessage)message).Autobus = ((MyMessage)messagePom).Autobus;
 
+
             if (((MyMessage)message).Autobus.KoniecProcesu)
             {
                 AssistantFinished(message);
@@ -51,7 +54,7 @@ namespace continualAssistants
                     UkonciNastupovanie(message);
                 }
                 else if (((MyMessage)message).Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count
-                         == 0 && !((MyMessage)message).Autobus.KoniecProcesu)
+                         == 0 && !((MyMessage)message).Autobus.KoniecProcesu && ((MyMessage)message).Autobus.PocetDveriObsadene == 0)
                 {
                     UkonciNastupovanie(message);
                 }
@@ -78,12 +81,22 @@ namespace continualAssistants
                             throw new ArgumentOutOfRangeException();
                     }
 
+                    //holdTime = Cas;
+
                     if (nastupiNiekto && !((MyMessage)message).Autobus.AktualnaZastavka.Konecna)
                     {
-                        //Console.WriteLine(MySim.CurrentTime + " Na zastavke " + ((MyMessage)message).Autobus.AktualnaZastavka.Zastavka + " je " + ((MyMessage)message).Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count);
-                        Hold(holdTime, message);
-                    }
 
+                        if (((MyMessage)message).Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count > 0)
+                        {
+                            var cestujuci = ((MyMessage)message).Autobus.AktualnaZastavka.Zastavka.Cestujuci.Dequeue();
+                            cestujuci.CasCakania = (MySim.CurrentTime * 60) - (cestujuci.CasZacatiaCakania * 60);
+                           // Console.WriteLine((MySim.CurrentTime * 60) + "NASTUPUJE, CAKAL " + cestujuci.CasCakania + " " + ((MyMessage)message).Autobus.AktualnaZastavka.Zastavka);
+                            ((MyMessage)message).Autobus.Cestujuci.Enqueue(cestujuci);
+
+                            ((MyMessage)message).Autobus.PocetDveriObsadene++;
+                            Hold(holdTime, message);
+                        }
+                    }
                     else
                         UkonciNastupovanie(message);
                 }
@@ -103,6 +116,11 @@ namespace continualAssistants
                     newMessage.Autobus = sprava.Autobus;
                     newMessage.Code = sprava.Code;
 
+
+                    ((MyMessage)message).Autobus.PocetDveriObsadene--;
+                    //Console.WriteLine((MySim.CurrentTime * 60) + " nastupil " + sprava.Autobus.AktualnaZastavka.Zastavka);
+
+
                     if (sprava.Autobus.StojiNaZastavke && !sprava.Autobus.AktualnaZastavka.Konecna)
                     {
                         double holdTime = -1;
@@ -119,23 +137,7 @@ namespace continualAssistants
                                 throw new ArgumentOutOfRangeException();
                         }
 
-                        if (sprava.Autobus.CakalNavyse && sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count > 0)
-                            ;
 
-                        if (sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count > 0)
-                        {
-                            var cestujuci = sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Dequeue();
-                            cestujuci.CasCakania = MySim.CurrentTime - cestujuci.CasZacatiaCakania;
-                            sprava.Autobus.Cestujuci.Enqueue(cestujuci);
-                            sprava.Autobus.CelkovyPocetPrevezenych++;
-                            sprava.Autobus.AktualnyPocetPrevezenych++;
-                            sprava.Autobus.AktualnaZastavka.Zastavka.PocetCestujucich =
-                                sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count;
-                        }
-
-
-
-                        //Console.WriteLine(MySim.CurrentTime + " Nastupil " + sprava.Autobus.Typ + " " + sprava.Autobus.AktualnaZastavka.Zastavka);
 
                         if (sprava.Autobus.KapacitaOsob > sprava.Autobus.Cestujuci.Count)
                         {
@@ -147,18 +149,35 @@ namespace continualAssistants
                                 }
                                 else
                                 {
+                                    var cestujuci = sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Dequeue();
+                                    cestujuci.CasCakania = (MySim.CurrentTime * 60) - (cestujuci.CasZacatiaCakania * 60);
+
+                                    //Console.WriteLine((MySim.CurrentTime * 60) + "NASTUPUJE, CAKAL " + cestujuci.CasCakania + " " + ((MyMessage)message).Autobus.AktualnaZastavka.Zastavka);
+
+                                    sprava.Autobus.Cestujuci.Enqueue(cestujuci);
+                                    sprava.Autobus.CelkovyPocetPrevezenych++;
+                                    sprava.Autobus.AktualnyPocetPrevezenych++;
+                                    sprava.Autobus.AktualnaZastavka.Zastavka.PocetCestujucich =
+                                        sprava.Autobus.AktualnaZastavka.Zastavka.Cestujuci.Count;
+
+                                    ((MyMessage)message).Autobus.PocetDveriObsadene++;
+
+                                    //holdTime = Cas;
                                     Hold(holdTime, message);
                                 }
                             }
-                            else if (((MySimulation)MySim).Configration.Cakanie && sprava.Autobus.Typ == AutobusyTyp.Autobus && !sprava.Autobus.CakalNavyse)
-                            {
-                                Hold(1.5, message);
-                                sprava.Autobus.CakalNavyse = true;
-                            }
-                            else
-                            {
-                                UkonciNastupovanie(message);
-                            }
+                            else if (((MyMessage)message).Autobus.PocetDveriObsadene == 0)
+                                if (((MySimulation)MySim).Configration.Cakanie && sprava.Autobus.Typ == AutobusyTyp.Autobus && !sprava.Autobus.CakalNavyse)
+                                {
+                                    //Console.WriteLine((MySim.CurrentTime * 60) + " CAKANA  1.5 ");
+                                    Hold(1.5, message);
+                                    sprava.Autobus.CakalNavyse = true;
+                                    sprava.Autobus.PocetDveriObsadene++;
+                                }
+                                else
+                                {
+                                    UkonciNastupovanie(message);
+                                }
                         }
                         else
                         {
@@ -188,7 +207,7 @@ namespace continualAssistants
                 sprava.Autobus.KoniecProcesu = true;
                 sprava.Autobus.StojiNaZastavke = false;
                 sprava.Autobus.CakalNavyse = false;
-
+                sprava.Autobus.AktualnaZastavka.Zastavka.CakajuciAutobus = null;
                 newMessage.Code = Mc.JazdaNaZastavku;
                 newMessage.Addressee = MySim.FindAgent(SimId.AgentAutobusov);
                 Notice(newMessage);

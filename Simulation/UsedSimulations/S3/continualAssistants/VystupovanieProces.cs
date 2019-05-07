@@ -13,7 +13,8 @@ namespace continualAssistants
     //meta! id="70"
     public class VystupovanieProces : Process
     {
-       
+
+        public double Cislo { get; set; } = 3.1 / 60;
         private int pocetUkoncenychAutobusov;
         private TriangularDistribution triangularDistribution;
         public VystupovanieProces(int id, OSPABA.Simulation mySim, CommonAgent myAgent) :
@@ -54,8 +55,7 @@ namespace continualAssistants
                         throw new ArgumentOutOfRangeException();
                 }
 
-
-
+                //holdTime = Cislo;
                 Hold(holdTime, sprava);
             }
             else if (MySim.CurrentTime >= ((MySimulation)MySim).Configration.ZaciatokZapasu && sprava.Autobus.Cestujuci.Count == 0 && !sprava.Autobus.KoniecJazd)
@@ -76,6 +76,8 @@ namespace continualAssistants
             }
             else
                 UkonciVystupovanie(sprava);
+
+            
         }
 
         //meta! userInfo="Process messages defined in code", id="0"
@@ -118,6 +120,7 @@ namespace continualAssistants
 
                         if (newMessage.Autobus.Cestujuci.Count > 0)
                         {
+                            //holdTime = Cislo;
                             Hold(holdTime, newMessage);
                         }
                         else
