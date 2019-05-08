@@ -23,5 +23,10 @@ namespace Simulations.UsedSimulations.S3.entities
         public Linka(int id, OSPABA.Simulation mySim) : base(id, mySim)
         {
         }
+
+        public override string ToString()
+        {
+            return Meno;
+        }
     }
 }

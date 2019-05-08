@@ -9,7 +9,7 @@ namespace Simulations.Distributions
     public class ExponentialDistribution : Distribution
     {
 
-        private double lambda;
+        public double lambda;
         public ExponentialDistribution(double lambda, int seed) : base(seed)
         {
             this.lambda = lambda;

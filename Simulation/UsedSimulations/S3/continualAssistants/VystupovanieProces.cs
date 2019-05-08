@@ -86,7 +86,6 @@ namespace continualAssistants
             else
                 UkonciVystupovanie(sprava);
 
-
         }
 
         //meta! userInfo="Process messages defined in code", id="0"

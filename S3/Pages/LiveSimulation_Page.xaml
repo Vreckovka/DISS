@@ -132,6 +132,7 @@
             <Button Content="Start" Margin="10" Click="StartClick" Width="150"/>
             <Button Content="Pauza" Margin="10" Click="PauseClick" Width="150"/>
             <Button Content="Stop" Margin="10" Click="StopClick" Width="150"/>
+            <Slider Maximum="0.01" Minimum="0.001" TickFrequency="0.01" Width="150" ValueChanged="Slider" x:Name="slider"/>
         </StackPanel>
     </Grid>
 </Page>

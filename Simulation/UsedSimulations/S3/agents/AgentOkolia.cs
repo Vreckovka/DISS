@@ -104,6 +104,10 @@ namespace agents
 
 
                     // }
+
+                    //Console.WriteLine(zastavka.Zastavka.Meno + " " + zastavka.CasZaciatkuGenerovania + " " + zastavka.CasKoncaGenerovania + " " + zastavka.Generator.lambda);
+                    //Console.WriteLine(zastavka.CasZaciatkuGenerovania);
+                    //Console.WriteLine(zastavka.Generator.lambda);
                 }
             }
         }
@@ -601,6 +605,8 @@ namespace agents
                         linka.Zastavky[i].Generator = new ExponentialDistribution((1.0 / (65.0 / linka.Zastavky[i].Zastavka.MaxPocetVygenerovanych)),
                          ((MySimulation)MySim).Random.Next());
 
+
+                    
                 }
             }
 

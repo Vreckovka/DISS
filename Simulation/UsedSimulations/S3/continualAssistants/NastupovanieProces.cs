@@ -90,13 +90,17 @@ namespace continualAssistants
                         {
                             var cestujuci = ((MyMessage)message).Autobus.AktualnaZastavka.Zastavka.Cestujuci.Dequeue();
                             cestujuci.CasCakania = (MySim.CurrentTime * 60) - (cestujuci.CasZacatiaCakania * 60);
-                           // Console.WriteLine((MySim.CurrentTime * 60) + "NASTUPUJE, CAKAL " + cestujuci.CasCakania + " " + ((MyMessage)message).Autobus.AktualnaZastavka.Zastavka);
+                            // Console.WriteLine((MySim.CurrentTime * 60) + "NASTUPUJE, CAKAL " + cestujuci.CasCakania + " " + ((MyMessage)message).Autobus.AktualnaZastavka.Zastavka);
                             ((MyMessage)message).Autobus.Cestujuci.Enqueue(cestujuci);
                             ((MyMessage)message).Autobus.AktualnaZastavka.Zastavka.PocetCestujucich--;
                             ((MyMessage)message).Autobus.PocetDveriObsadene++;
+                            ((MyMessage)message).Autobus.AktualnyPocetPrevezenych++;
+                            ((MyMessage)message).Autobus.CelkovyPocetPrevezenych++;
                             cestujuci.Linka = ((MyMessage)message).Autobus.Linka;
                             Hold(holdTime, message);
                         }
+                        else
+                            UkonciNastupovanie(message);
                     }
                     else
                         UkonciNastupovanie(message);

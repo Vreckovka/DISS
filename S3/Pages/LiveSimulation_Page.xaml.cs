@@ -26,6 +26,7 @@ namespace S3.Pages
     [AddINotifyPropertyChangedInterface]
     public partial class LiveSimulation_Page : Page
     {
+        public double Speed { get; set; }
 
         public LiveSimulation_Page()
         {
@@ -36,7 +37,7 @@ namespace S3.Pages
         private void StartClick(object sender, RoutedEventArgs e)
         {
 
-            SimWrapper.SimulationModel.Simulation.SetSimSpeed(1 / 60d, 0.0001);
+           
             SimWrapper.SimulationModel.Simulation.OnRefreshUI(SimWrapper.SimulationModel.RefreshGui);
             MainWindow._rep_Page.DataContext = null;
             MainWindow._live_Page.DataContext = SimWrapper.SimulationModel;
@@ -71,6 +72,11 @@ namespace S3.Pages
         private void PauseClick(object sender, RoutedEventArgs e)
         {
             SimWrapper.SimulationModel.Simulation.PauseSimulation();
+        }
+
+        private void Slider(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            SimWrapper.SimulationModel.Simulation.SetSimSpeed(1 / 60d, (0.01 - slider.Value));
         }
     }
 }

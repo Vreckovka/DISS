@@ -38,6 +38,7 @@ namespace simulation
         public OSPStat.Stat StatAvrageMicro { get; set; }
         public double[] StatAvrageMicroInterval { get; set; }
 
+        public OSPStat.Stat APocet { get; set; }
 
         public double AvrageCakania { get; set; }
         public double AvragePocetLudi { get; set; }
@@ -59,6 +60,9 @@ namespace simulation
             AvrageCakania = 0;
             AvrageMicro = 0;
             AvrageFinishedNaPo = 0;
+
+
+            APocet = new OSPStat.Stat();
 
             StatAvrageCakanieA = new OSPStat.Stat();
             StatAvrageCakanieB = new OSPStat.Stat();
@@ -94,15 +98,15 @@ namespace simulation
                 var b = (from x in AgentOkolia.Zastavky[3].Cestujuci where x.Linka == AgentOkolia.Linky[1] select x.CasCakania);
                 var c = (from x in AgentOkolia.Zastavky[3].Cestujuci where x.Linka == AgentOkolia.Linky[2] select x.CasCakania);
 
-               
+                
                 if (a.Count() > 0)
                     StatAvrageCakanieA.AddSample(a.Average() / 60);
 
                 if (b.Count() > 0)
-                    StatAvrageCakanieA.AddSample(b.Average() / 60);
+                    StatAvrageCakanieB.AddSample(b.Average() / 60);
 
                 if (c.Count() > 0)
-                    StatAvrageCakanieA.AddSample(c.Average() / 60);
+                    StatAvrageCakanieC.AddSample(c.Average() / 60);
 
 
                 if (StatAvragePocetLudi.SampleSize > 1)

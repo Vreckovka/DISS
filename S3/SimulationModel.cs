@@ -43,7 +43,7 @@ namespace S3
         {
             var s = ((MySimulation)simulation);
 
-            SimTime = TimeSpan.FromMinutes(Simulation.CurrentTime).ToString("hh\\:mm\\:ss");
+            SimTime = TimeSpan.FromMinutes(Simulation.CurrentTime).ToString();
 
             foreach (var autobus in s.AgentAutobusov.Autobusy)
             {
